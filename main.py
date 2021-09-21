@@ -14,7 +14,7 @@ load_dotenv()
 
 from lector import bot
 
-TOKEN = os.environ["DISCORD_TOKEN"]
+TOKEN = os.getenv("DISCORD_TOKEN")
 
 def main():
 

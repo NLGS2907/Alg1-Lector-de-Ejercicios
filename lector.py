@@ -27,7 +27,7 @@ Por ejemplo, *!random 12 <=* devuelve un ejercicio aleatorio de alguna guía ant
 Repositorio de GitHub: https://github.com/NLGS2907/Alg1-Lector-de-Ejercicios
 """
 
-CMD_PREFIX = os.environ["CMD_PREFIX"]
+CMD_PREFIX = os.getenv("CMD_PREFIX")
 """
 El prefijo usado para identificar mensajes de comando
 """
@@ -193,3 +193,12 @@ async def jugar(ctx):
     """
 
     await ctx.channel.send(f"`{ctx.prefix}{ctx.command}` *aún no ha sido implementado. ¡Pero vendrá muy pronto!*", delete_after=10)
+
+@bot.command(name="hist", help="Mira el historial")
+async def print_history(ctx):
+
+    mensajes = ctx.channel.history(limit=10)
+    mensajes_l = await ctx.channel.history(limit=10).flatten()
+
+    print(mensajes)
+    print(mensajes_l)
