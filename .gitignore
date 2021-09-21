@@ -7,6 +7,9 @@
 # $ git config --global mergetool.keepBackup false
 *.orig
 
+# Any file that ends with .env
+*.env
+
 # Created by git when using merge tools for conflicts
 *.BACKUP.*
 *.BASE.*

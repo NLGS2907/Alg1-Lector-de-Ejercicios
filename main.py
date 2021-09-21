@@ -1,13 +1,15 @@
 import os
-
-from dotenv import load_dotenv
-
 import lector
 
-load_dotenv("data.env")
-TOKEN = os.getenv("DISCORD_TOKEN")
+TOKEN = os.environ["DISCORD_TOKEN"]
 
-if __name__ == "__main__":
+def main():
 
     lector = lector.bot
     lector.run(TOKEN)
+
+    return 0
+
+if __name__ == "__main__":
+
+    main()

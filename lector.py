@@ -1,13 +1,10 @@
 import os
 
-from dotenv import load_dotenv
 from discord.ext import commands
 
 import guia
 
-load_dotenv("data.env")
-TOKEN = os.getenv("DISCORD_TOKEN")
-CMD_PREFIX = os.getenv("CMD_PREFIX")
+CMD_PREFIX = os.environ["CMD_PREFIX"]
 
 GUIA = guia.cargar_guia()
 
