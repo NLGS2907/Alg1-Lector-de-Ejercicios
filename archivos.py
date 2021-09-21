@@ -1,4 +1,11 @@
+from random import choice
+
 def cargar_guia(carpeta: str="guia/2c2019") -> dict:
+    """
+    Carga la guía de ejercicios en un diccionario de diccionarios, donde cada
+    sub-diccionario tiene los pares clave valor en donde la clave es el numero
+    de ejercicio y el valor el enunciado del mismo, ya formateado.
+    """
 
     guia = dict()
 
@@ -46,3 +53,14 @@ def cargar_guia(carpeta: str="guia/2c2019") -> dict:
         guia[str(unidad)] = dic_unidad
 
     return guia
+
+def cargar_easter_eggs(nombre_archivo: str="easter_eggs.txt") -> list:
+    """
+    Devuelve una lista de las lineas del archivo de guiños.
+    """
+
+    with open(nombre_archivo, encoding="utf-8") as archivo:
+
+        lineas = archivo.read().splitlines()
+
+    return lineas
