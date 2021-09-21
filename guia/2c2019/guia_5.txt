@@ -1,0 +1,102 @@
+# 't=' for tab, 'n=' for new line at the end, or 'tn=' for both
+# '[number]=<' to begin reading excercise, and '>' to finish (if not it will not append the string)
+
+titulo=Más sobre Ciclos
+
+1=<
+Escribir un programa que permita al usuario ingresar un conjunto de notas, preguntando a cada paso si desea ingresar más notas, e imprimiendo el promedio correspondiente.
+>
+
+2=<
+Escribir una función que reciba un número entero 𝑘 e imprima su descomposición en factores primos.
+>
+
+3=<
+n=**Manejo de Contraseñas**
+
+t=**a)** Escribir un programa que contenga una contraseña inventada, que le pregunte al usuario la contraseña,
+tn=   y no le permita continuar hasta que la haya ingresado correctamente.
+
+tn=**b)** Modificar el programa anterior para que solamente permita una cantidad fija de intentos.
+
+t=**c)** Modificar el programa anterior para que después de cada intento agregue una pausa cada vez mayor,
+tn=   utilizando la función sleep del módulo `time`.
+
+t=**d)** Modificar el programa anterior para que sea una función que devuelva si el usuario ingresó o no la
+t=   contraseña correctamente, mediante un valor booleano (`True` o `False`).
+>
+
+4=<
+Utilizando la función `randrange` del módulo `random`, escribir un programa que obtenga un número aleatorio secreto, y luego permita al usuario ingresar números y le indique si son menores o mayores que el número a adivinar, hasta que el usuario ingrese el número correcto.
+>
+
+5=<
+n=**Algoritmo de Euclides**
+
+t=**a)** Implementar el algoritmo de Euclides para calcular el máximo común divisor de dos números 𝑛 y 𝑚,
+tn=   dado por los siguientes pasos.
+
+t=   **1.** Teniendo 𝑛 y 𝑚, se obtiene 𝑟, el resto de la división entera de 𝑚/𝑛.
+t=   **2.** Si 𝑟 es cero, 𝑛 es el mcd de los valores iniciales.
+tn=   **3.** Se reemplaza 𝑚 ← 𝑛, 𝑛 ← 𝑟, y se vuelve al primer paso.
+
+t=**b)** Hacer un seguimiento del algoritmo implementado para los siguientes pares de números:
+t=   (15, 9); (9, 15); (10, 8); (12, 6).
+>
+
+6=<
+n=**Potencias de dos**
+
+t=**a)** Escribir una función `es_potencia_de_dos` que reciba como parámetro un número natural, y devuelva
+tn=   `True` si el número es una potencia de 2, y `False` en caso contrario.
+
+t=**b)** Escribir una función que, dados dos números naturales pasados como parámetros, devuelva la suma de
+t=   todas las potencias de 2 que hay en el rango formado por esos números (0 si no hay ninguna potencia
+t=   de 2 entre los dos).
+t=   Utilizar la función `es_potencia_de_dos`, descripta en el punto anterior.
+>
+
+7=<
+n=**Números perfectos y Números amigos**
+
+tn=**a)** Escribir una función que devuelva la suma de todos los divisores de un número 𝑛, sin incluirlo.
+
+t=**b)** Usando la función anterior, escribir una función que imprima los primeros 𝑚 números tales que la
+tn=   suma de sus divisores sea igual a sí mismo (es decir los primeros 𝑚 números *perfectos*).
+
+t=**c)** Usando la primera función, escribir una función que imprima las primeras 𝑚 parejas de números
+t=   (𝑎, 𝑏), tales que la suma de los divisores de 𝑎 es igual a 𝑏 y la suma de los divisores de 𝑏 es igual
+tn=   a 𝑎 (es decir las primeras 𝑚 parejas de números *amigos*).
+
+t=**d)** Proponer optimizaciones a las funciones anteriores para disminuir el tiempo de ejecución.
+>
+
+8=<
+Escribir un programa que le pida al usuario que ingrese una sucesión de números naturales (primero uno, luego otro, y así hasta que el usuario ingrese `-1` como condición de salida).
+Al final, el programa debe imprimir cuántos números fueron ingresados, la suma total de los valores y el promedio.
+>
+
+9=<
+n=Escribir una función que reciba dos números como parámetros, y devuelva cuántos múltiplos del primero hay, que sean menores que el segundo.
+
+tn=**a)** Implementarla utilizando un ciclo `for`, desde el primer número hasta el segundo.
+
+t=**b)** Implementarla utilizando un ciclo `while`, que multiplique el primer número hasta que sea mayor
+tn=   que el segundo.
+
+t=**c)** Comparar ambas implementaciones: ¿Cuál es más clara? ¿Cuál realiza menos operaciones?
+>
+
+10=<
+Escribir una función que reciba un número natural e imprima todos los números primos que hay hasta ese número.
+>
+
+11=<
+Escribir una función que reciba un dígito y un número natural, y decida numéricamente si el dígito se encuentra en la notación decimal del segundo.
+>
+
+12=<
+Escribir una función que dada la cantidad de ejercicios de un examen, y el porcentaje necesario de ejercicios bien resueltos necesario para aprobar dicho examen, revise un grupo de examenes.
+Para ello, en cada paso debe preguntar la cantidad de ejercicios resueltos por el alumno, indicando con un valor centinela que no hay más examenes a revisar.
+Debe mostrar por pantalla el porcentaje correspondiente a la cantidad de ejercicios resueltos respecto a la cantidad de ejercicios del examen y una leyenda que indique si aprobó o no.
+>

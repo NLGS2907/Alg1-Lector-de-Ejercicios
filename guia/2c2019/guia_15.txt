@@ -1,0 +1,102 @@
+# 't=' for tab, 'n=' for new line at the end, or 'tn=' for both
+# '[number]=<' to begin reading excercise, and '>' to finish (if not it will not append the string)
+
+titulo=Modelo de Ejecucuión de Funciones y Recursión
+
+
+1=<
+Escribir una función recursiva que reciba un número positivo 𝑛 y devuelva la cantidad de dígitos que tiene.
+>
+
+2=<
+n=Escribir una función recursiva que simule el siguiente experimento:
+
+Se tiene una rata en una jaula con 3 caminos, entre los cuales elige al azar (cada uno tiene la misma probabilidad), si elige el *1*  luego de 3 minutos vuelve a la jaula, si elige el *2*  luego de 5 minutos vuelve a la jaula, en el caso de elegir el *3*  luego de 7 minutos sale de la jaula.
+La rata no aprende, siempre elige entre los 3 caminos con la misma probabilidad, pero quiere su
+n=libertad, por lo que recorrerá los caminos hasta salir de la jaula.
+
+La función debe devolver el tiempo que tarda la rata en salir de la jaula.
+>
+
+3=<
+Escribir una función recursiva que reciba 2 enteros *n* y *b* y devuelva `True` si *n* es potencia de *b*.
+Ejemplos:
+```python
+es_potencia(8, 2) -> True
+es_potencia(64, 4) -> True
+es_potencia(70, 10) -> False
+```
+>
+
+4=<
+Escribir una funcion recursiva que reciba como parámetros dos cadenas *a* y *b*, y
+devuelva una lista con las posiciones en donde se encuentra *b* dentro de *a*.
+Ejemplo:
+```python
+posiciones_de("Un tete a tete con Tete", "te") -> [3, 5, 10, 12, 21]
+```
+>
+
+5=<
+Escribir dos funciones mutualmente recursivas `par(n)` e `impar(n)` que determinen la paridad
+n=del numero natural dado, conociendo solo que:
+t=**•** 1 es impar.
+t=**•** Si un número es impar, su antecesor es par; y viceversa.
+>
+
+6=<
+Escribir una función recursiva que calcule recursivamente el n-ésimo número triangular (el número 1 + 2 + 3 + ⋯ + 𝑛).
+>
+
+7=<
+Escribir una función que calcule recursivamente cuántos elementos hay en una pila, suponiendo que la pila sólo tiene los métodos `apilar` y `desapilar`, y no altere el contenido de la pila.
+>
+
+8=<
+Escribir una funcion recursiva que encuentre el mayor elemento de una lista.
+>
+
+9=<
+Escribir una función recursiva para replicar los elementos de una lista una cantidad *n* de veces.
+Por ejemplo:
+```python
+replicar([1, 3, 3, 7], 2) -> ([1, 1, 3, 3, 3, 3, 7, 7])
+```
+>
+
+10=<
+Escribir una funcion recursiva que dada una cadena determine si en la misma hay más letras A o letras E.
+>
+
+11=<
+El triángulo de Pascal es un arreglo triangular de números que se define de la siguiente manera:
+Las filas se enumeran desde 𝑛 = 0, de arriba hacia abajo. Los valores de cada fila se enumeran desde 𝑘 = 0 (de izquierda a derecha).
+Los valores que se encuentran en los bordes del triángulo son 1.
+n=Cualquier otro valor se calcula sumando los dos valores contiguos de la fila de arriba.
+=𝑛 = 0                                1
+=𝑛 = 1                             1       1
+=𝑛 = 2                         1     2      1
+=𝑛 = 3                     1     3       3     1
+=𝑛 = 4                 1     4     6     4      1
+=𝑛 = 5             1     5     10     10    5     1
+n=𝑛 = 6         1      6     15   20   15    6      1
+
+Escribir la función recursiva `pascal(n, k)` que calcula el valor que se encuentra en la fila *n*
+y la columna *k*.
+Ejemplo:
+```python
+pascal(5, 2) -> 10
+```
+>
+
+12=<
+Ya sabemos que la implementación recursiva del cálculo del número de Fibonacci (𝐹𝑛 = 𝐹𝑛−1 + 𝐹𝑛−2, 𝐹0 = 0, 𝐹1 = 1) es ineficiente porque muchas de las ramas calculan reiteradamente los mismos valores.
+Escribir una función `fibonacci(n)` que calcule el enésimo número de Fibonacci de forma recursiva pero que utilice un diccionario para almacenar los valores ya computados y no computarlos más de una vez.
+**Nota:** Será necesario implementar una función *wrapper* para cumplir con la firma de la función
+pedida.
+>
+
+13=<
+Escribir una función recursiva que reciba un conjunto de caracteres únicos, y un número 𝑘, e imprima todas las posibles cadenas de longitud 𝑘 formadas con los caracteres dados (permitiendo caracteres repetidos).
+Ejemplo: `combinaciones(['a', 'b', 'c'], 2)` debe imprimir `aa ab ac ba bb bc ca cb cc`.
+>

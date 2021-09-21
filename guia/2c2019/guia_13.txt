@@ -1,0 +1,50 @@
+# 't=' for tab, 'n=' for new line at the end, or 'tn=' for both
+# '[number]=<' to begin reading excercise, and '>' to finish (if not it will not append the string)
+
+titulo=Listas Enlazadas
+
+1=<
+Implementar el método `__str__` de `ListaEnlazada`, para que se genere una salida legible de lo que contiene la lista, similar a las listas de python.
+>
+
+2=<
+Agregar a `ListaEnlazada` un método `extend` que reciba una `ListaEnlazada` y agregue a la lista actual los elementos que se encuentran en la lista recibida.
+>
+
+3=<
+Implementar el método `remover_todos(elemento`) de `ListaEnlazada`, que recibe un elemento y remueve de la lista todas las apariciones del mismo, devolviendo la cantidad de elementos removidos.
+La lista debe ser recorrida una sola vez.
+>
+
+4=<
+Implementar el método `duplicar(elemento)` de `ListaEnlazada`, que recibe un elemento y duplica todas las apariciones del mismo.
+Ejemplo:
+```python
+=L = 1 -> 5 -> 8 -> 8 -> 2 -> 8
+=L.duplicar(8) => L = 1 -> 5 -> 8 -> 8 -> 8 -> 8 -> 2 -> 8 -> 8
+```
+>
+
+5=<
+Implementar el método `filter(f)` de `ListaEnlazada`, que recibe una función y devuelve **una nueva lista enlazada** con los elementos para los cuales la aplicación de **f** devuelve
+`True`. La nueva lista debe ser construida recorriendo los nodos una sola vez (es decir, no se puede llamar a `append`).
+Ejemplo:
+```python
+=L = 1 -> 5 -> 8 -> 8 -> 2 -> 8
+=L.filter(es_primo) -> L2 = 5 -> 2
+```
+>
+
+6=<
+Escribir un método de la clase `ListaEnlazada` que invierta el orden de la lista (es decir, el primer elemento queda como último y viceversa).
+>
+
+7=<
+Una **lista circular** es una lista cuyo último nodo está ligado al primero, de modo que es posible recorrerla infinitamente.
+Escribir la clase `ListaCircular`, incluyendo los métodos `insert`, `append`, `remove` y `pop`.
+>
+
+8=<
+Una **lista doblemente enlazada** es una lista en la cual cada nodo tiene una referencia al anterior además de al próximo de modo que es posible recorrerla en ambas direcciones.
+Escribir la clase `ListaDobleEnlazada`, incluyendo los métodos `insert`, `append`, `remove` y `pop`.
+>

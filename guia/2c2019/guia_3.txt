@@ -1,0 +1,47 @@
+# 't=' for tab, 'n=' for new line at the end, or 'tn=' for both
+# '[number]=<' to begin reading excercise, and '>' to finish (if not it will not append the string)
+
+titulo=Funciones
+
+1=<
+n=Escribir dos funciones que permitan calcular:
+tn=**a)** La duración en segundos de un intervalo dado en horas, minutos y segundos.
+t=**b)** La duración en horas, minutos y segundos de un intervalo dado en segundos.
+>
+
+2=<
+Usando las funciones del ejercicio anterior, escribir un programa que pida al usuario dos intervalos expresados en horas, minutos y segundos, sume sus duraciones, y muestre por pantalla la duración total en horas, minutos y segundos.
+>
+
+3=<
+Escribir una función que, dados cuatro números, devuelva el mayor producto de dos de ellos.
+=Por ejemplo, si recibe los números 1, 5, -2, -4 debe devolver 8, que es el producto más grande que se puede obtener entre ellos (8 = (−2) × (−4)).
+>
+
+4=<
+n=**Área de polígonos**
+t=**a)** Escribir una función que reciba las coordenadas de un vector en ℝ³ (x, y, z) y devuelva la norma del
+t=   vector, dada por ‖ (x1, y1, z1) × (x2, y2, z2)‖ = √(𝑥² + 𝑦² + 𝑧²).
+tn=   Ejemplo: `norma(3, 2, -4)` → `5.3851`
+
+t=**b)** Escribir una función que reciba las coordenadas de dos vectores en ℝ³ (x1, y1, z1, x2, y2, z2) y
+t=   devuelva las coordenadas del vector diferencia (debe devolver 3 valores numéricos).
+tn=   Ejemplo: `diferencia(8, 7, -3, 5, 3, 2)` → `(3, 4, -5)`
+
+t=**c)** Escribir una función que reciba las coordenadas de dos vectores en ℝ³ y devuelva las coordenadas del
+t=   producto vectorial, definido como:
+t=   (x1, y1, z1) × (x2, y2, z2) = (y1 · z2 - z1 · y2, z1 · x2 - x1 · z2, x1 · y2 - y1 · x2)
+tn=   Ejemplo: `producto_vec(1, 4, -2, 3, -1, 0)` → `(-2, -6, -13)`
+
+t=**d)** Utilizando las funciones anteriores, escribir una función que reciba las coordenadas de 3 puntos en
+t=   ℝ³ y devuelva el área del triángulo que conforman.
+t=   *Ayuda:* Si 𝐴, 𝐵 y 𝐶 son 3 puntos en el espacio, la norma del producto vectorial AB × AC es igual al doble
+t=   del área del triángulo 𝐴𝐵𝐶.
+tn=   Ejemplo: `area_triangulo(5, 8, -1, -2, 3, 4, -3, 3, 0)` → `19.4551`
+
+t=**e)** Escribir una función que reciba las coordenadas de 4 puntos en el plano ℝ² (x1, y1, x2, y2, x3, y3, x4, y4)
+t=   que conforman un cuadrilátero convexo, y devuelva el área del mismo.
+t=   *Ayuda:* Aprovechar las funciones escritas anteriormente, asumiendo que los puntos dados están en ℝ³ con
+t=   coordenada 𝑧 = 0.
+t=   Ejemplo: `area_cuadrilatero(4, 3, 5, 10, -2, 8, -3, -5)` → `65`
+>

@@ -1,0 +1,48 @@
+# 't=' for tab, 'n=' for new line at the end, or 'tn=' for both
+# '[number]=<' to begin reading excercise, and '>' to finish (if not it will not append the string)
+
+titulo=Algoritmos de Búsqueda
+
+1=<
+n=Escribir una función que reciba una lista desordenada y un elemento, que:
+
+t=**a)** Busque todos los elementos coincidan con el pasado por parámetro y devuelva la cantidad
+tn=   de coincidencias encontradas.
+
+tn=**b)** Busque la primera coincidencia del elemento en la lista y devuelva su posición.
+
+t=**c)** Utilizando la función anterior, busque todos los elementos que coincidan con el pasado
+t=   por parámetro y devuelva una lista con las posiciones.
+>
+
+2=<
+n=Escribir una función que reciba una lista de números no ordenada, que:
+
+tn=**a)** Devuelva el valor máximo.
+
+tn=**b)** Devuelva una tupla que incluya el valor máximo y su posición.
+
+tn=**c)** ¿Qué sucede si los elementos son cadenas de caracteres?
+
+**Nota:** no utilizar `lista.sort()`.
+>
+
+3=<
+n=**Agenda Simplificada**
+Escribir una función que reciba una cadena a buscar y una lista de tuplas (nombre_completo, telefono), y busque dentro de la lista, todas las entradas que contengan en el nombre completo la cadena recibida (puede ser el nombre, el apellido o sólo una parte de cualquiera de ellos).
+Debe devolver una lista con todas las tuplas encontradas.
+>
+
+4=<
+n=**Sistema de Facturación Simplificado**
+
+Se cuenta con una lista ordenada de productos, en la que uno consiste en una tupla de (identificador, descripción, precio), y una lista de los productos a facturar, en la que cada uno consiste en una tupla de (identificador, cantidad).
+Se desea generar una factura que incluya la cantidad, la descripción, el precio unitario y el precio total de cada producto comprado, y al final imprima el total general.
+Escribir una función que reciba ambas listas e imprima por pantalla la factura solicitada.
+>
+
+5=<
+Escribir una función que reciba una lista ordenada y un elemento. Si el elemento se encuentra en la lista, debe encontrar su posición mediante búsqueda binaria y devolverlo.
+Si no se encuentra, debe agregarlo a la lista en la posición correcta y devolver esa nueva posición.
+(No utilizar `lista.sort()`.)
+>

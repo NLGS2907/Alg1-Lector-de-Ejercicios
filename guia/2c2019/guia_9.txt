@@ -1,0 +1,46 @@
+# 't=' for tab, 'n=' for new line at the end, or 'tn=' for both
+# '[number]=<' to begin reading excercise, and '>' to finish (if not it will not append the string)
+
+titulo=Diccionarios
+
+1=<
+Escribir una función que reciba una lista de tuplas, y que devuelva un diccionario en donde las claves sean los primeros elementos de las tuplas, y los valores una lista con los segundos.
+n=Por ejemplo:
+```python
+=>>> l = [ ('Hola', 'don Pepito'), ('Hola', 'don Jose'), ('Buenos', 'días') ]
+>>> print(tuplas_a_diccionario(l))
+{ 'Hola': ['don Pepito', 'don Jose'], 'Buenos': ['días'] }
+```
+>
+
+2=<
+n=**Diccionarios usados para contar**
+
+t=**a)** Escribir una función que reciba una cadena y devuelva un diccionario con la cantidad de apariciones
+t=   de cada palabra en la cadena.
+t=   Por ejemplo, si recibe `"Qué lindo día que hace hoy"` debe devolver:
+tn=   `{ 'que': 2, 'lindo': 1, 'día': 1, 'hace': 1, 'hoy': 1}`.
+
+t=**b)** Escribir una función que cuente la cantidad de apariciones de cada caracter en una cadena de
+tn=   texto, y los devuelva en un diccionario.
+
+t=**c)** Escribir una función que reciba una cantidad de iteraciones de una tirada de 2 dados a realizar
+t=   y devuelva la cantidad de veces que se observa cada valor de la suma de los dos dados.
+t=   **Nota:** Utilizar el módulo `random` para obtener tiradas aleatorias.
+>
+
+3=<
+n=**Continuación de la agenda**
+n=Escribir un programa que vaya solicitando al usuario que ingrese nombres.
+
+t=**a)** Si el nombre se encuentra en la agenda (*implementada con un diccionario*), debe mostrar el
+tn=   teléfono y, opcionalmente, permitir modificarlo si no es correcto.
+
+tn=**b)** Si el nombre no se encuentra, debe permitir ingresar el teléfono correspondiente.
+
+El usuario puede utilizar la cadena "*", para salir del programa.
+>
+
+4=<
+Escribir una función que reciba un texto y para cada caracter presente en el texto devuelva la cadena más larga en la que se encuentra ese caracter.
+>

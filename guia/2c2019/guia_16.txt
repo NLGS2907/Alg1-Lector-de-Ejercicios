@@ -1,0 +1,24 @@
+# 't=' for tab, 'n=' for new line at the end, or 'tn=' for both
+# '[number]=<' to begin reading excercise, and '>' to finish (if not it will not append the string)
+
+titulo=Ordenar Listas
+
+1=<
+Mostrar los pasos del ordenamiento de la lista `[ 0 9 3 8 5 3 2 4 ]` con los algoritmos de inserción y selección.
+>
+
+2=<
+Escribir una función `merge_sort_3` que funcione igual que el *merge sort* pero en lugar de dividir los valores en dos partes iguales, los divida en tres (asumir que se cuenta con la función `merge(lista_1, lista_2, lista_3)`).
+¿Cómo te parece que se va a comportar este método con respecto al *merge sort* original?
+>
+
+3=<
+Mostrar los pasos del ordenamiento de la lista: `[ 6 0 3 2 5 7 4 1 ]` con los métodos
+de inserción y con *merge sort*.
+¿Cuáles son las principales diferencias entre los métodos? ¿Cuál usarías en qué casos?
+>
+
+4=<
+Ordenar la lista `[ 6 0 3 2 5 7 4 1 ]` usando el método *quicksort*.
+Mostrar el árbol de recursividad explicando las llamadas que se hacen en cada paso, y el orden en el que se realizan.
+>

@@ -1,0 +1,45 @@
+# 't=' for tab, 'n=' for new line at the end, or 'tn=' for both
+# '[number]=<' to begin reading excercise, and '>' to finish (if not it will not append the string)
+
+titulo=Documentación, Contratos y Mutabilidad
+
+1=<
+Analizar cada una de las siguientes funciones. ¿Cuál es el contrato de la función?
+¿Cómo sería su documentación? ¿Es necesario agregar comentarios?
+¿Se puede simplificar el código y/o mejorar su legibilidad? ¿Hay algún invariante de ciclo?
+
+t=**a)**
+```python
+def Abs(i):
+=   if i >= 0:
+        return i
+    else:
+        return -i
+```
+
+t=**b)**
+```python
+def emails(diccionario):
+    for k, v in diccionario.items():
+        print(f"El e-mail de {k} es {v}")
+```
+
+t=**c)**
+```python
+def emails2(diccionario):
+=   buenos = {}
+    for k, v in diccionario.items():
+        if '@' in v:
+            buenos[k] = v
+    return buenos
+```
+
+t=**d)**
+```python
+def emails3(nombres, direcciones):
+    for nom in range(len(nombres)):
+=       if direcciones[nom] == None:
+=           nombre, apellido = ' '.split(nombres[nom].lower())
+=           direcciones[nom] = nombre[0] + apellido + '@ejemplo.com'
+```
+>
