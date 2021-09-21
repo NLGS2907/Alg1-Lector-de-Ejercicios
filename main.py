@@ -1,11 +1,11 @@
 import os
-import lector
+from lector import bot
 
 TOKEN = os.environ["DISCORD_TOKEN"]
 
 def main():
 
-    lector = lector.bot
+    lector = bot
     lector.run(TOKEN)
 
     return 0
