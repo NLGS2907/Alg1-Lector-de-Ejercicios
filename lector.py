@@ -2,34 +2,27 @@
 Módulo dedicado a contener al comportamiento del bot.
 """
 
-import os
+
 from typing import Optional
 from random import choice
 from datetime import datetime
 
 from discord.ext import commands
 
-import archivos
+import archivos, ahorcado
 
-INFO_MESSAGE = """>>>\t**Lector de Ejercicios**
+INFO_MESSAGE = """>>>**Lector de Ejercicios - Instrucciones**
 
+`{prefix}info` muestra esta lista.
+`{prefix}ej <unidad> <ejercicio> | dm` para mostrar el ejercicio de la unidad correspondiente de la guía.
 
-
-`!info` muestra esta lista.
-`!ej <unidad> <ejercicio> | dm` para mostrar el ejercicio de la unidad correspondiente de la guía.
-
-`!random <unidad_posible>, <opcion> | dm` para mostrar un ejercicio al azar. 'unidad_posible' es de
+`{prefix}random <unidad_posible>, <opcion> | dm` para mostrar un ejercicio al azar. 'unidad_posible' es de
 dónde empezar a buscar, y 'opcion' es el parámetro de búsqueda, y toma los valores '=', '<', '<=',
 '>' o '>='.
-Por ejemplo, *!random 12 <=* devuelve un ejercicio aleatorio de alguna guía anterior o igual a la guía 12.
+Por ejemplo, *{prefix}random 12 <=* devuelve un ejercicio aleatorio de alguna guía anterior o igual a la guía 12.
 
 *desarrolado por Franco 'NLGS' Lighterman.*
 Repositorio de GitHub: https://github.com/NLGS2907/Alg1-Lector-de-Ejercicios
-"""
-
-CMD_PREFIX = os.getenv("CMD_PREFIX")
-"""
-El prefijo usado para identificar mensajes de comando
 """
 
 GUIA = archivos.cargar_guia()
@@ -65,9 +58,21 @@ def existe_ejercicio(ejercicio: str, unidad: str, guia: dict=GUIA) -> bool:
 
     return ejercicio in [ej for ej in guia[unidad].keys()]
 
+class CustomBot(commands.Bot):
+    """
+    Clase pasa sobrecargar y agregar cosas a la clase 'commands.Bot'.
+    """
 
+    def __init__(self, cmd_prefix: str='!', **opciones) -> None:  # '!' es el predeterminado, pero podría ser cambiado en un futuro.
+        """
+        Crea una instancia de tipo 'CustomBot'.
+        """
 
-bot = commands.Bot(command_prefix=CMD_PREFIX)
+        super().__init__(cmd_prefix, options=opciones)
+
+        self.partidas = dict()
+
+bot = CustomBot()
 """
 El objeto de tipo 'Bot' que maneja todo el comportamiento.
 """
@@ -80,7 +85,7 @@ async def on_ready() -> None:
 
     print(f"[ {str(datetime.now())} ] ¡{bot.user} conectado y listo para utilizarse!")
 
-@bot.command(name="ej", help="Muestra ejercicios de la guía.")
+@bot.command(name="ej", aliases=["ejercicio", "enunciado"], help="Muestra ejercicios de la guía.")
 async def leer_ejercicio(ctx, unidad: str, ejercicio: str, *opciones) -> None:
 
     if not existe_ejercicio(ejercicio, unidad):
@@ -94,6 +99,7 @@ async def leer_ejercicio(ctx, unidad: str, ejercicio: str, *opciones) -> None:
 
         await ctx.author.create_dm()
         await ctx.author.dm_channel.send(mensaje)
+        await ctx.message.delete()
 
     else:
 
@@ -108,13 +114,14 @@ async def mostrar_info(ctx, *opciones):
     if opciones and opciones[0] == "dm":
 
         await ctx.author.create_dm()
-        await ctx.author.dm_channel.send(INFO_MESSAGE)
+        await ctx.author.dm_channel.send(INFO_MESSAGE.format(prefix=ctx.prefix))
+        await ctx.message.delete()
 
     else:
 
-        await ctx.channel.send(INFO_MESSAGE)
+        await ctx.channel.send(INFO_MESSAGE.format(prefix=ctx.prefix))
 
-@bot.command(name="random", help="Muestra un ejercicio aleatorio de la guía.")
+@bot.command(name="random", aliases=["aleatorio", 'r'], help="Muestra un ejercicio aleatorio de la guía.")
 async def ejercicio_al_azar(ctx, unidad_posible: Optional[str]=None, opcion: str='=', *opciones) -> None:
     """
     Muestra un ejercicio al azar de la guía.
@@ -171,8 +178,8 @@ async def ejercicio_al_azar(ctx, unidad_posible: Optional[str]=None, opcion: str
 
     await leer_ejercicio(ctx, unidad_elegida, ejercicio_elegido, ("dm" if (opciones and opciones[0] == "dm") else ''))
 
-@bot.command(name="meme", help="Por si querés saber un poquito más.")
-async def mostrar_easter_egg(ctx, *opciones):
+@bot.command(name="meme", help="Para los curiosos aburridos.")
+async def mostrar_easter_egg(ctx, *opciones) -> None:
     """
     Muestra una línea al azar del archivo de easter eggs.
     """
@@ -181,24 +188,28 @@ async def mostrar_easter_egg(ctx, *opciones):
 
         await ctx.author.create_dm()
         await ctx.author.dm_channel.send(choice(EASTER_EGGS))
+        await ctx.message.delete()
 
     else:
 
-        await ctx.channel.send(choice(EASTER_EGGS))
+        puede_mostrar = True
 
-@bot.command(name="play", help="(¡Aún no implementado!)")
-async def jugar(ctx):
+        # Si está en el server del curso, que solo funcione en el canal #off-topic
+        if ctx.guild.name == "Algoritmos y Programación I - Essaya" and not ctx.channel.name == "off-topic":
+
+            puede_mostrar = False
+
+        if puede_mostrar: await ctx.channel.send(choice(EASTER_EGGS))
+
+@bot.command(name="hanged", aliases=["ahorcado"], help="Interactúa con un juego de ahorcado.")
+async def interactuar_con_juego(ctx, *opciones) -> None:
     """
-    Crea una instancia de juego.
+    Dependiendo de los comandos que se pasen, interactúa con
+    las de juego de ahorcado que hay actualmente.
     """
 
-    await ctx.channel.send(f"`{ctx.prefix}{ctx.command}` *aún no ha sido implementado. ¡Pero vendrá muy pronto!*", delete_after=10)
+    await ctx.channel.send(f"{ctx.prefix}{ctx.command} fue llamado")
 
-@bot.command(name="hist", help="Mira el historial")
-async def print_history(ctx):
+    if opciones[0] in ("crear", "create", "nuevo", "new"):
 
-    mensajes = ctx.channel.history(limit=10)
-    mensajes_l = await ctx.channel.history(limit=10).flatten()
-
-    print(mensajes)
-    print(mensajes_l)
+        bot.partidas[opciones[1]] = ahorcado.Ahorcado(opciones[2] if opciones[2] else None)
