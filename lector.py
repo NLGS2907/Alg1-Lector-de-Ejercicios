@@ -19,7 +19,7 @@ INFO_MESSAGE = """>>>**Lector de Ejercicios - Instrucciones**
 `{prefix}random <unidad_posible>, <opcion> | dm` para mostrar un ejercicio al azar. 'unidad_posible' es de
 dónde empezar a buscar, y 'opcion' es el parámetro de búsqueda, y toma los valores '=', '<', '<=',
 '>' o '>='.
-Por ejemplo, *{prefix}random 12 <=* devuelve un ejercicio aleatorio de alguna guía anterior o igual a la guía 12.
+Por ejemplo, `{prefix}random 12 <=` devuelve un ejercicio aleatorio de alguna guía anterior o igual a la guía 12.
 
 *desarrolado por Franco 'NLGS' Lighterman.*
 Repositorio de GitHub: https://github.com/NLGS2907/Alg1-Lector-de-Ejercicios
@@ -192,14 +192,7 @@ async def mostrar_easter_egg(ctx, *opciones) -> None:
 
     else:
 
-        puede_mostrar = True
-
-        # Si está en el server del curso, que solo funcione en el canal #off-topic
-        if ctx.guild.name == "Algoritmos y Programación I - Essaya" and not ctx.channel.name == "off-topic":
-
-            puede_mostrar = False
-
-        if puede_mostrar: await ctx.channel.send(choice(EASTER_EGGS))
+        await ctx.channel.send(choice(EASTER_EGGS))
 
 @bot.command(name="hanged", aliases=["ahorcado"], help="Interactúa con un juego de ahorcado.")
 async def interactuar_con_juego(ctx, *opciones) -> None:
