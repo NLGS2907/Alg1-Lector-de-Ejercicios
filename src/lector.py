@@ -57,7 +57,7 @@ que se actualice para mostrar el avance del juego.
 Repositorio: *https://github.com/NLGS2907/Alg1-Lector-de-Ejercicios*
 """
 
-EASTER_EGGS = archivos.cargar_lineas("easter_eggs.txt")
+EASTER_EGGS = archivos.cargar_lineas("src/easter_eggs.txt")
 """
 Pequeños guiños escondidos (más o menos).
 """

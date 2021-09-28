@@ -19,9 +19,9 @@ DEFAULT_VERSION = "2C2019"
 La versión de la guía por defecto, si la especificada no se encontrase.
 """
 
-PREFIXES_FILE = "prefixes.csv"
+PREFIXES_FILE = "src/prefixes.csv"
 
-VERSIONS_FILE = "versions.csv"
+VERSIONS_FILE = "src/versions.csv"
 
 def get_prefijo(bot, mensaje: Message) -> str:
     """

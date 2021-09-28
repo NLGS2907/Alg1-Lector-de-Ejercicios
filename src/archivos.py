@@ -9,7 +9,7 @@ La extensión de archivo usada para almacenar el texto que son los ejercicios
 de la guía.
 """
 
-GUIA_PATH = "../guia"
+GUIA_PATH = "guia"
 """
 Dirección (relativa) de la carpeta de guías.
 """

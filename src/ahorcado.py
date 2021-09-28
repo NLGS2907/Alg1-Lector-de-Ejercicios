@@ -53,7 +53,7 @@ class Ahorcado:
         Crea una instancia de tipo 'Ahorcado'.
         """
 
-        frase_magica = (frase if frase else choice(archivos.cargar_lineas("palabras.txt")))
+        frase_magica = (frase if frase else choice(archivos.cargar_lineas("src/palabras.txt")))
         self.maximos_intentos = opciones.get("vidas_maximas", 7)
         self.intentos = self.maximos_intentos
 
