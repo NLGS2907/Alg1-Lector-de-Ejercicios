@@ -6,7 +6,7 @@ titulo=Documentación, Contratos y Mutabilidad
 1=<
 Analizar cada una de las siguientes funciones. ¿Cuál es el contrato de la función?
 ¿Cómo sería su documentación? ¿Es necesario agregar comentarios?
-¿Se puede simplificar el código y/o mejorar su legibilidad? ¿Hay algún invariante de ciclo?
+n=¿Se puede simplificar el código y/o mejorar su legibilidad? ¿Hay algún invariante de ciclo?
 
 t=**a)**
 ```python

@@ -59,7 +59,7 @@ Por ejemplo: si recibe `'3'` debe devolver `'miércoles'`, si recibe `'9'` debe 
 >
 
 7=<
-**⋆** Escribir un programa que reciba como entrada un entero representando un año (por ejemplo 751, 1999, o 2158), y muestre por pantalla el mismo año escrito en números romanos.
+**⋆** Escribir un programa que reciba como entrada un entero representando un año (por ejemplo `751`, `1999`, o `2158`), y muestre por pantalla el mismo año escrito en números romanos.
 >
 
 8=<
