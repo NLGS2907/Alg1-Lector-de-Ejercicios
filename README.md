@@ -3,9 +3,13 @@
 Este bot de discord está pensado para usarse únicamente en el discord de la materia Algoritmos y Programación I,
 de la Facultad de Ingeniería de la UBA, aunque puede utilizarse para cualquier servidor que lo quiera.
 
-**Enlace de Invitación:** [Aquí](https://discord.com/api/oauth2/authorize?client_id=889312376036425810&permissions=292057910336&scope=bot)
+**Enlace de Invitación:** [Aquí](https://discord.com/api/oauth2/authorize?client_id=889312376036425810&permissions=292057984064&scope=bot)
 
 <hr/>
+
+### ⋆ [Changelog] Nuevo en v1.0.1
+
+* **Agregado comando `clear`** para limpiar mensajes del bot.
 
 ### ⋆ [Changelog] Nuevo en v1.0.0
 

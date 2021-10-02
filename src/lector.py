@@ -7,7 +7,8 @@ from random import choice
 from datetime import datetime
 
 from discord import Thread
-from discord.ext.commands import Context
+from discord.ext.commands import Context, check
+from discord.message import Message
 
 import custom_bot, archivos
 
@@ -25,7 +26,7 @@ INFO_MESSAGE = """>>> **Lector de Ejercicios - Instrucciones**
 
 Versión de la guía para este servidor: `{version}`
 
-`{prefix}info` muestra esta lista.
+`{prefix}info | dm` muestra esta lista.
 
 `{prefix}ej|ejercicio|enunciado <unidad> <ejercicio> | dm` para mostrar el ejercicio de la unidad correspondiente de la guía.
 
@@ -51,6 +52,8 @@ También, si se está dentro de una sala de ahorcado:
 
 `{prefix}display|mostrar` para mostrar de nuevo la pantalla del juego de ahorcado. Ahora esta nueva pantalla será la
 que se actualice para mostrar el avance del juego.
+
+`{prefix}clear|clean|cls <limite> | full` para limpiar los mensajes del bot
 
 
 *desarrolado por Franco 'NLGS' Lighterman.*
@@ -102,12 +105,38 @@ def encontrar_meme(id: str, memes: list[str]=EASTER_EGGS) -> str:
     return choice(memes)
 
 
-
 bot = custom_bot.CustomBot()
 """
 El objeto de tipo 'Bot' que maneja todo el comportamiento.
 """
 
+
+def es_rol_valido(ctx: Context) -> bool:
+    """
+    Verifica si está en el servidor del curso, y si es así,
+    si se tienen los roles correspondientes.
+    """
+
+    return not all((ctx.guild.id == ALGORITMOS_ESSAYA_ID,
+                   all([role.id not in (ROL_DIEGO_ID, ROL_DOCENTE_ID) for role in ctx.author.roles])))
+
+async def es_mensaje_de_bot(msg: Message) -> bool:
+    """
+    Verifica si un mensaje pasado es un mensaje escrito
+    por el bot.
+    """
+
+    return msg.author == bot.user
+
+async def es_mensaje_comando(msg: Message) -> bool:
+    """
+    Verifica si un mensaje escrito por un usuario o
+    bot es un comando.
+    """
+
+    ctx = await bot.get_context(msg)
+
+    return ctx.valid
 
 @bot.event
 async def on_ready() -> None:
@@ -157,7 +186,7 @@ async def on_thread_update(before: Thread, after: Thread) -> None:
     if partida and after.archived:
 
         bot.partidas.pop(str(after.id))
-        await after.parent.send(f"**[AVISO]** Partida `{after.name}` fue eliminada por estar 1 hora inactivo y ser archivado.")
+        await after.parent.send(f"**[AVISO]** Partida `{after.name}` fue eliminada al ser archivado (probablemente por la hora de inactividad).")
         await after.delete()
 
 @bot.command(name="ej", aliases=["ejercicio", "enunciado"], help="Muestra ejercicios de la guía.")
@@ -256,6 +285,7 @@ async def ejercicio_al_azar(ctx, unidad_posible: Optional[str]=None, sentido: st
     await leer_ejercicio(ctx, unidad_elegida, ejercicio_elegido, ("dm" if ("dm" in opciones) else ''))
 
 @bot.command(name="prefix", aliases=["prefijo"], help="Cambia el prefijo de los comandos.")
+@check(es_rol_valido)
 async def cambiar_prefijo(ctx: Context, nuevo_prefijo: str) -> None:
     """
     Cambia el prefijo utilizado para convocar a los comandos, solamente del
@@ -263,11 +293,6 @@ async def cambiar_prefijo(ctx: Context, nuevo_prefijo: str) -> None:
 
     Se da por hecho que el servidor ya está memorizado en el diccionario.
     """
-
-    # Si está en el servidor de la materia, que sólo los docente y diego puedan actualizar el prefijo.
-    if ctx.guild.id == ALGORITMOS_ESSAYA_ID and all([role.id not in (ROL_DIEGO_ID, ROL_DOCENTE_ID) for role in ctx.author.roles]):
-
-        return
 
     prefijo_viejo = ctx.prefix
 
@@ -278,15 +303,11 @@ async def cambiar_prefijo(ctx: Context, nuevo_prefijo: str) -> None:
     await ctx.channel.send(f"**[AVISO]** El prefijo de los comandos fue cambiado de `{prefijo_viejo}` a `{nuevo_prefijo}` exitosamente.", delete_after=30)
 
 @bot.command(name="guia", aliases = ["version"], help="Cambia la versión de la guía.")
+@check(es_rol_valido)
 async def cambiar_version_guia(ctx: Context, nueva_version: str) -> None:
     """
     Cambia la versión de la guía a utilizar, si dicha versión es válida.
     """
-
-    # Si está en el servidor de la materia, que sólo los docente y diego puedan actualizar la versión de la guía.
-    if ctx.guild.id == ALGORITMOS_ESSAYA_ID and all([role.id not in (ROL_DIEGO_ID, ROL_DOCENTE_ID) for role in ctx.author.roles]):
-
-        return
 
     if not archivos.version_es_valida(nueva_version):
 
@@ -362,3 +383,19 @@ async def mostrar_juego(ctx: Context) -> None:
 
     nuevo_display = await ctx.channel.send(partida)
     partida.definir_display(nuevo_display.id)
+
+@bot.command(name="clear", aliases=["clean", "cls"], help="Limpia el canal de mensajes del bot.")
+@check(es_rol_valido)
+async def limpiar_mensajes(ctx: Context, limite: int=10, *opciones) -> None:
+    """
+    Limpia los mensajes del bot del canal de donde se
+    invoca el comando.
+
+    Si 'full' está entre las opciones, también borra los
+    mensajes de los usuarios que invocan los comandos.
+    """
+
+    funcion_check = (es_mensaje_comando if "full" in opciones else es_mensaje_de_bot)
+    eliminados = await ctx.channel.purge(limit=limite, check=funcion_check)
+
+    print(f"[ {str(datetime.now())} ] [AVISO] {len(eliminados)} fueron eliminados de #{ctx.channel.name} en {ctx.guild.name}")

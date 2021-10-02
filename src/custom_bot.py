@@ -144,7 +144,7 @@ class CustomBot(commands.Bot):
         else:
 
             partida.intentos -= 1
-            await ctx.channel.send(f"¡Ole! ¡{ctx.author.mention} ha dicho el caracter `{char}`, que no se encuntra en la palabra! Quedan {partida.intentos} intentos...")
+            await ctx.channel.send(f"¡Ole! ¡{ctx.author.mention} ha dicho el caracter `{char}`, que no se encuentra en la palabra! Quedan {partida.intentos} intentos...")
 
         partida.caracteres_usados.append(char)
 
