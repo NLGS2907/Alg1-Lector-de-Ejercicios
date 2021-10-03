@@ -145,7 +145,7 @@ def es_mensaje_comando(msg: Message) -> bool:
     bot es un comando.
     """
 
-    return not es_ultimo_mensaje(msg) and msg.content.startswith(custom_bot.get_prefijo(bot, msg))
+    return (not es_ultimo_mensaje(msg) and msg.content.startswith(custom_bot.get_prefijo(bot, msg))) or es_mensaje_de_bot(msg)
 
 @bot.event
 async def on_ready() -> None:
