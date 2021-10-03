@@ -122,13 +122,13 @@ def es_rol_valido(ctx: Context) -> bool:
     return not all((ctx.guild.id == ALGORITMOS_ESSAYA_ID,
                    all([role.id not in (ROL_DIEGO_ID, ROL_DOCENTE_ID) for role in ctx.author.roles])))
 
-def es_comando_clear(msg: Message) -> bool:
+def es_ultimo_mensaje(msg: Message) -> bool:
     """
-    Verifica que el mensaje a procesar no es el comando
-    `clear` mismo.
+    Verifica que el mensaje a procesar no sea el
+    ultimo del canal.
     """
 
-    return msg.content in ("!clear", "!clean", "!cls")
+    return msg == msg.channel.last_message
 
 def es_mensaje_de_bot(msg: Message) -> bool:
     """
@@ -136,7 +136,7 @@ def es_mensaje_de_bot(msg: Message) -> bool:
     por el bot.
     """
 
-    return not es_comando_clear(msg) and msg.author == bot.user
+    return not es_ultimo_mensaje(msg) and msg.author == bot.user
 
 def es_mensaje_comando(msg: Message) -> bool:
     """
@@ -144,7 +144,7 @@ def es_mensaje_comando(msg: Message) -> bool:
     bot es un comando.
     """
 
-    return not es_comando_clear(msg) and msg.content.startswith(custom_bot.get_prefijo(bot, msg))
+    return not es_ultimo_mensaje(msg) and msg.content.startswith(custom_bot.get_prefijo(bot, msg))
 
 @bot.event
 async def on_ready() -> None:
