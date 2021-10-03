@@ -53,7 +53,9 @@ También, si se está dentro de una sala de ahorcado:
 `{prefix}display|mostrar` para mostrar de nuevo la pantalla del juego de ahorcado. Ahora esta nueva pantalla será la
 que se actualice para mostrar el avance del juego.
 
-`{prefix}clear|clean|cls <limite> | full` para limpiar los mensajes del bot
+`{prefix}clear|clean|cls <limite> | full` para limpiar los mensajes del bot. `<limite>` es la cantidad de mensajes
+que verificar (no los que serán borrados, aunque puede ser el caso). 'full' elimina no sólo los mensajes del bot
+si no también los de todos los usuarios que invocan sus comandos.
 
 
 *desarrolado por Franco 'NLGS' Lighterman.*
@@ -120,23 +122,29 @@ def es_rol_valido(ctx: Context) -> bool:
     return not all((ctx.guild.id == ALGORITMOS_ESSAYA_ID,
                    all([role.id not in (ROL_DIEGO_ID, ROL_DOCENTE_ID) for role in ctx.author.roles])))
 
-async def es_mensaje_de_bot(msg: Message) -> bool:
+def es_comando_clear(msg: Message) -> bool:
+    """
+    Verifica que el mensaje a procesar no es el comando
+    `clear` mismo.
+    """
+
+    return msg.content in ("!clear", "!clean", "!cls")
+
+def es_mensaje_de_bot(msg: Message) -> bool:
     """
     Verifica si un mensaje pasado es un mensaje escrito
     por el bot.
     """
 
-    return msg.author == bot.user
+    return not es_comando_clear(msg) and msg.author == bot.user
 
-async def es_mensaje_comando(msg: Message) -> bool:
+def es_mensaje_comando(msg: Message) -> bool:
     """
     Verifica si un mensaje escrito por un usuario o
     bot es un comando.
     """
 
-    ctx = await bot.get_context(msg)
-
-    return ctx.valid
+    return not es_comando_clear(msg) and msg.content.startswith(custom_bot.get_prefijo(bot, msg))
 
 @bot.event
 async def on_ready() -> None:
@@ -396,6 +404,6 @@ async def limpiar_mensajes(ctx: Context, limite: int=10, *opciones) -> None:
     """
 
     funcion_check = (es_mensaje_comando if "full" in opciones else es_mensaje_de_bot)
-    eliminados = await ctx.channel.purge(limit=limite, check=funcion_check)
+    eliminados = await ctx.channel.purge(limit=limite + 1, check=funcion_check)
 
-    print(f"[ {str(datetime.now())} ] [AVISO] {len(eliminados)} fueron eliminados de #{ctx.channel.name} en {ctx.guild.name}")
+    print(f"[ {str(datetime.now())} ] [AVISO] {len(eliminados)} mensajes fueron eliminados de #{ctx.channel.name} en {ctx.guild.name}")
