@@ -22,7 +22,7 @@ ROL_DIEGO_ID = 653341579389435927
 
 ROL_DOCENTE_ID = 653341523886342145
 
-INFO_MESSAGE = """>>> **Lector de Ejercicios - Instrucciones**
+INFO_MESSAGE_1 = """>>> **Lector de Ejercicios - Instrucciones**
 
 Versión de la guía para este servidor: `{version}`
 
@@ -41,8 +41,9 @@ Por ejemplo, `{prefix}random 12 <=` devuelve un ejercicio aleatorio de alguna gu
 
 `{prefix}meme <id>` para generar un meme aleatorio, o con `<id>` determinado si se desea uno en concreto, aunque
 hay que conocer el URL del meme en específico (solo funciona si tiene el dominio `https://i.imgur.com`).
+"""
 
-`{prefix}hanged|ahorcado <vidas> <*frase>` para reservar una sala de ahorcado. Esta es en forma de un hilo temporal.
+INFO_MESSAGE_2 = """ >>> `{prefix}hanged|ahorcado <vidas> <*frase>` para reservar una sala de ahorcado. Esta es en forma de un hilo temporal.
 Si se hace una partida personalizada con `<*frase>` determinada por el usuario, se recomienda encerrarlo en '\|\|'.
 Así, \|\|palabra\|\| se ve como ||palabra||. Esto sirve para desalentar ver la respuesta de primeras.
 
@@ -227,11 +228,13 @@ async def mostrar_info(ctx: Context, *opciones):
 
     if "dm" in opciones:
 
-        await mandar_dm(ctx, INFO_MESSAGE.format(version=version_guia, prefix=ctx.prefix))
+        await mandar_dm(ctx, INFO_MESSAGE_1.format(version=version_guia, prefix=ctx.prefix))
+        await mandar_dm(ctx, INFO_MESSAGE_2.format(prefix=ctx.prefix))
 
     else:
 
-        await ctx.channel.send(INFO_MESSAGE.format(version=version_guia, prefix=ctx.prefix))
+        await ctx.channel.send(INFO_MESSAGE_1.format(version=version_guia, prefix=ctx.prefix))
+        await ctx.channel.send(INFO_MESSAGE_2.format(prefix=ctx.prefix))
 
 @bot.command(name="random", aliases=["aleatorio", 'r'], help="Muestra un ejercicio aleatorio de la guía.")
 async def ejercicio_al_azar(ctx, unidad_posible: Optional[str]=None, sentido: str='=', *opciones) -> None:
