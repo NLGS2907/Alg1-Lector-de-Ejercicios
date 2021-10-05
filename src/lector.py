@@ -43,7 +43,7 @@ Por ejemplo, `{prefix}random 12 <=` devuelve un ejercicio aleatorio de alguna gu
 hay que conocer el URL del meme en específico (solo funciona si tiene el dominio `https://i.imgur.com`).
 """
 
-INFO_MESSAGE_2 = """ >>> `{prefix}hanged|ahorcado <vidas> <*frase>` para reservar una sala de ahorcado. Esta es en forma de un hilo temporal.
+INFO_MESSAGE_2 = """>>> `{prefix}hanged|ahorcado <vidas> <*frase>` para reservar una sala de ahorcado. Esta es en forma de un hilo temporal.
 Si se hace una partida personalizada con `<*frase>` determinada por el usuario, se recomienda encerrarlo en '\|\|'.
 Así, \|\|palabra\|\| se ve como ||palabra||. Esto sirve para desalentar ver la respuesta de primeras.
 
