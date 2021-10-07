@@ -18,6 +18,13 @@ DiccionarioPares = dict[str, str]
 
 DiccionarioGuia = dict[str, Union[str, dict[str, str]]]
 
+class GuiaNoEncontrada(Exception):
+    """
+    Pequeña clase para definir un error de guía no encontrada.
+    """
+
+    pass
+
 def archivos_guia(version: str, carpeta: str) -> list[str]:
     """
     Dado un directorio, devuelve una lista de strings con todos los nombres
@@ -54,7 +61,7 @@ def cargar_guia(version: str, carpeta: str=GUIA_PATH) -> DiccionarioGuia:
 
     if not version_es_valida(version, carpeta):
 
-        raise Exception(f"La versión especificada '{version}' no es válida. No se puede cargar un diccionario inexistente.")
+        raise GuiaNoEncontrada(f"La versión especificada '{version}' no es válida. No se puede cargar un diccionario inexistente.")
 
     unidades = archivos_guia(version, carpeta)
 

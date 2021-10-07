@@ -14,7 +14,7 @@ El prefijo por defecto que los servidores a los que se una el bot
 tendrá inicialmente.
 """
 
-DEFAULT_VERSION = "2C2019"
+DEFAULT_VERSION = "2c2019"
 """
 La versión de la guía por defecto, si la especificada no se encontrase.
 """
@@ -49,7 +49,17 @@ def definir_guias() -> dict[str, archivos.DiccionarioGuia]:
 
     for guild_id, version in archivos.cargar_pares_valores(VERSIONS_FILE).items():
 
-        dict_guias[guild_id] = archivos.cargar_guia(version)
+        try:
+
+            dict_guias[guild_id] = archivos.cargar_guia(version)
+
+        except archivos.GuiaNoEncontrada:
+
+            print(f"[AVISO] La versión '{version}' no fue encontrada, configurando la versión predeterminada '{DEFAULT_VERSION}' para id {guild_id}...", end=' ')
+
+            dict_guias[guild_id] = DEFAULT_VERSION
+
+            print("listo.")
 
     return dict_guias
 

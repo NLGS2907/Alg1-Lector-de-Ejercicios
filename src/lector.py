@@ -4,9 +4,9 @@ Módulo dedicado a contener al comportamiento del bot.
 
 from typing import Optional
 from random import choice
-from datetime import datetime
+from datetime import date, datetime
 
-from discord import Thread
+from discord import Thread, Guild
 from discord.ext.commands import Context, check
 from discord.message import Message
 
@@ -165,12 +165,12 @@ async def mandar_dm(ctx: Context, mensaje: str) -> None:
     await ctx.message.delete()
 
 @bot.event
-async def on_guild_join(guild) -> None:
+async def on_guild_join(guild: Guild) -> None:
     """
     El bot se conectó por primera vez a un servidor.
     """
 
-    print(f"El bot se conectó a {guild.name}")
+    print(f"[ {str(datetime.now)} ] El bot se conectó a '{guild.name}'")
 
     dic_prefijos = archivos.cargar_pares_valores(custom_bot.PREFIXES_FILE)
     dic_prefijos[str(guild.id)] = custom_bot.DEFAULT_PREFIX
@@ -187,7 +187,9 @@ async def on_guild_join(guild) -> None:
 @bot.event
 async def on_thread_update(before: Thread, after: Thread) -> None:
     """
-    Un hilo fue archivado. Si es uno de las partidas de ahorcado, lo elimina.
+    Un hilo fue actualizado. Si esta actualización fue que el hilo en
+    cuestión fue archivado, y si es uno de las partidas de ahorcado,
+    lo elimina.
     """
 
     partida = bot.encontrar_partida(str(after.id))
