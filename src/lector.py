@@ -170,7 +170,7 @@ async def on_guild_join(guild: Guild) -> None:
     El bot se conectó por primera vez a un servidor.
     """
 
-    print(f"[ {str(datetime.now)} ] El bot se conectó a '{guild.name}'")
+    print(f"[ {str(datetime.now())} ] El bot se conectó a '{guild.name}'")
 
     dic_prefijos = archivos.cargar_pares_valores(custom_bot.PREFIXES_FILE)
     dic_prefijos[str(guild.id)] = custom_bot.DEFAULT_PREFIX
