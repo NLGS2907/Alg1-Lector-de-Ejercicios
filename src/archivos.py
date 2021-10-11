@@ -1,7 +1,6 @@
 from csv import reader
 from os import listdir
 from os.path import isfile, isdir, join, splitext
-from typing import Union
 
 EXT = ".txt"
 """
@@ -16,7 +15,7 @@ Dirección (relativa) de la carpeta de guías.
 
 DiccionarioPares = dict[str, str]
 
-DiccionarioGuia = dict[str, Union[str, dict[str, str]]]
+DiccionarioGuia = dict[str, str | dict[str, str]]
 
 class GuiaNoEncontrada(Exception):
     """

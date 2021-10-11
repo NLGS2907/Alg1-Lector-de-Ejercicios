@@ -4,7 +4,7 @@ Módulo dedicado a contener al comportamiento del bot.
 
 from typing import Optional
 from random import choice
-from datetime import date, datetime
+from datetime import datetime
 
 from discord import Thread, Guild
 from discord.ext.commands import Context, check
@@ -266,28 +266,30 @@ async def ejercicio_al_azar(ctx, unidad_posible: Optional[str]=None, sentido: st
     unidad_elegida = ''
     ejercicio_elegido = ''
 
-    if sentido == '=':
+    match sentido:
 
-        unidad_elegida = unidad_pivote
-        ejercicio_elegido = choice([ej for ej in guia[unidad_pivote].keys()])
+        case '=':
 
-    elif sentido == '<':
+            unidad_elegida = unidad_pivote
+            ejercicio_elegido = choice([ej for ej in guia[unidad_pivote].keys()])
 
-        expresion_busqueda = (lambda u: u < int(unidad_pivote))
+        case '<':
 
-    elif sentido == "<=":
+            expresion_busqueda = (lambda u: u < int(unidad_pivote))
 
-        expresion_busqueda = (lambda u: u <= int(unidad_pivote))
+        case "<=":
 
-    elif sentido == '>':
+            expresion_busqueda = (lambda u: u <= int(unidad_pivote))
 
-        expresion_busqueda = (lambda u: u > int(unidad_pivote))
+        case '>':
 
-    elif sentido == ">=":
+            expresion_busqueda = (lambda u: u > int(unidad_pivote))
 
-        expresion_busqueda = (lambda u: u >= int(unidad_pivote))
+        case ">=":
 
-    else: return
+            expresion_busqueda = (lambda u: u >= int(unidad_pivote))
+
+        case _: return
 
     if expresion_busqueda:
 
