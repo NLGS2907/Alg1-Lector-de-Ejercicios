@@ -293,7 +293,9 @@ async def ejercicio_al_azar(ctx, unidad_posible: Optional[str]=None, sentido: st
 
     if expresion_busqueda:
 
-        unidad_elegida = choice([unidad for unidad in guia.keys() if expresion_busqueda(int(unidad))])
+        print([unidad for unidad in guia.keys()])
+
+        unidad_elegida = choice([unidad for unidad in list(guia.keys())[1:] if expresion_busqueda(int(unidad))])
     
     ejercicio_elegido = choice([ej for ej in guia[unidad_elegida].keys()])
 
