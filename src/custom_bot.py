@@ -173,7 +173,7 @@ class CustomBot(commands.Bot):
 
         if es_victoria:
 
-            await ctx.channel.parent.send(f"Resultado de partida `{ctx.channel.name}`: **[VICTORIA]**\n\n¡{ctx.author.mention} se hizo con la victoria con la letra `{ultimo_caracter}`, y con {partida_terminada.intentos} vida{'' if es_una_vida else 's'} de sobra! En efecto, la frase era `{frase_magica}`.")
+            await ctx.channel.parent.send(f"Resultado de partida `{ctx.channel.name}`: **[VICTORIA]**\n\n¡{ctx.author.mention} se hizo con la victoria con la letra `{ultimo_caracter}`, y con `{partida_terminada.intentos}` vida{'' if es_una_vida else 's'} de sobra! En efecto, la frase era `{frase_magica}`.")
 
         else:
 

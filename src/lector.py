@@ -22,7 +22,7 @@ ROL_DIEGO_ID = 653341579389435927
 
 ROL_DOCENTE_ID = 653341523886342145
 
-INFO_MESSAGE_1 = """>>> **Lector de Ejercicios - Instrucciones**
+INFO_MESSAGE_1 = """>>> **- Lector de Ejercicios -**
 
 Versión de la guía para este servidor: `{version}`
 
