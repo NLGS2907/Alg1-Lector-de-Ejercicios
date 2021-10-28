@@ -7,7 +7,7 @@ from random import choice
 from datetime import datetime
 
 from discord import Thread, Guild
-from discord.ext.commands import Context, check
+from discord.ext.commands import Context, check, is_owner
 from discord.message import Message
 
 import custom_bot, archivos
@@ -414,3 +414,12 @@ async def limpiar_mensajes(ctx: Context, limite: int=10, *opciones) -> None:
     eliminados = await ctx.channel.purge(limit=limite + 1, check=funcion_check)
 
     print(f"[ {str(datetime.now())} ] [AVISO] {len(eliminados)} mensajes fueron eliminados de #{ctx.channel.name} en {ctx.guild.name}")
+
+@bot.command(name="shutdown", aliases=["logout", "exit"], help="Apaga el bot.")
+@is_owner()
+async def shutdown(ctx: Context) -> None:
+    """
+    Apaga el bot y mata el proceso del cliente que lo corre.
+    """
+
+    await ctx.bot.logout()
