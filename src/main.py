@@ -10,7 +10,7 @@ Enlace para invitar bot: https://discord.com/api/oauth2/authorize?client_id=8893
 Repositorio: https://github.com/NLGS2907/Alg1-Lector-de-Ejercicios
 """
 
-__version__ = "v1.0.1"
+__version__ = "1.0.2"
 
 import os
 
@@ -26,6 +26,7 @@ def main():
     bot.run(TOKEN)
 
     return 0
+
 
 if __name__ == "__main__":
 

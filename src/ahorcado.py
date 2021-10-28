@@ -20,7 +20,7 @@ class LetraAhorcado:
     def __str__(self):
         """
         Muestra la letra con su valor y si está oculta o no.
-        Está pensado apra fines de Debug.
+        Está pensado para fines de Debug.
         """
 
         return f"Valor: {self.valor} | Oculta: {self._oculta}"
@@ -39,7 +39,7 @@ class LetraAhorcado:
         La letra, una vez descubierta, no debe poderse volver a cubrir.
         """
 
-        if nuevo_valor == False:
+        if not nuevo_valor:
 
             self._oculta = nuevo_valor
 
@@ -57,7 +57,7 @@ class Ahorcado:
         self.maximos_intentos = opciones.get("vidas_maximas", 7)
         self.intentos = self.maximos_intentos
 
-        self.display_id = 0 # Es inicializado después con el primer pensaje
+        self.display_id = 0  # Es inicializado después con el primer mensaje
 
         self.caracteres_usados = list()
 
@@ -109,7 +109,7 @@ class Ahorcado:
 
         self.display_id = display_id
 
-    def termino_juego(self) -> tuple[bool]:
+    def termino_juego(self) -> tuple[bool, bool]:
         """
         Determina si la partida ha terminado, y si fue una victoria o derrota.
         """

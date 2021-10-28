@@ -6,7 +6,8 @@ from discord.ext import commands
 
 from datetime import datetime
 
-import ahorcado, archivos
+import ahorcado
+import archivos
 
 DEFAULT_PREFIX = '!'
 """
@@ -90,10 +91,10 @@ class CustomBot(commands.Bot):
         hilo = await ctx.message.create_thread(name=f"AHORCADO - Partida {datetime.now()}", auto_archive_duration=60)
         frase_a_usar = None
 
-        spoilertag = "||" # Por si el usuario la declaró con spolertags
+        spoilertag = "||"  # Por si el usuario la declaró con spoilertags
         frase = ' '.join(' '.join(palabras).replace(spoilertag, '').split()).upper()
 
-        if frase: # El usuario indicó una  con la que jugar
+        if frase:  # El usuario indicó una  con la que jugar
 
             frase_a_usar = frase
 
@@ -102,7 +103,7 @@ class CustomBot(commands.Bot):
         mensaje = await hilo.send(partida)
         partida.definir_display(mensaje.id)
 
-    def encontrar_partida(self, id: str) -> Optional[ahorcado.Ahorcado]:
+    def encontrar_partida(self, id_a_encontrar: str) -> Optional[ahorcado.Ahorcado]:
         """
         Si la encuentra dentro del diccionario de partidas, devuelve la partida
         que corresponde al ID pasado.
@@ -112,7 +113,7 @@ class CustomBot(commands.Bot):
 
         for id_partida in self.partidas:
 
-            if str(id) == id_partida:
+            if str(id_a_encontrar) == id_partida:
 
                 partida = self.partidas[id_partida]
                 break
@@ -130,7 +131,7 @@ class CustomBot(commands.Bot):
 
         partida = self.encontrar_partida(str(ctx.channel.id))
 
-        if any((not partida, partida.intentos <= 0, not len(char) == 1)): # 'letra' debe ser, efectivamente, uan cadena de un solo caracter
+        if any((not partida, partida.intentos <= 0, not len(char) == 1)):  # 'letra' debe ser, efectivamente, uan cadena de un solo caracter
 
             return
 
@@ -159,7 +160,7 @@ class CustomBot(commands.Bot):
         partida.caracteres_usados.append(char)
 
         mensaje = await ctx.channel.fetch_message(partida.display_id)
-        await mensaje.edit(partida)
+        await mensaje.edit(str(partida))
 
     async def fin_del_juego(self, ctx: commands.Context, es_victoria: bool) -> None:
         """

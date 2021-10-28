@@ -7,6 +7,10 @@ de la Facultad de Ingeniería de la UBA, aunque puede utilizarse para cualquier 
 
 <hr/>
 
+### ⋆ [Changelog] Nuevo en v1.0.2
+
+* **Mejorado un poco el código.** Ahora el cuerpo del código sigue mejor las convenciones de python.
+* **Agregadas** algunas que otras palabras nuevas que pueden tocar en el ahorcado.
 ### ⋆ [Changelog] Nuevo en v1.0.1
 
 * **Agregado comando `clear`** para limpiar mensajes del bot.

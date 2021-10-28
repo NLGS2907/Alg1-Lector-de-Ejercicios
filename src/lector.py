@@ -7,10 +7,11 @@ from random import choice
 from datetime import datetime
 
 from discord import Thread, Guild
-from discord.ext.commands import Context, check, is_owner
+from discord.ext.commands import Context, check
 from discord.message import Message
 
-import custom_bot, archivos
+import custom_bot
+import archivos
 
 ALGORITMOS_ESSAYA_ID = 653341065767550976
 """
@@ -22,7 +23,7 @@ ROL_DIEGO_ID = 653341579389435927
 
 ROL_DOCENTE_ID = 653341523886342145
 
-INFO_MESSAGE_1 = """>>> **- Lector de Ejercicios -**
+INFO_MESSAGE_1 = """>>> **- Lector de Ejercicios (v{version_bot}) -**
 
 Versión de la guía para este servidor: `{version}`
 
@@ -59,7 +60,7 @@ que verificar (no los que serán borrados, aunque puede ser el caso). 'full' eli
 si no también los de todos los usuarios que invocan sus comandos.
 
 
-*desarrolado por Franco 'NLGS' Lighterman.*
+*desarrollado por Franco 'NLGS' Lighterman.*
 Repositorio: *https://github.com/NLGS2907/Alg1-Lector-de-Ejercicios*
 """
 
@@ -90,13 +91,13 @@ def existe_ejercicio(ejercicio: str, unidad: str, guia: archivos.DiccionarioGuia
 
     return ejercicio in [ej for ej in guia[unidad].keys()]
 
-def encontrar_meme(id: str, memes: list[str]=EASTER_EGGS) -> str:
+def encontrar_meme(id_meme: str, memes: list[str]=EASTER_EGGS) -> str:
     """
     Verifica si una imagen con un 'id' dado se encuentra entre las imágenes
     disponibles. De ser así, le agrega también al link la extensión correspondiente.
     """
 
-    link_sin_tipo = f"https://i.imgur.com/{id}"
+    link_sin_tipo = f"https://i.imgur.com/{id_meme}"
     tiene_extension = (lambda ext, img: f"{link_sin_tipo}.{ext}" == img)
 
     for meme in memes:
@@ -226,16 +227,17 @@ async def mostrar_info(ctx: Context, *opciones):
     Muestra una lista con los comandos y lo que hace cada uno.
     """
 
+    version_del_bot = "1.0.2"
     version_guia = bot.guias[str(ctx.guild.id)]["version"]
 
     if "dm" in opciones:
 
-        await mandar_dm(ctx, INFO_MESSAGE_1.format(version=version_guia, prefix=ctx.prefix))
+        await mandar_dm(ctx, INFO_MESSAGE_1.format(version_bot=version_del_bot, version=version_guia, prefix=ctx.prefix))
         await mandar_dm(ctx, INFO_MESSAGE_2.format(prefix=ctx.prefix))
 
     else:
 
-        await ctx.channel.send(INFO_MESSAGE_1.format(version=version_guia, prefix=ctx.prefix))
+        await ctx.channel.send(INFO_MESSAGE_1.format(version_bot=version_del_bot, version=version_guia, prefix=ctx.prefix))
         await ctx.channel.send(INFO_MESSAGE_2.format(prefix=ctx.prefix))
 
 @bot.command(name="random", aliases=["aleatorio", 'r'], help="Muestra un ejercicio aleatorio de la guía.")
@@ -317,7 +319,7 @@ async def cambiar_prefijo(ctx: Context, nuevo_prefijo: str) -> None:
 
     await ctx.channel.send(f"**[AVISO]** El prefijo de los comandos fue cambiado de `{prefijo_viejo}` a `{nuevo_prefijo}` exitosamente.", delete_after=30)
 
-@bot.command(name="guia", aliases = ["version"], help="Cambia la versión de la guía.")
+@bot.command(name="guia", aliases=["version"], help="Cambia la versión de la guía.")
 @check(es_rol_valido)
 async def cambiar_version_guia(ctx: Context, nueva_version: str) -> None:
     """
@@ -341,14 +343,14 @@ async def cambiar_version_guia(ctx: Context, nueva_version: str) -> None:
         await ctx.channel.send(f"**[AVISO]** La versión de la guía fue cambiada de `{version_vieja}` a `{nueva_version}` exitosamente.", delete_after=30)
 
 @bot.command(name="meme", help="Para los curiosos aburridos.")
-async def mostrar_meme(ctx: Context, id: Optional[str]=None, *opciones) -> None:
+async def mostrar_meme(ctx: Context, id_meme: Optional[str]=None, *opciones) -> None:
     """
     Muestra una línea al azar del archivo de easter eggs.
     """
 
-    meme = (encontrar_meme(id) if id else choice(EASTER_EGGS))
+    meme = (encontrar_meme(id_meme) if id_meme else choice(EASTER_EGGS))
 
-    if "dm" in opciones or id == "dm":
+    if "dm" in opciones or id_meme == "dm":
 
         await mandar_dm(ctx, meme)
 
@@ -396,7 +398,7 @@ async def mostrar_juego(ctx: Context) -> None:
 
         return
 
-    nuevo_display = await ctx.channel.send(partida)
+    nuevo_display = await ctx.channel.send(str(partida))
     partida.definir_display(nuevo_display.id)
 
 @bot.command(name="clear", aliases=["clean", "cls"], help="Limpia el canal de mensajes del bot.")
@@ -414,12 +416,3 @@ async def limpiar_mensajes(ctx: Context, limite: int=10, *opciones) -> None:
     eliminados = await ctx.channel.purge(limit=limite + 1, check=funcion_check)
 
     print(f"[ {str(datetime.now())} ] [AVISO] {len(eliminados)} mensajes fueron eliminados de #{ctx.channel.name} en {ctx.guild.name}")
-
-@bot.command(name="shutdown", aliases=["logout", "exit"], help="Apaga el bot.")
-@is_owner()
-async def shutdown(ctx: Context) -> None:
-    """
-    Apaga el bot y mata el proceso del cliente que lo corre.
-    """
-
-    await ctx.bot.logout()
