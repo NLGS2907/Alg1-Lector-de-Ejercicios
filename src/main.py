@@ -10,8 +10,6 @@ Enlace para invitar bot: https://discord.com/api/oauth2/authorize?client_id=8893
 Repositorio: https://github.com/NLGS2907/Alg1-Lector-de-Ejercicios
 """
 
-__version__ = "1.0.2"
-
 import os
 
 from dotenv import load_dotenv

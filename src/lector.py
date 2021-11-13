@@ -6,7 +6,7 @@ from typing import Optional
 from random import choice
 from datetime import datetime
 
-from discord import Thread, Guild
+from discord import Thread, Guild, Game
 from discord.ext.commands import Context, check
 from discord.message import Message
 
@@ -80,16 +80,64 @@ def existe_unidad(unidad: str, guia: archivos.DiccionarioGuia) -> bool:
 
     return unidad in [parte for parte in guia.keys()]
 
-def existe_ejercicio(ejercicio: str, unidad: str, guia: archivos.DiccionarioGuia) -> bool:
+def existe_ejercicio(ejercicio: str, unidad: str, guia: archivos.DiccionarioGuia) -> tuple[bool, bool]:
     """
     Verifica si un determinado ejercicio existe en una determinada unidad.
+
+    Devuelve uan tupla donde el primer elemento indica si existe la unidad
+    especificada, mientras que el segundo especifica si existe el ejercicio
+    especificado. Si no existe la unidad, tampoco el ejercicio.
     """
 
     if not existe_unidad(unidad, guia):
 
+        return False, False
+
+    return True, ejercicio in [ej for ej in guia[unidad].keys()]
+
+async def mostrar_unidad_y_ejercicio_validos(ctx: Context, unidad: Optional[str]=None, ejercicio: Optional[str]=None) -> bool:
+    """
+    Muestra por pantalla errores que le indican al usuario si los valores
+    ingresados para la unidad y el ejercicio son inválidos.
+    """
+
+    guia = bot.guias[str(ctx.guild.id)]
+
+    unidad_existe, ej_existe = existe_ejercicio(ejercicio, unidad, guia)
+
+    if not unidad_existe:
+
+        unidades = " - ".join([f"`{u}`" for u in guia.keys()][1:])
+
+        if unidad is None:
+
+            await ctx.channel.send(
+                f"**[ERROR]** Por favor, ingrese el número de guía y el de ejercicio de esta forma:\n\n`{ctx.prefix}ej <unidad> <ejercicio>`")
+
+        else:
+
+            await ctx.channel.send(
+                f"**[ERROR]** El número de unidad `{unidad}` no es válido. Los valores aceptados son:\n\n{unidades}")
+
         return False
 
-    return ejercicio in [ej for ej in guia[unidad].keys()]
+    elif not ej_existe:
+
+        ejercicios = " - ".join([f"`{e}`" for e in guia[unidad].keys()][1:])
+
+        if ejercicio is None:
+
+            await ctx.channel.send(
+                f"Los números de ejercicios disponibles para la unidad `{unidad}` son:\n\n{ejercicios}")
+
+        else:
+
+            await ctx.channel.send(
+                f"**[ERROR]** El número de ejercicio `{ejercicio}` no es válido. Los valores aceptados son:\n\n{ejercicios}")
+
+        return False
+
+    return True
 
 def encontrar_meme(id_meme: str, memes: list[str]=EASTER_EGGS) -> str:
     """
@@ -109,7 +157,9 @@ def encontrar_meme(id_meme: str, memes: list[str]=EASTER_EGGS) -> str:
     return choice(memes)
 
 
-bot = custom_bot.CustomBot()
+actividad_bot = Game(name="!info")
+
+bot = custom_bot.CustomBot(actividad=actividad_bot)
 """
 El objeto de tipo 'Bot' que maneja todo el comportamiento.
 """
@@ -202,11 +252,11 @@ async def on_thread_update(before: Thread, after: Thread) -> None:
         await after.delete()
 
 @bot.command(name="ej", aliases=["ejercicio", "enunciado"], help="Muestra ejercicios de la guía.")
-async def leer_ejercicio(ctx, unidad: str, ejercicio: str, *opciones) -> None:
+async def leer_ejercicio(ctx, unidad: Optional[str]=None, ejercicio: Optional[str]=None, *opciones) -> None:
 
     guia = bot.guias[str(ctx.guild.id)]
 
-    if not existe_ejercicio(ejercicio, unidad, guia):
+    if not await mostrar_unidad_y_ejercicio_validos(ctx, unidad, ejercicio):
 
         return
 
@@ -227,17 +277,16 @@ async def mostrar_info(ctx: Context, *opciones):
     Muestra una lista con los comandos y lo que hace cada uno.
     """
 
-    version_del_bot = "1.0.2"
     version_guia = bot.guias[str(ctx.guild.id)]["version"]
 
     if "dm" in opciones:
 
-        await mandar_dm(ctx, INFO_MESSAGE_1.format(version_bot=version_del_bot, version=version_guia, prefix=ctx.prefix))
+        await mandar_dm(ctx, INFO_MESSAGE_1.format(version_bot=bot.version, version=version_guia, prefix=ctx.prefix))
         await mandar_dm(ctx, INFO_MESSAGE_2.format(prefix=ctx.prefix))
 
     else:
 
-        await ctx.channel.send(INFO_MESSAGE_1.format(version_bot=version_del_bot, version=version_guia, prefix=ctx.prefix))
+        await ctx.channel.send(INFO_MESSAGE_1.format(version_bot=bot.version, version=version_guia, prefix=ctx.prefix))
         await ctx.channel.send(INFO_MESSAGE_2.format(prefix=ctx.prefix))
 
 @bot.command(name="random", aliases=["aleatorio", 'r'], help="Muestra un ejercicio aleatorio de la guía.")
@@ -301,7 +350,7 @@ async def ejercicio_al_azar(ctx, unidad_posible: Optional[str]=None, sentido: st
 
     await leer_ejercicio(ctx, unidad_elegida, ejercicio_elegido, ("dm" if ("dm" in opciones) else ''))
 
-@bot.command(name="prefix", aliases=["prefijo"], help="Cambia el prefijo de los comandos.")
+@bot.command(name="prefix", aliases=["prefijo", "pfx", "px"], help="Cambia el prefijo de los comandos.")
 @check(es_rol_valido)
 async def cambiar_prefijo(ctx: Context, nuevo_prefijo: str) -> None:
     """
@@ -319,7 +368,7 @@ async def cambiar_prefijo(ctx: Context, nuevo_prefijo: str) -> None:
 
     await ctx.channel.send(f"**[AVISO]** El prefijo de los comandos fue cambiado de `{prefijo_viejo}` a `{nuevo_prefijo}` exitosamente.", delete_after=30)
 
-@bot.command(name="guia", aliases=["version"], help="Cambia la versión de la guía.")
+@bot.command(name="guia", aliases=["guia_version", "gver"], help="Cambia la versión de la guía.")
 @check(es_rol_valido)
 async def cambiar_version_guia(ctx: Context, nueva_version: str) -> None:
     """
@@ -416,3 +465,19 @@ async def limpiar_mensajes(ctx: Context, limite: int=10, *opciones) -> None:
     eliminados = await ctx.channel.purge(limit=limite + 1, check=funcion_check)
 
     print(f"[ {str(datetime.now())} ] [AVISO] {len(eliminados)} mensajes fueron eliminados de #{ctx.channel.name} en {ctx.guild.name}")
+
+@bot.command(name="version", aliases=["ver"], help="Muestra la versión del bot.")
+async def mostrar_version(ctx: Context, *opciones) -> None:
+    """
+    Muestra en el chat la versión actual del bot.
+    """
+
+    mensaje = f"Mi versión actual es la `{bot.version}`"
+
+    if "dm" in opciones:
+
+        await mandar_dm(ctx, mensaje)
+
+    else:
+
+        await ctx.channel.send(mensaje)

@@ -9,6 +9,14 @@ from datetime import datetime
 import ahorcado
 import archivos
 
+BOT_VERSION = "1.0.3"
+"""
+La versión del bot a ser usada.
+
+Esto es más bien una convención a ser usada para llevar control
+sobre el desarrollo del bot.
+"""
+
 DEFAULT_PREFIX = '!'
 """
 El prefijo por defecto que los servidores a los que se una el bot
@@ -74,7 +82,9 @@ class CustomBot(commands.Bot):
         Crea una instancia de tipo 'CustomBot'.
         """
 
-        super().__init__(cmd_prefix, options=opciones)
+        super().__init__(cmd_prefix, activity=opciones.get("actividad", "nada"), options=opciones)
+
+        self.version = BOT_VERSION
 
         self.guias = definir_guias()
         """

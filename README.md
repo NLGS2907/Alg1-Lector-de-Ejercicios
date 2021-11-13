@@ -1,21 +1,27 @@
 # Lector de Ejercicios
 
-Este bot de discord está pensado para usarse únicamente en el discord de la materia Algoritmos y Programación I,
+Este bot de discord está pensado para usarse principalmente en el discord de la materia Algoritmos y Programación I,
 de la Facultad de Ingeniería de la UBA, aunque puede utilizarse para cualquier servidor que lo quiera.
 
 **Enlace de Invitación:** [Aquí](https://discord.com/api/oauth2/authorize?client_id=889312376036425810&permissions=292057984064&scope=bot)
 
 <hr/>
 
-### ⋆ [Changelog] Nuevo en v1.0.2
+### ⋆ [ v1.0.3 ]
+
+* **Agregado una actividad `!info`** en el estado del bot.
+
+* **Agregados nuevos mensajes de error** para excepciones del comando `ej`.
+
+### ⋆ [ v1.0.2 ]
 
 * **Mejorado un poco el código.** Ahora el cuerpo del código sigue mejor las convenciones de python.
 * **Agregadas** algunas que otras palabras nuevas que pueden tocar en el ahorcado.
-### ⋆ [Changelog] Nuevo en v1.0.1
+### ⋆ [ v1.0.1 ]
 
 * **Agregado comando `clear`** para limpiar mensajes del bot.
 
-### ⋆ [Changelog] Nuevo en v1.0.0
+### ⋆ [ v1.0.0 ]
 
 * Ahora el bot proviene de una clase `CustomBot` que sobrecarga a la clase de Discord `commands.Bot`. Esto es para contener información persistente, pero los
   comandos siguen siendo definidos mediante decoradores.
