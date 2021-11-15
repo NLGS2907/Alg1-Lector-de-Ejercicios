@@ -16,10 +16,18 @@ import archivos
 # Para que no tire error en Windows al cerrar el Bot.
 
 from platform import system
-from asyncio import set_event_loop_policy, WindowsSelectorEventLoopPolicy
+from asyncio import set_event_loop_policy
 
-if system() == "Windows":
-	set_event_loop_policy(WindowsSelectorEventLoopPolicy())
+try:
+
+    from asyncio import WindowsSelectorEventLoopPolicy
+
+    if system() == "Windows":
+        set_event_loop_policy(WindowsSelectorEventLoopPolicy())
+
+except ImportError:
+
+    log.warning("No se pudo importar 'WindowsSelectorEventLoopPolicy', probablemente porque esto no es Windows.")
 
 ALGORITMOS_ESSAYA_ID = 653341065767550976
 """
@@ -527,7 +535,7 @@ async def mostrar_version(ctx: Context, *opciones) -> None:
         await ctx.channel.send(mensaje)
 
 
-@bot.command(name="shutdown", aliases=["exit", "quit", "salir"], help="Apaga el bot. Uso exclusivo del dev.")
+@bot.command(name="shutdown", aliases=["shut", "exit", "quit", "salir"], help="Apaga el bot. Uso exclusivo del dev.")
 @is_owner()
 async def shutdown(ctx: Context) -> None:
     """
