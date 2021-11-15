@@ -7,6 +7,14 @@ de la Facultad de Ingeniería de la UBA, aunque puede utilizarse para cualquier 
 
 <hr/>
 
+### ⋆ [ v1.0.4 ]
+
+Esta versión tiene más que nada mantenimiento y mejoras internas:
+
+* **Mejorada la forma de registrar eventos.** Ahora hace uso del módulo `logging` para registrar eventos en la ejecución del bot.
+
+* **Nuevo archivo** `lector.log` para guardar dichos registros.
+
 ### ⋆ [ v1.0.3 ]
 
 * **Agregado una actividad `!info`** en el estado del bot.

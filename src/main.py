@@ -10,18 +10,20 @@ Enlace para invitar bot: https://discord.com/api/oauth2/authorize?client_id=8893
 Repositorio: https://github.com/NLGS2907/Alg1-Lector-de-Ejercicios
 """
 
-import os
-
 from dotenv import load_dotenv
 load_dotenv()
 
-from lector import bot
+from os import getenv
 
-TOKEN = os.getenv("DISCORD_TOKEN")
+TOKEN = getenv("DISCORD_TOKEN")
+
+from lector import bot, log
 
 def main():
 
     bot.run(TOKEN)
+
+    log.info(f"{bot.user} se desconectó satisfactoriamente.\n")
 
     return 0
 

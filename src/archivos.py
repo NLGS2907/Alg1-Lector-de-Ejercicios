@@ -17,12 +17,14 @@ DiccionarioPares = dict[str, str]
 
 DiccionarioGuia = dict[str, str | dict[str, str]]
 
+
 class GuiaNoEncontrada(Exception):
     """
     Pequeña clase para definir un error de guía no encontrada.
     """
 
     pass
+
 
 def archivos_guia(version: str, carpeta: str) -> list[str]:
     """
@@ -34,12 +36,14 @@ def archivos_guia(version: str, carpeta: str) -> list[str]:
     version_path = join(carpeta, version)
     return [u for u in listdir(version_path) if (isfile(join(version_path, u)) and splitext(join(version_path, u))[1] == EXT)]
 
+
 def lista_versiones(carpeta: str=GUIA_PATH):
     """
     Devuelve una lista de todas las versiones válidas que se encuentran
     en el directorio de guías.
     """
     return [ver for ver in listdir(carpeta) if isdir(join(carpeta, ver))]
+
 
 def version_es_valida(version: str, carpeta: str=GUIA_PATH):
     """
@@ -48,6 +52,7 @@ def version_es_valida(version: str, carpeta: str=GUIA_PATH):
     """
 
     return version in lista_versiones(carpeta)
+
 
 def cargar_guia(version: str, carpeta: str=GUIA_PATH) -> DiccionarioGuia:
     """
@@ -111,6 +116,7 @@ def cargar_guia(version: str, carpeta: str=GUIA_PATH) -> DiccionarioGuia:
 
     return guia
 
+
 def cargar_lineas(nombre_archivo: str) -> list[str]:
     """
     Devuelve una lista de las lineas de un archivo que tiene solo
@@ -126,6 +132,7 @@ def cargar_lineas(nombre_archivo: str) -> list[str]:
             lineas.append(linea.rstrip())
 
     return lineas
+
 
 def cargar_pares_valores(nombre_archivo: str) -> DiccionarioPares:
     """
@@ -144,6 +151,7 @@ def cargar_pares_valores(nombre_archivo: str) -> DiccionarioPares:
             dic_pares_valores[clave] = valor
 
     return dic_pares_valores
+
 
 def guardar_pares_valores(dic_pares_valores: DiccionarioPares, nombre_archivo: str) -> None:
     """

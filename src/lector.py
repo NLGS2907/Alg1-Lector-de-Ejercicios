@@ -4,14 +4,22 @@ Módulo dedicado a contener al comportamiento del bot.
 
 from typing import Optional
 from random import choice
-from datetime import datetime
 
 from discord import Thread, Guild, Game
-from discord.ext.commands import Context, check
+from discord.ext.commands import Context, check, is_owner
 from discord.message import Message
 
 import custom_bot
+from custom_bot import log
 import archivos
+
+# Para que no tire error en Windows al cerrar el Bot.
+
+from platform import system
+from asyncio import set_event_loop_policy, WindowsSelectorEventLoopPolicy
+
+if system() == "Windows":
+	set_event_loop_policy(WindowsSelectorEventLoopPolicy())
 
 ALGORITMOS_ESSAYA_ID = 653341065767550976
 """
@@ -80,6 +88,7 @@ def existe_unidad(unidad: str, guia: archivos.DiccionarioGuia) -> bool:
 
     return unidad in [parte for parte in guia.keys()]
 
+
 def existe_ejercicio(ejercicio: str, unidad: str, guia: archivos.DiccionarioGuia) -> tuple[bool, bool]:
     """
     Verifica si un determinado ejercicio existe en una determinada unidad.
@@ -94,6 +103,7 @@ def existe_ejercicio(ejercicio: str, unidad: str, guia: archivos.DiccionarioGuia
         return False, False
 
     return True, ejercicio in [ej for ej in guia[unidad].keys()]
+
 
 async def mostrar_unidad_y_ejercicio_validos(ctx: Context, unidad: Optional[str]=None, ejercicio: Optional[str]=None) -> bool:
     """
@@ -139,6 +149,7 @@ async def mostrar_unidad_y_ejercicio_validos(ctx: Context, unidad: Optional[str]
 
     return True
 
+
 def encontrar_meme(id_meme: str, memes: list[str]=EASTER_EGGS) -> str:
     """
     Verifica si una imagen con un 'id' dado se encuentra entre las imágenes
@@ -164,7 +175,6 @@ bot = custom_bot.CustomBot(actividad=actividad_bot)
 El objeto de tipo 'Bot' que maneja todo el comportamiento.
 """
 
-
 def es_rol_valido(ctx: Context) -> bool:
     """
     Verifica si está en el servidor del curso, y si es así,
@@ -174,6 +184,7 @@ def es_rol_valido(ctx: Context) -> bool:
     return not all((ctx.guild.id == ALGORITMOS_ESSAYA_ID,
                    all([role.id not in (ROL_DIEGO_ID, ROL_DOCENTE_ID) for role in ctx.author.roles])))
 
+
 def es_ultimo_mensaje(msg: Message) -> bool:
     """
     Verifica que el mensaje a procesar no sea el
@@ -181,6 +192,7 @@ def es_ultimo_mensaje(msg: Message) -> bool:
     """
 
     return msg == msg.channel.last_message
+
 
 def es_mensaje_de_bot(msg: Message) -> bool:
     """
@@ -190,6 +202,7 @@ def es_mensaje_de_bot(msg: Message) -> bool:
 
     return not es_ultimo_mensaje(msg) and msg.author == bot.user
 
+
 def es_mensaje_comando(msg: Message) -> bool:
     """
     Verifica si un mensaje escrito por un usuario o
@@ -198,13 +211,31 @@ def es_mensaje_comando(msg: Message) -> bool:
 
     return (not es_ultimo_mensaje(msg) and msg.content.startswith(custom_bot.get_prefijo(bot, msg))) or es_mensaje_de_bot(msg)
 
+
 @bot.event
 async def on_ready() -> None:
     """
     El bot se conectó y está listo para usarse.
     """
 
-    print(f"[ {str(datetime.now())} ] ¡{bot.user} conectado y listo para utilizarse!")
+    log.info(f"¡{bot.user} conectado y listo para utilizarse!")
+
+@bot.event
+async def on_command(ctx: Context):
+    """
+    El usuario está tratando de invocar un comando.
+    """
+
+    log.info(f"El usuario {ctx.author} está tratando de invocar '{ctx.prefix}{ctx.command}' en el canal '#{ctx.channel.name}' del server '{ctx.guild.name}' mediante el mensaje '{ctx.message.content}'")
+
+@bot.event
+async def on_command_completion(ctx: Context):
+    """
+    El usuario ejecutó el comando satisfactoriamente.
+    """
+
+    log.info(f"{ctx.author} ha invocado '{ctx.prefix}{ctx.command}' satisfactoriamente.")
+
 
 async def mandar_dm(ctx: Context, mensaje: str) -> None:
     """
@@ -215,13 +246,14 @@ async def mandar_dm(ctx: Context, mensaje: str) -> None:
     await ctx.author.dm_channel.send(mensaje)
     await ctx.message.delete()
 
+
 @bot.event
 async def on_guild_join(guild: Guild) -> None:
     """
     El bot se conectó por primera vez a un servidor.
     """
 
-    print(f"[ {str(datetime.now())} ] El bot se conectó a '{guild.name}'")
+    log.info(f"El bot se conectó a '{guild.name}'")
 
     dic_prefijos = archivos.cargar_pares_valores(custom_bot.PREFIXES_FILE)
     dic_prefijos[str(guild.id)] = custom_bot.DEFAULT_PREFIX
@@ -234,6 +266,7 @@ async def on_guild_join(guild: Guild) -> None:
     archivos.guardar_pares_valores(dic_versiones, custom_bot.VERSIONS_FILE)
 
     bot.guias = custom_bot.definir_guias()
+
 
 @bot.event
 async def on_thread_update(before: Thread, after: Thread) -> None:
@@ -250,6 +283,7 @@ async def on_thread_update(before: Thread, after: Thread) -> None:
         bot.partidas.pop(str(after.id))
         await after.parent.send(f"**[AVISO]** Partida `{after.name}` fue eliminada al ser archivado (probablemente por la hora de inactividad).")
         await after.delete()
+
 
 @bot.command(name="ej", aliases=["ejercicio", "enunciado"], help="Muestra ejercicios de la guía.")
 async def leer_ejercicio(ctx, unidad: Optional[str]=None, ejercicio: Optional[str]=None, *opciones) -> None:
@@ -271,6 +305,7 @@ async def leer_ejercicio(ctx, unidad: Optional[str]=None, ejercicio: Optional[st
 
         await ctx.channel.send(mensaje)
 
+
 @bot.command(name="info", help="Muestra una lista de todos los comandos.")
 async def mostrar_info(ctx: Context, *opciones):
     """
@@ -288,6 +323,7 @@ async def mostrar_info(ctx: Context, *opciones):
 
         await ctx.channel.send(INFO_MESSAGE_1.format(version_bot=bot.version, version=version_guia, prefix=ctx.prefix))
         await ctx.channel.send(INFO_MESSAGE_2.format(prefix=ctx.prefix))
+
 
 @bot.command(name="random", aliases=["aleatorio", 'r'], help="Muestra un ejercicio aleatorio de la guía.")
 async def ejercicio_al_azar(ctx, unidad_posible: Optional[str]=None, sentido: str='=', *opciones) -> None:
@@ -350,6 +386,7 @@ async def ejercicio_al_azar(ctx, unidad_posible: Optional[str]=None, sentido: st
 
     await leer_ejercicio(ctx, unidad_elegida, ejercicio_elegido, ("dm" if ("dm" in opciones) else ''))
 
+
 @bot.command(name="prefix", aliases=["prefijo", "pfx", "px"], help="Cambia el prefijo de los comandos.")
 @check(es_rol_valido)
 async def cambiar_prefijo(ctx: Context, nuevo_prefijo: str) -> None:
@@ -367,6 +404,7 @@ async def cambiar_prefijo(ctx: Context, nuevo_prefijo: str) -> None:
     archivos.guardar_pares_valores(dic_prefijos, custom_bot.PREFIXES_FILE)
 
     await ctx.channel.send(f"**[AVISO]** El prefijo de los comandos fue cambiado de `{prefijo_viejo}` a `{nuevo_prefijo}` exitosamente.", delete_after=30)
+
 
 @bot.command(name="guia", aliases=["guia_version", "gver"], help="Cambia la versión de la guía.")
 @check(es_rol_valido)
@@ -391,6 +429,7 @@ async def cambiar_version_guia(ctx: Context, nueva_version: str) -> None:
 
         await ctx.channel.send(f"**[AVISO]** La versión de la guía fue cambiada de `{version_vieja}` a `{nueva_version}` exitosamente.", delete_after=30)
 
+
 @bot.command(name="meme", help="Para los curiosos aburridos.")
 async def mostrar_meme(ctx: Context, id_meme: Optional[str]=None, *opciones) -> None:
     """
@@ -407,6 +446,7 @@ async def mostrar_meme(ctx: Context, id_meme: Optional[str]=None, *opciones) -> 
 
         await ctx.channel.send(meme)
 
+
 # Comandos para ahorcado
 
 @bot.command(name="hanged", aliases=["ahorcado"], help="Interactúa con un juego de ahorcado.")
@@ -419,6 +459,7 @@ async def crear_sala(ctx: Context, vidas: str='7', *frase) -> None:
     if vidas.isdigit():
 
         await bot.hanged_create(ctx, int(vidas), *frase)
+
 
 @bot.command(name="guess", aliases=["adivinar"], help="Comando para adivinar una letra en el comando.")
 async def adivinar_letra(ctx: Context, letra: str=''):
@@ -433,6 +474,7 @@ async def adivinar_letra(ctx: Context, letra: str=''):
     if termino:
 
         await bot.fin_del_juego(ctx, es_victoria)
+
 
 @bot.command(name="display", aliases=["mostrar"], help="Muestra la pantalla del juego de ahorcado, por si es muy molesto scrollear.")
 async def mostrar_juego(ctx: Context) -> None:
@@ -450,6 +492,7 @@ async def mostrar_juego(ctx: Context) -> None:
     nuevo_display = await ctx.channel.send(str(partida))
     partida.definir_display(nuevo_display.id)
 
+
 @bot.command(name="clear", aliases=["clean", "cls"], help="Limpia el canal de mensajes del bot.")
 @check(es_rol_valido)
 async def limpiar_mensajes(ctx: Context, limite: int=10, *opciones) -> None:
@@ -464,7 +507,8 @@ async def limpiar_mensajes(ctx: Context, limite: int=10, *opciones) -> None:
     funcion_check = (es_mensaje_comando if "full" in opciones else es_mensaje_de_bot)
     eliminados = await ctx.channel.purge(limit=limite + 1, check=funcion_check)
 
-    print(f"[ {str(datetime.now())} ] [AVISO] {len(eliminados)} mensajes fueron eliminados de #{ctx.channel.name} en {ctx.guild.name}")
+    log.info(f"{len(eliminados)} mensajes fueron eliminados de '#{ctx.channel.name}' en '{ctx.guild.name}'")
+
 
 @bot.command(name="version", aliases=["ver"], help="Muestra la versión del bot.")
 async def mostrar_version(ctx: Context, *opciones) -> None:
@@ -481,3 +525,26 @@ async def mostrar_version(ctx: Context, *opciones) -> None:
     else:
 
         await ctx.channel.send(mensaje)
+
+
+@bot.command(name="shutdown", aliases=["exit", "quit", "salir"], help="Apaga el bot. Uso exclusivo del dev.")
+@is_owner()
+async def shutdown(ctx: Context) -> None:
+    """
+    Apaga el bot y lo desconecta.
+    """
+
+    await ctx.channel.send(f"**[AVISO]** Cerrando Bot...")
+
+    await ctx.bot.close()
+
+@bot.command(name="flush", aliases=["logclear"], help="Vacía el archivo de registro. Uso exclusivo del dev.")
+@is_owner()
+async def logflush(ctx: Context):
+    """
+    Vacía el contenido del archivo de registro.
+    """
+
+    with open(custom_bot.LOG_PATH, mode='w'):
+
+        await ctx.channel.send(f"**[AVISO]** Vaciando archivo en '{custom_bot.LOG_PATH}'...", delete_after=10)

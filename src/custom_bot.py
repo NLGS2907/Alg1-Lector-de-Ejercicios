@@ -5,11 +5,12 @@ from discord.guild import Guild
 from discord.ext import commands
 
 from datetime import datetime
+import logging
 
 import ahorcado
 import archivos
 
-BOT_VERSION = "1.0.3"
+BOT_VERSION = "1.0.4"
 """
 La versión del bot a ser usada.
 
@@ -32,6 +33,36 @@ PREFIXES_FILE = "src/prefixes.csv"
 
 VERSIONS_FILE = "src/versions.csv"
 
+LOG_PATH = "lector.log" # Esto es relativo al directorio raíz, no de la carpeta 'src'
+
+
+def nuevo_logger(nombre: str) -> logging.Logger:
+    """
+    Genera un nuevo registrador.
+    """
+
+    formato_mensaje = f"[ %(asctime)s ] - %(levelname)s - %(message)s"
+    formato_fecha = f"%d-%m-%Y %I:%M:%S %p"
+
+    formateador = logging.Formatter(fmt=formato_mensaje, datefmt=formato_fecha)
+
+    archivo_handler = logging.FileHandler(filename=LOG_PATH, encoding="utf-8")
+    archivo_handler.setFormatter(formateador)
+
+    consola_handler = logging.StreamHandler()
+    consola_handler.setFormatter(formateador)
+
+    log = logging.getLogger(name=nombre)
+    log.setLevel(logging.INFO)
+    log.addHandler(archivo_handler)
+    log.addHandler(consola_handler)
+
+    return log
+
+
+log = nuevo_logger("lector")
+
+
 def get_prefijo(bot, mensaje: Message) -> str:
     """
     Se fija en el diccionario de prefijos y devuelve el que
@@ -40,6 +71,7 @@ def get_prefijo(bot, mensaje: Message) -> str:
 
     return archivos.cargar_pares_valores(PREFIXES_FILE).get(str(mensaje.guild.id), DEFAULT_PREFIX)
 
+
 def get_version(guild: Guild) -> str:
     """
     Consigue la versión de la guía que ha sido especificada, si no
@@ -47,6 +79,7 @@ def get_version(guild: Guild) -> str:
     """
 
     return archivos.cargar_pares_valores(VERSIONS_FILE).get(str(guild.id), DEFAULT_VERSION)
+
 
 def definir_guias() -> dict[str, archivos.DiccionarioGuia]:
     """
@@ -64,13 +97,14 @@ def definir_guias() -> dict[str, archivos.DiccionarioGuia]:
 
         except archivos.GuiaNoEncontrada:
 
-            print(f"[AVISO] La versión '{version}' no fue encontrada, configurando la versión predeterminada '{DEFAULT_VERSION}' para id {guild_id}...", end=' ')
+            log.warning(f"La versión '{version}' no fue encontrada, configurando la versión predeterminada '{DEFAULT_VERSION}' para id {guild_id}...", end=' ')
 
             dict_guias[guild_id] = DEFAULT_VERSION
 
-            print("listo.")
+            log.warning("listo.")
 
     return dict_guias
+
 
 class CustomBot(commands.Bot):
     """
