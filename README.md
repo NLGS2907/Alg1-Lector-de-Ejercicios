@@ -1,13 +1,74 @@
 # Lector de Ejercicios
 
+<img alt="exercise_reader.png" align="left" src="img/exercise_reader.png" height=128 width=128 />
+
+<p align="left">
+<img alt="version" src="https://img.shields.io/badge/version-1.1.0-brightgreen" />
+<img alt="version" src="https://img.shields.io/github/stars/NLGS2907/Alg1-Lector-de-Ejercicios?label=Estrellas&style=social" />
+
 Este bot de discord está pensado para usarse principalmente en el discord de la materia Algoritmos y Programación I,
 de la Facultad de Ingeniería de la UBA, aunque puede utilizarse para cualquier servidor que lo quiera.
+</p>
 
 **Enlace de Invitación:** [Aquí](https://discord.com/api/oauth2/authorize?client_id=889312376036425810&permissions=292057984064&scope=bot)
 
+<br/>
 <hr/>
 
-### ⋆ [ v1.0.4 ]
+### Changelog:
+
+**[v1.1.0](#v110)** ***<- La más nueva***
+
+[v1.0.4](#v104)
+
+[v1.0.3](#v103)
+
+[v1.0.2](#v102)
+
+[v1.0.1](#v101)
+
+[v1.0.0](#v100)
+
+
+<hr/>
+
+
+## v1.1.0
+
+Esta versión introduce una nueva imagen para el bot, manejo de imágenes por
+Imgur, para mejor experiencia de memes. También se introducen menús contextuales para `ej` y `guia`.
+
+* **¡Nuevo Logo!** Las referencias se encuentran en la carpeta de [imágenes](img).
+
+* **Hace uso de [`imgur-python`](https://pypi.org/project/imgur-python/)** para manejar imágenes a través del bot de Discord.
+
+* **Nuevo Archivo `cliente_imgur.py`** para guardar la lógica de la
+aplicación que representa el cliente de Imgur.
+
+* **Ahora el comando `meme` ya no acepta ids de links.** Sin embargo, ahora
+acepta que se le pase el índice de meme si se quiere uno en concreto de la
+colección en Imgur.
+
+* **Nuevo parámetro `add` para el comando `meme`**. Con esto, si el mensaje que envía el comando refiere a una imagen, se agrega esta a la colección de memes.
+
+* **Nuevo Archivo `interfaces.py`** en donde guardar las interfaces usadas
+en los mensajes del bot.
+
+* **Ahora `guia` tiene un menú contextual.** Permite seleccionar más
+intuitivamente las versiones de la guía, y se llama con `guia` sin
+parámetros.
+
+* **Similarmente con `ej`,** ahora este tiene no sólo también un menú
+selector, si no también hace uso de botones para navegar por los ejercicios.
+
+* **Agregado banco entero de palabras en español para el ahorcado.** Ahora
+hay `80946` combinaciones posibles. Unas pocas más.
+
+* **El bot ahora es más** ¿...competitivo?
+
+<hr style="height:4px" />
+
+### v1.0.4
 
 Esta versión tiene más que nada mantenimiento y mejoras internas:
 
@@ -15,21 +76,30 @@ Esta versión tiene más que nada mantenimiento y mejoras internas:
 
 * **Nuevo archivo** `lector.log` para guardar dichos registros.
 
-### ⋆ [ v1.0.3 ]
+<hr style="height:2px" />
+
+### v1.0.3
 
 * **Agregado una actividad `!info`** en el estado del bot.
 
 * **Agregados nuevos mensajes de error** para excepciones del comando `ej`.
 
-### ⋆ [ v1.0.2 ]
+<hr style="height:2px" />
+
+### v1.0.2
 
 * **Mejorado un poco el código.** Ahora el cuerpo del código sigue mejor las convenciones de python.
 * **Agregadas** algunas que otras palabras nuevas que pueden tocar en el ahorcado.
-### ⋆ [ v1.0.1 ]
+
+<hr style="height:2px" />
+
+### v1.0.1
 
 * **Agregado comando `clear`** para limpiar mensajes del bot.
 
-### ⋆ [ v1.0.0 ]
+<hr style="height:4px" />
+
+## v1.0.0
 
 * Ahora el bot proviene de una clase `CustomBot` que sobrecarga a la clase de Discord `commands.Bot`. Esto es para contener información persistente, pero los
   comandos siguen siendo definidos mediante decoradores.

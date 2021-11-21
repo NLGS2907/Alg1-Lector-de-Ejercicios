@@ -1,21 +1,20 @@
+"""
+Módulo que procesa 
+"""
+
 from csv import reader
-from os import listdir
+from os import listdir, stat
 from os.path import isfile, isdir, join, splitext
 
-EXT = ".txt"
-"""
-La extensión de archivo usada para almacenar el texto que son los ejercicios
-de la guía.
-"""
+from typing import Optional, Any
 
-GUIA_PATH = "guia"
-"""
-Dirección (relativa) de la carpeta de guías.
-"""
+from constantes import EXT, GUIA_PATH, VERSIONS_PATH, STATS_PATH
 
 DiccionarioPares = dict[str, str]
 
 DiccionarioGuia = dict[str, str | dict[str, str]]
+
+DiccionarioStats = dict[str, list[int]]
 
 
 class GuiaNoEncontrada(Exception):
@@ -23,7 +22,7 @@ class GuiaNoEncontrada(Exception):
     Pequeña clase para definir un error de guía no encontrada.
     """
 
-    pass
+    ...
 
 
 def archivos_guia(version: str, carpeta: str) -> list[str]:
@@ -37,7 +36,7 @@ def archivos_guia(version: str, carpeta: str) -> list[str]:
     return [u for u in listdir(version_path) if (isfile(join(version_path, u)) and splitext(join(version_path, u))[1] == EXT)]
 
 
-def lista_versiones(carpeta: str=GUIA_PATH):
+def lista_versiones(carpeta: str=GUIA_PATH) -> list[str]:
     """
     Devuelve una lista de todas las versiones válidas que se encuentran
     en el directorio de guías.
@@ -45,7 +44,7 @@ def lista_versiones(carpeta: str=GUIA_PATH):
     return [ver for ver in listdir(carpeta) if isdir(join(carpeta, ver))]
 
 
-def version_es_valida(version: str, carpeta: str=GUIA_PATH):
+def version_es_valida(version: str, carpeta: str=GUIA_PATH) -> bool:
     """
     Verifica que la versión especificada existe dentro del directorio de
     las guías de ejercicios.
@@ -116,6 +115,30 @@ def cargar_guia(version: str, carpeta: str=GUIA_PATH) -> DiccionarioGuia:
 
     return guia
 
+def lista_unidades(guia: DiccionarioGuia) -> list[str]:
+    """
+    Dada una guía, devuelve una lista de sus unidades.
+    """
+
+    return [unidad for unidad in guia][1:] # Se escluye la clave 'version'
+
+def lista_ejercicios(guia: DiccionarioGuia, unidad: DiccionarioPares) -> list[str]:
+    """
+    Dada una guía de ejercicios y la unidad, devuelve una
+    lista con los números de ejercicios.
+    """
+
+    return [ejercicio for ejercicio in guia[unidad].keys()][1:] # Se excluye la clave 'titulo'
+
+def actualizar_guia(nueva_version: str, guild_id: str) -> None:
+    """
+    Cambia la versión de la guía para un servidor en particular.
+    """
+
+    dic_versiones = cargar_pares_valores(VERSIONS_PATH)
+    dic_versiones[guild_id] = nueva_version
+    guardar_pares_valores(dic_versiones, VERSIONS_PATH)
+
 
 def cargar_lineas(nombre_archivo: str) -> list[str]:
     """
@@ -153,6 +176,16 @@ def cargar_pares_valores(nombre_archivo: str) -> DiccionarioPares:
     return dic_pares_valores
 
 
+def cargar_valor(nombre_archivo: str, llave: Any, default: Any=None) -> Optional[Any]:
+    """
+    Carga un solo valor de un diccionario de pares.
+    """
+
+    dic_pares_valores = cargar_pares_valores(nombre_archivo)
+
+    return dic_pares_valores.get(llave, default)
+
+
 def guardar_pares_valores(dic_pares_valores: DiccionarioPares, nombre_archivo: str) -> None:
     """
     Recibe un diccionario y guarda la información de este en un archivo CSV.
@@ -165,5 +198,41 @@ def guardar_pares_valores(dic_pares_valores: DiccionarioPares, nombre_archivo: s
         for clave, valor in dic_pares_valores.items():
 
             lista_a_imprimir.append(f"{clave}={valor}")
+
+        archivo.write('\n'.join(lista_a_imprimir))
+
+
+def cargar_stats_ppt(nombre_archivo: str=STATS_PATH) -> DiccionarioStats:
+    """
+    Mira en un archivo (por defecto 'src/rps_stats.csv') y crea
+    un diccionario con los datos procesados.
+    """
+
+    diccionario_estadisticas = dict()
+
+    with open(nombre_archivo, mode='r') as archivo:
+
+        stats_usuarios = reader(archivo, delimiter='=')
+
+        for usuario, stats in stats_usuarios:
+
+            diccionario_estadisticas[usuario] = [int(stat) for stat in stats.split('-')]
+
+    return diccionario_estadisticas
+
+
+def guardar_stats_ppt(dic_stats: DiccionarioStats, nombre_archivo: str=STATS_PATH) -> None:
+    """
+    Guarda los datos de un diccionario de estadísticas en un archivo
+    (por defecto 'src/rps_stats.csv').
+    """
+
+    lista_a_imprimir = list()
+
+    with open(nombre_archivo, mode='w') as archivo:
+
+        for usuario, stats in dic_stats.items():
+
+            lista_a_imprimir.append(f"{usuario}={'-'.join([str(stat) for stat in stats])}")
 
         archivo.write('\n'.join(lista_a_imprimir))

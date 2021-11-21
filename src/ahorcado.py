@@ -1,3 +1,7 @@
+"""
+Pequeño módulo que implementa la lógica de una partida de ahorcado.
+"""
+
 from typing import Optional
 from random import choice
 

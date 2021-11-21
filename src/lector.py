@@ -4,14 +4,23 @@ Módulo dedicado a contener al comportamiento del bot.
 
 from typing import Optional
 from random import choice
+from os import remove
+from time import sleep
 
-from discord import Thread, Guild, Game
+from discord import Thread, Guild, Game, Message, Attachment, Interaction
 from discord.ext.commands import Context, check, is_owner
-from discord.message import Message
+from discord.ui import View
+from datetime import datetime
 
 import custom_bot
 from custom_bot import log
+
+import cliente_imgur
+import interfaces
 import archivos
+import ppt
+
+from constantes import ALGORITMOS_ESSAYA_ID, INFO_MESSAGE, MESSAGE_FORMAT, ROL_DIEGO_ID, ROL_DOCENTE_ID, WHATSNEW, elegir_frases
 
 # Para que no tire error en Windows al cerrar el Bot.
 
@@ -29,61 +38,6 @@ except ImportError:
 
     log.warning("No se pudo importar 'WindowsSelectorEventLoopPolicy', probablemente porque esto no es Windows.")
 
-ALGORITMOS_ESSAYA_ID = 653341065767550976
-"""
-Para más facilidad, se tiene a mano una constante
-con el ID del servidor de Algoritmos I - Essaya.
-"""
-
-ROL_DIEGO_ID = 653341579389435927
-
-ROL_DOCENTE_ID = 653341523886342145
-
-INFO_MESSAGE_1 = """>>> **- Lector de Ejercicios (v{version_bot}) -**
-
-Versión de la guía para este servidor: `{version}`
-
-`{prefix}info | dm` muestra esta lista.
-
-`{prefix}ej|ejercicio|enunciado <unidad> <ejercicio> | dm` para mostrar el ejercicio de la unidad correspondiente de la guía.
-
-`{prefix}random|aleatorio|r <unidad_posible>, <sentido> | dm` para mostrar un ejercicio al azar. 'unidad_posible' es de
-dónde empezar a buscar, y 'sentido' es el parámetro de búsqueda, y toma los valores '=', '<', '<=',
-'>' o '>='.
-Por ejemplo, `{prefix}random 12 <=` devuelve un ejercicio aleatorio de alguna guía anterior o igual a la guía 12.
-
-`{prefix}prefix|prefijo <nuevo_prefijo>` cambia el prefijo de los comandos a 'nuevo_prefijo'.
-
-`{prefix}guia|version <nueva_version>` cambia la versión de la guía que utilizar, si es una versión válida.
-
-`{prefix}meme <id>` para generar un meme aleatorio, o con `<id>` determinado si se desea uno en concreto, aunque
-hay que conocer el URL del meme en específico (solo funciona si tiene el dominio `https://i.imgur.com`).
-"""
-
-INFO_MESSAGE_2 = """>>> `{prefix}hanged|ahorcado <vidas> <*frase>` para reservar una sala de ahorcado. Esta es en forma de un hilo temporal.
-Si se hace una partida personalizada con `<*frase>` determinada por el usuario, se recomienda encerrarlo en '\|\|'.
-Así, \|\|palabra\|\| se ve como ||palabra||. Esto sirve para desalentar ver la respuesta de primeras.
-
-También, si se está dentro de una sala de ahorcado:
-
-`{prefix}guess|adivinar <caracter>` para tratar de adivinar un solo caracter de la frase oculta.
-
-`{prefix}display|mostrar` para mostrar de nuevo la pantalla del juego de ahorcado. Ahora esta nueva pantalla será la
-que se actualice para mostrar el avance del juego.
-
-`{prefix}clear|clean|cls <limite> | full` para limpiar los mensajes del bot. `<limite>` es la cantidad de mensajes
-que verificar (no los que serán borrados, aunque puede ser el caso). 'full' elimina no sólo los mensajes del bot
-si no también los de todos los usuarios que invocan sus comandos.
-
-
-*desarrollado por Franco 'NLGS' Lighterman.*
-Repositorio: *https://github.com/NLGS2907/Alg1-Lector-de-Ejercicios*
-"""
-
-EASTER_EGGS = archivos.cargar_lineas("src/easter_eggs.txt")
-"""
-Pequeños guiños escondidos (más o menos).
-"""
 
 def existe_unidad(unidad: str, guia: archivos.DiccionarioGuia) -> bool:
     """
@@ -125,56 +79,89 @@ async def mostrar_unidad_y_ejercicio_validos(ctx: Context, unidad: Optional[str]
 
     if not unidad_existe:
 
-        unidades = " - ".join([f"`{u}`" for u in guia.keys()][1:])
-
         if unidad is None:
 
-            await ctx.channel.send(
-                f"**[ERROR]** Por favor, ingrese el número de guía y el de ejercicio de esta forma:\n\n`{ctx.prefix}ej <unidad> <ejercicio>`")
+            await ctx.channel.send(content="Por favor elija el número de unidad", view=interfaces.SelectorUnidad(guia=guia))
 
         else:
 
-            await ctx.channel.send(
-                f"**[ERROR]** El número de unidad `{unidad}` no es válido. Los valores aceptados son:\n\n{unidades}")
+            unidades = archivos.lista_unidades(guia)
+
+            await ctx.channel.send(f"**[ERROR]** El número de unidad `{unidad}` no es válido. Los valores aceptados son:\n\n{' - '.join([f'`{u}`' for u in unidades])}")
 
         return False
 
     elif not ej_existe:
 
-        ejercicios = " - ".join([f"`{e}`" for e in guia[unidad].keys()][1:])
-
         if ejercicio is None:
 
-            await ctx.channel.send(
-                f"Los números de ejercicios disponibles para la unidad `{unidad}` son:\n\n{ejercicios}")
+            await ctx.channel.send(content="Por favor elija un ejercicio", view=interfaces.SelectorEjercicios(guia=guia, unidad=unidad))
 
         else:
 
-            await ctx.channel.send(
-                f"**[ERROR]** El número de ejercicio `{ejercicio}` no es válido. Los valores aceptados son:\n\n{ejercicios}")
+            ejercicios = archivos.lista_ejercicios(guia, unidad)
+
+            await ctx.channel.send(f"**[ERROR]** El número de ejercicio `{ejercicio}` no es válido. Los valores aceptados son:\n\n{' - '.join([f'`{ej}`' for ej in ejercicios])}")
 
         return False
 
     return True
 
 
-def encontrar_meme(id_meme: str, memes: list[str]=EASTER_EGGS) -> str:
+def tipo_mime(str_mime: str) -> Optional[tuple[str]]:
     """
-    Verifica si una imagen con un 'id' dado se encuentra entre las imágenes
-    disponibles. De ser así, le agrega también al link la extensión correspondiente.
+    Transforma un string 'tipo/subtipo' en una tupla
+    '(tipo, subtipo)', si el formato del string es válido.
+    Si no, devuelve 'None'.
     """
 
-    link_sin_tipo = f"https://i.imgur.com/{id_meme}"
-    tiene_extension = (lambda ext, img: f"{link_sin_tipo}.{ext}" == img)
+    tupla_a_devolver = None
+    
+    tupla_mime = str_mime.split('/')
 
-    for meme in memes:
+    if len(tupla_mime) == 2 and tupla_mime[0] and tupla_mime[1]:
 
-        if any([tiene_extension(ext, meme) for ext in ("png", "jpg", "jpeg", "PNG", "JPG", "JPEG")]):
+        tupla_a_devolver = tupla_mime
 
-            return meme
+    return tupla_a_devolver
 
-    return choice(memes)
 
+def es_tipo_imagen(mime_type: tuple[str]) -> bool:
+    """
+    Devuelve 'True' si el string pasado por parametro es del formato
+    de un tipo MIME, y si este es de tipo 'image'. De lo contrario,
+    devuelve 'False'.
+    """
+
+    return mime_type[0] == "image"
+
+
+def hay_valor_numerico(lista: list[str]) -> Optional[int]:
+    """
+    Busca en una lista si hay un números en tipo 'string'.
+    De ser así, devuelve el primer caso encontrado, ya
+    convertido a tipo 'int'.
+    """
+
+    elemento_a_devolver = None
+
+    for elem in lista:
+
+        try:
+            
+            elemento_a_devolver = int(elem)
+            break
+
+        except ValueError:
+
+            continue
+
+    return elemento_a_devolver
+
+
+# --------------------------------------------------#
+#               Instanciación del Bot               #
+# --------------------------------------------------#
 
 actividad_bot = Game(name="!info")
 
@@ -182,6 +169,12 @@ bot = custom_bot.CustomBot(actividad=actividad_bot)
 """
 El objeto de tipo 'Bot' que maneja todo el comportamiento.
 """
+
+cliente = cliente_imgur.MemeImgur()
+"""
+El cliente de Imgur encargado de manejar las imágenes que pide el bot.
+"""
+
 
 def es_rol_valido(ctx: Context) -> bool:
     """
@@ -191,6 +184,16 @@ def es_rol_valido(ctx: Context) -> bool:
 
     return not all((ctx.guild.id == ALGORITMOS_ESSAYA_ID,
                    all([role.id not in (ROL_DIEGO_ID, ROL_DOCENTE_ID) for role in ctx.author.roles])))
+
+
+async def mandar_dm(ctx: Context, mensaje: str, vista: View) -> None:
+    """
+    Manda un mensaje por privado.
+    """
+
+    await ctx.author.create_dm()
+    await ctx.author.dm_channel.send(content=mensaje, view=vista)
+    await ctx.message.delete()
 
 
 def es_ultimo_mensaje(msg: Message) -> bool:
@@ -220,6 +223,53 @@ def es_mensaje_comando(msg: Message) -> bool:
     return (not es_ultimo_mensaje(msg) and msg.content.startswith(custom_bot.get_prefijo(bot, msg))) or es_mensaje_de_bot(msg)
 
 
+async def buscar_meme_en_adjunto(msg: Message) -> Optional[Attachment]:
+    """
+    Busca si existe un meme en los datos adjunto por el mensaje que
+    está ejecutando el comando.
+    """
+
+    archivo = None
+
+    if msg.attachments and es_tipo_imagen(tipo_mime(msg.attachments[0].content_type)):
+
+        archivo = msg.attachments[0]
+
+    return archivo
+
+
+async def buscar_meme_en_referencia(ctx: Context) -> Optional[Attachment]:
+    """
+    Busca si existe un meme en un mensaje referenciado por el que está
+    ejecutando el comando.
+    """
+
+    archivo = None
+
+    referencia = ctx.message.reference
+
+    if referencia:
+
+        archivo = await buscar_meme_en_adjunto(await ctx.fetch_message(referencia.message_id))
+
+    return archivo
+
+
+async def es_numero_meme_valido(mensaje_enviado: Message, indice_meme: int, lista_memes: list[str]) -> bool:
+    """
+    Verifica si el índice que se pasó por parámetro es válido o no. En caso
+    de no serlo envía un mensaje indicándolo.
+    """
+
+    limite_memes = len(lista_memes)
+
+    if all((lista_memes, indice_meme > 0, indice_meme < limite_memes)):
+
+        return True
+
+    await mensaje_enviado.edit(f"**[ERROR]** El número de meme `{indice_meme}` ingresado no es válido.\n\nLas opciones disponibles incluyen de `1` a `{limite_memes}`.")
+    return False
+
 @bot.event
 async def on_ready() -> None:
     """
@@ -234,7 +284,7 @@ async def on_command(ctx: Context):
     El usuario está tratando de invocar un comando.
     """
 
-    log.info(f"El usuario {ctx.author} está tratando de invocar '{ctx.prefix}{ctx.command}' en el canal '#{ctx.channel.name}' del server '{ctx.guild.name}' mediante el mensaje '{ctx.message.content}'")
+    log.info(f"El usuario {ctx.author} está tratando de invocar '{ctx.command}' en el canal '#{ctx.channel.name}' del server '{ctx.guild.name}' mediante el mensaje '{ctx.message.content}'")
 
 @bot.event
 async def on_command_completion(ctx: Context):
@@ -242,17 +292,7 @@ async def on_command_completion(ctx: Context):
     El usuario ejecutó el comando satisfactoriamente.
     """
 
-    log.info(f"{ctx.author} ha invocado '{ctx.prefix}{ctx.command}' satisfactoriamente.")
-
-
-async def mandar_dm(ctx: Context, mensaje: str) -> None:
-    """
-    Manda un mensaje por privado.
-    """
-
-    await ctx.author.create_dm()
-    await ctx.author.dm_channel.send(mensaje)
-    await ctx.message.delete()
+    log.info(f"{ctx.author} ha invocado '{ctx.command}' satisfactoriamente")
 
 
 @bot.event
@@ -263,15 +303,15 @@ async def on_guild_join(guild: Guild) -> None:
 
     log.info(f"El bot se conectó a '{guild.name}'")
 
-    dic_prefijos = archivos.cargar_pares_valores(custom_bot.PREFIXES_FILE)
+    dic_prefijos = archivos.cargar_pares_valores(custom_bot.PREFIXES_PATH)
     dic_prefijos[str(guild.id)] = custom_bot.DEFAULT_PREFIX
 
-    archivos.guardar_pares_valores(dic_prefijos, custom_bot.PREFIXES_FILE)
+    archivos.guardar_pares_valores(dic_prefijos, custom_bot.PREFIXES_PATH)
 
-    dic_versiones = archivos.cargar_pares_valores(custom_bot.VERSIONS_FILE)
+    dic_versiones = archivos.cargar_pares_valores(custom_bot.VERSIONS_PATH)
     dic_versiones[str(guild.id)] = custom_bot.DEFAULT_VERSION
 
-    archivos.guardar_pares_valores(dic_versiones, custom_bot.VERSIONS_FILE)
+    archivos.guardar_pares_valores(dic_versiones, custom_bot.VERSIONS_PATH)
 
     bot.guias = custom_bot.definir_guias()
 
@@ -293,8 +333,26 @@ async def on_thread_update(before: Thread, after: Thread) -> None:
         await after.delete()
 
 
-@bot.command(name="ej", aliases=["ejercicio", "enunciado"], help="Muestra ejercicios de la guía.")
-async def leer_ejercicio(ctx, unidad: Optional[str]=None, ejercicio: Optional[str]=None, *opciones) -> None:
+@bot.command(name="info", aliases=["i"], usage="-dm", help="Muestra una lista de todos los comandos.")
+async def mostrar_info(ctx: Context, *opciones):
+    """
+    Muestra una lista con los comandos y lo que hace cada uno.
+    """
+
+    version_guia = bot.guias[str(ctx.guild.id)]["version"]
+    info_ui = interfaces.InfoUI()
+
+    if "-dm" in opciones:
+
+        await mandar_dm(ctx, INFO_MESSAGE['1'].format(version_bot=bot.version, version=version_guia, prefix=ctx.prefix), view=info_ui)
+
+    else:
+
+        await ctx.channel.send(INFO_MESSAGE['1'].format(version_bot=bot.version, version=version_guia, prefix=ctx.prefix), view=info_ui)
+
+
+@bot.command(name="ej", aliases=["ejercicio", "enunciado"], usage="<unidad> <ejercicio> -dm", help="Muestra ejercicios de la guía.")
+async def leer_ejercicio(ctx: Context, unidad: Optional[str]=None, ejercicio: Optional[str]=None, *opciones) -> None:
 
     guia = bot.guias[str(ctx.guild.id)]
 
@@ -303,38 +361,22 @@ async def leer_ejercicio(ctx, unidad: Optional[str]=None, ejercicio: Optional[st
         return
 
     enunciado = guia[unidad][ejercicio]
-    mensaje = f"**{ctx.author.mention}** ha consultado:\n\n>>> **Unidad** {unidad} - \"{guia[unidad]['titulo']}\"  |  **Ejercicio** {ejercicio}:\n\n**{unidad}.{ejercicio}.** {enunciado}"
 
-    if "dm" in opciones:
+    mensaje = MESSAGE_FORMAT.format(mention=ctx.author.mention, unidad=unidad, titulo=guia[unidad]["titulo"], ejercicio=ejercicio, enunciado=enunciado)
 
-        await mandar_dm(ctx, mensaje)
+    interfaz = interfaces.NavegadorEjercicios(guia=guia, unidad=unidad, ejercicio=ejercicio)
 
-    else:
+    if "-dm" in opciones:
 
-        await ctx.channel.send(mensaje)
-
-
-@bot.command(name="info", help="Muestra una lista de todos los comandos.")
-async def mostrar_info(ctx: Context, *opciones):
-    """
-    Muestra una lista con los comandos y lo que hace cada uno.
-    """
-
-    version_guia = bot.guias[str(ctx.guild.id)]["version"]
-
-    if "dm" in opciones:
-
-        await mandar_dm(ctx, INFO_MESSAGE_1.format(version_bot=bot.version, version=version_guia, prefix=ctx.prefix))
-        await mandar_dm(ctx, INFO_MESSAGE_2.format(prefix=ctx.prefix))
+        await mandar_dm(ctx, mensaje, vista=interfaz)
 
     else:
 
-        await ctx.channel.send(INFO_MESSAGE_1.format(version_bot=bot.version, version=version_guia, prefix=ctx.prefix))
-        await ctx.channel.send(INFO_MESSAGE_2.format(prefix=ctx.prefix))
+        await ctx.channel.send(mensaje, view=interfaz)
 
 
-@bot.command(name="random", aliases=["aleatorio", 'r'], help="Muestra un ejercicio aleatorio de la guía.")
-async def ejercicio_al_azar(ctx, unidad_posible: Optional[str]=None, sentido: str='=', *opciones) -> None:
+@bot.command(name="random", aliases=["aleatorio", 'r'], usage="<unidad posible>, <sentido> -dm", help="Muestra un ejercicio aleatorio de la guía.")
+async def ejercicio_al_azar(ctx: Context, unidad_posible: Optional[str]=None, sentido: str='=', *opciones) -> None:
     """
     Muestra un ejercicio al azar de la guía.
 
@@ -392,10 +434,10 @@ async def ejercicio_al_azar(ctx, unidad_posible: Optional[str]=None, sentido: st
     
     ejercicio_elegido = choice([ej for ej in guia[unidad_elegida].keys()])
 
-    await leer_ejercicio(ctx, unidad_elegida, ejercicio_elegido, ("dm" if ("dm" in opciones) else ''))
+    await leer_ejercicio(ctx, unidad_elegida, ejercicio_elegido, ("-dm" if ("-dm" in opciones) else ''))
 
 
-@bot.command(name="prefix", aliases=["prefijo", "pfx", "px"], help="Cambia el prefijo de los comandos.")
+@bot.command(name="prefix", aliases=["prefijo", "pfx", "px"], usage="<nuevo_prefijo>", help="Cambia el prefijo de los comandos.")
 @check(es_rol_valido)
 async def cambiar_prefijo(ctx: Context, nuevo_prefijo: str) -> None:
     """
@@ -407,57 +449,128 @@ async def cambiar_prefijo(ctx: Context, nuevo_prefijo: str) -> None:
 
     prefijo_viejo = ctx.prefix
 
-    dic_prefijos = archivos.cargar_pares_valores(custom_bot.PREFIXES_FILE)
+    dic_prefijos = archivos.cargar_pares_valores(custom_bot.PREFIXES_PATH)
     dic_prefijos[str(ctx.guild.id)] = nuevo_prefijo
-    archivos.guardar_pares_valores(dic_prefijos, custom_bot.PREFIXES_FILE)
+    archivos.guardar_pares_valores(dic_prefijos, custom_bot.PREFIXES_PATH)
 
     await ctx.channel.send(f"**[AVISO]** El prefijo de los comandos fue cambiado de `{prefijo_viejo}` a `{nuevo_prefijo}` exitosamente.", delete_after=30)
+    log.info(f"El prefijo de comandos en '{ctx.guild.name}' fue cambiado de '{prefijo_viejo}' a '{nuevo_prefijo}'")
 
 
-@bot.command(name="guia", aliases=["guia_version", "gver"], help="Cambia la versión de la guía.")
+@bot.command(name="guia", aliases=["guia_version", "gver"], usage="<nueva_version>", help="Cambia la versión de la guía.")
 @check(es_rol_valido)
-async def cambiar_version_guia(ctx: Context, nueva_version: str) -> None:
+async def cambiar_version_guia(ctx: Context, nueva_version: Optional[str]=None) -> None:
     """
     Cambia la versión de la guía a utilizar, si dicha versión es válida.
     """
 
-    if not archivos.version_es_valida(nueva_version):
+    versiones = " - ".join(f"`{version}`" for version in archivos.lista_versiones())
 
-        versiones = " - ".join(f"`{version}`" for version in archivos.lista_versiones())
+    if nueva_version is not None and not archivos.version_es_valida(nueva_version):
 
-        await ctx.channel.send(f"**[ERROR]** La versión especificada `{nueva_version}` no es válida.\nLas versiones válidas son: {versiones}", delete_after=10)
+        await ctx.channel.send(f"**[ERROR]** La versión especificada `{nueva_version}` no es válida.\nLas versiones válidas son:\n{versiones}", delete_after=10)
+        return
+
+    version_vieja = bot.guias[str(ctx.guild.id)]["version"]
+
+    if not nueva_version:
+
+        await ctx.channel.send(f"Por favor seleccione una versión de la guía", view=interfaces.SelectorGuia(version_actual=version_vieja))
 
     else:
 
-        dic_versiones = archivos.cargar_pares_valores(custom_bot.VERSIONS_FILE)
-
-        version_vieja = bot.guias[str(ctx.guild.id)]["version"]
-        dic_versiones[str(ctx.guild.id)] = nueva_version
-        archivos.guardar_pares_valores(dic_versiones, custom_bot.VERSIONS_FILE)
-
+        archivos.actualizar_guia(nueva_version, str(ctx.guild.id))
         await ctx.channel.send(f"**[AVISO]** La versión de la guía fue cambiada de `{version_vieja}` a `{nueva_version}` exitosamente.", delete_after=30)
 
+    bot.actualizar_guia()
 
-@bot.command(name="meme", help="Para los curiosos aburridos.")
-async def mostrar_meme(ctx: Context, id_meme: Optional[str]=None, *opciones) -> None:
+    log.info(f"La versión de la guía en '{ctx.guild.name}' fue cambiada de '{version_vieja}' a '{nueva_version}'")
+
+
+@bot.command(name="meme", usage="-add|-agregar|<numero>", help="Para los curiosos aburridos.")
+async def mostrar_meme(ctx: Context, *opciones) -> None:
     """
-    Muestra una línea al azar del archivo de easter eggs.
+    Muestra un meme o lo agrega al album donde estan guardados.
     """
 
-    meme = (encontrar_meme(id_meme) if id_meme else choice(EASTER_EGGS))
+    if "-add" in opciones or "-agregar" in opciones:
 
-    if "dm" in opciones or id_meme == "dm":
-
-        await mandar_dm(ctx, meme)
+        await subir_meme(ctx)
 
     else:
 
-        await ctx.channel.send(meme)
+        status = "**[AVISO]** Cargando meme..."
+
+        if "-dm" in opciones:
+
+            mensaje_enviado = await mandar_dm(ctx, status)
+
+        else:
+
+            mensaje_enviado = await ctx.channel.send(status, delete_after=120)
+
+        numero = hay_valor_numerico(opciones)
+        memes = cliente.get_links_imagenes(cliente_imgur.MEMES_ALBUM_NAME)
+        meme_link = None
+
+        if numero:
+        
+            if await es_numero_meme_valido(mensaje_enviado, numero, memes):
+
+                meme_link = memes[numero - 1]
+
+        else:
+
+            meme_link = choice(memes)
+
+        if meme_link: await mensaje_enviado.edit(meme_link)
+
+
+async def subir_meme(ctx: Context) -> None:
+    """
+    Trata de subir efectivamente el meme si lo encuentra.
+    """
+
+    adjunto_meme = await buscar_meme_en_adjunto(ctx.message)
+
+    if not adjunto_meme:
+
+        adjunto_meme = await buscar_meme_en_referencia(ctx)
+
+    if not adjunto_meme:
+
+        await ctx.channel.send("**[ERROR]** No se ha encontrado ningún meme.", delete_after=10)
+        return
+
+    mensaje_enviado = await ctx.channel.send("Subiendo Meme...", reference=ctx.message.to_reference())
+
+    meme_dir = f"temp/{str(datetime.now().strftime(custom_bot.DATE_FORMAT))}.{tipo_mime(adjunto_meme.content_type)[1]}"
+    album_destino = cliente.get_album_por_nombre(cliente_imgur.MEMES_ALBUM_NAME)
+    numero_meme = cliente.cuantas_imagenes(cliente_imgur.MEMES_ALBUM_NAME)
+    meme_titulo = f"Meme No. {numero_meme + 1}"
+
+    log.info(f"Guardando archivo temporalmente en '{meme_dir}'")
+    await adjunto_meme.save(meme_dir)
+    log.info("¡Guardado!")
+
+    cliente.image_upload(meme_dir, meme_titulo, f"Este es el {meme_titulo}", album=album_destino["id"])
+    log.info(f"Meme '{meme_titulo}' subido exitosamente")
+
+    try:
+
+        remove(meme_dir)
+        log.info(f"Se borró el archivo en '{meme_dir}'")
+
+    except:
+
+        log.warning(f"No se pudo borrar el archivo en '{meme_dir}'")
+
+    await mensaje_enviado.edit(content=f"¡De acuerdo, {ctx.author.mention}! Ya guardé esa imagen.\nAhora este es el nuevo Meme No. `{numero_meme}`.", delete_after=15)
 
 
 # Comandos para ahorcado
 
-@bot.command(name="hanged", aliases=["ahorcado"], help="Interactúa con un juego de ahorcado.")
+@bot.command(name="hanged", aliases=["ahorcado"], usage="<vidas> <*frase>", help="Interactúa con un juego de ahorcado.")
 async def crear_sala(ctx: Context, vidas: str='7', *frase) -> None:
     """
     Dependiendo de los comandos que se pasen, interactúa con
@@ -469,7 +582,7 @@ async def crear_sala(ctx: Context, vidas: str='7', *frase) -> None:
         await bot.hanged_create(ctx, int(vidas), *frase)
 
 
-@bot.command(name="guess", aliases=["adivinar"], help="Comando para adivinar una letra en el comando.")
+@bot.command(name="guess", aliases=["adivinar"], usage="<caracter>", help="Comando para adivinar una letra en el comando.")
 async def adivinar_letra(ctx: Context, letra: str=''):
     """
     Adivina una letra en una partida en curso de ahorcado.
@@ -501,7 +614,7 @@ async def mostrar_juego(ctx: Context) -> None:
     partida.definir_display(nuevo_display.id)
 
 
-@bot.command(name="clear", aliases=["clean", "cls"], help="Limpia el canal de mensajes del bot.")
+@bot.command(name="clear", aliases=["clean", "cls"], usage="<limite> | -full", help="Limpia el canal de mensajes del bot.")
 @check(es_rol_valido)
 async def limpiar_mensajes(ctx: Context, limite: int=10, *opciones) -> None:
     """
@@ -512,7 +625,7 @@ async def limpiar_mensajes(ctx: Context, limite: int=10, *opciones) -> None:
     mensajes de los usuarios que invocan los comandos.
     """
 
-    funcion_check = (es_mensaje_comando if "full" in opciones else es_mensaje_de_bot)
+    funcion_check = (es_mensaje_comando if "-full" in opciones else es_mensaje_de_bot)
     eliminados = await ctx.channel.purge(limit=limite + 1, check=funcion_check)
 
     log.info(f"{len(eliminados)} mensajes fueron eliminados de '#{ctx.channel.name}' en '{ctx.guild.name}'")
@@ -526,7 +639,7 @@ async def mostrar_version(ctx: Context, *opciones) -> None:
 
     mensaje = f"Mi versión actual es la `{bot.version}`"
 
-    if "dm" in opciones:
+    if "-dm" in opciones:
 
         await mandar_dm(ctx, mensaje)
 
@@ -535,7 +648,7 @@ async def mostrar_version(ctx: Context, *opciones) -> None:
         await ctx.channel.send(mensaje)
 
 
-@bot.command(name="shutdown", aliases=["shut", "exit", "quit", "salir"], help="Apaga el bot. Uso exclusivo del dev.")
+@bot.command(name="shutdown", aliases=["shut", "exit", "quit", "salir"], help="Apaga el bot. Uso exclusivo del dev.", hidden=True)
 @is_owner()
 async def shutdown(ctx: Context) -> None:
     """
@@ -546,7 +659,7 @@ async def shutdown(ctx: Context) -> None:
 
     await ctx.bot.close()
 
-@bot.command(name="flush", aliases=["logclear"], help="Vacía el archivo de registro. Uso exclusivo del dev.")
+@bot.command(name="flush", aliases=["logclear"], help="Vacía el archivo de registro. Uso exclusivo del dev.", hidden=True)
 @is_owner()
 async def logflush(ctx: Context):
     """
@@ -556,3 +669,41 @@ async def logflush(ctx: Context):
     with open(custom_bot.LOG_PATH, mode='w'):
 
         await ctx.channel.send(f"**[AVISO]** Vaciando archivo en '{custom_bot.LOG_PATH}'...", delete_after=10)
+
+@bot.command(name="whatsnew", aliases=["quehaydenuevo", "nuevo"], help="Muestra las novedades de la versión actual.", hidden=True)
+async def mostrar_novedades(ctx: Context):
+    """
+    Muestra las novedades de la versión más nueva del bot.
+    """
+
+    await ctx.channel.send(content=WHATSNEW)
+
+
+@bot.command(name="rps", aliases=["ppt"], help="Hace un pequeño juego de piedra-papel-tijeras.", hidden=True)
+async def jugar_ppt(ctx: Context, eleccion: Optional[str]=None) -> None:
+    """
+    Simula un pequeño juego de 'piedra, papel o tijeras'.
+    """
+
+    opciones = ("PIEDRA", "PAPEL", "TIJERAS")
+    piedra, papel, tijeras = opciones
+
+    if eleccion == "-reset":
+
+        bot.rps_stats[str(ctx.author.id)] = [0, 0, 0]
+        archivos.guardar_stats_ppt(bot.rps_stats)
+
+        await ctx.channel.send(f"¡De acuerdo, {ctx.author.mention}! Ya reseté tus estadísticas a `0` - `0` - `0`. *Imagino no querrá que vean que pierde tanto...*")
+        return
+
+    if not eleccion:
+
+        await ctx.channel.send(content=f"{elegir_frases()}\n\n**¡Elige!** ¿Piedra, Papel o Tijeras?\n", reference=ctx.message.to_reference(), view=interfaces.JuegoPPT(stats=bot.rps_stats))
+        return
+
+    if eleccion.upper() not in opciones:
+
+        await ctx.channel.send(f"**[ERROR]** Capo, tenés que elegir entre `{piedra}`, `{papel}` o `{tijeras}`.", reference=ctx.message.to_reference())
+        return
+
+    await ppt.jugar_partida_ppt(eleccion, ctx.message, bot.rps_stats)

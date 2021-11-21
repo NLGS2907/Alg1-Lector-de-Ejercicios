@@ -10,6 +10,9 @@
 # Any file that ends with .env
 *.env
 
+# The log file
+*.log
+
 # Created by git when using merge tools for conflicts
 *.BACKUP.*
 *.BASE.*

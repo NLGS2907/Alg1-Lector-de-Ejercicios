@@ -1,3 +1,7 @@
+"""
+Módulo dedicado a contener la clase personalizada 'CustomBot'.
+"""
+
 from typing import Callable, Optional
 
 from discord import Message
@@ -10,30 +14,7 @@ import logging
 import ahorcado
 import archivos
 
-BOT_VERSION = "1.0.4"
-"""
-La versión del bot a ser usada.
-
-Esto es más bien una convención a ser usada para llevar control
-sobre el desarrollo del bot.
-"""
-
-DEFAULT_PREFIX = '!'
-"""
-El prefijo por defecto que los servidores a los que se una el bot
-tendrá inicialmente.
-"""
-
-DEFAULT_VERSION = "2c2019"
-"""
-La versión de la guía por defecto, si la especificada no se encontrase.
-"""
-
-PREFIXES_FILE = "src/prefixes.csv"
-
-VERSIONS_FILE = "src/versions.csv"
-
-LOG_PATH = "lector.log" # Esto es relativo al directorio raíz, no de la carpeta 'src'
+from constantes import LOG_PATH, PREFIXES_PATH, DEFAULT_PREFIX, VERSIONS_PATH, DEFAULT_VERSION, BOT_VERSION, DATE_FORMAT
 
 
 def nuevo_logger(nombre: str) -> logging.Logger:
@@ -42,7 +23,7 @@ def nuevo_logger(nombre: str) -> logging.Logger:
     """
 
     formato_mensaje = f"[ %(asctime)s ] - %(levelname)s - %(message)s"
-    formato_fecha = f"%d-%m-%Y %I:%M:%S %p"
+    formato_fecha = f"%d-%m-%Y %I:%M:%S %p" # Necesariamente distinto de DATE_FORMAT
 
     formateador = logging.Formatter(fmt=formato_mensaje, datefmt=formato_fecha)
 
@@ -69,7 +50,7 @@ def get_prefijo(bot, mensaje: Message) -> str:
     corresponda al servidor de donde se convoca el comando.
     """
 
-    return archivos.cargar_pares_valores(PREFIXES_FILE).get(str(mensaje.guild.id), DEFAULT_PREFIX)
+    return archivos.cargar_valor(PREFIXES_PATH, str(mensaje.guild.id), DEFAULT_PREFIX)
 
 
 def get_version(guild: Guild) -> str:
@@ -78,7 +59,7 @@ def get_version(guild: Guild) -> str:
     devuelve el valor predeterminado como constante.
     """
 
-    return archivos.cargar_pares_valores(VERSIONS_FILE).get(str(guild.id), DEFAULT_VERSION)
+    return archivos.cargar_pares_valores(VERSIONS_PATH).get(str(guild.id), DEFAULT_VERSION)
 
 
 def definir_guias() -> dict[str, archivos.DiccionarioGuia]:
@@ -89,7 +70,7 @@ def definir_guias() -> dict[str, archivos.DiccionarioGuia]:
 
     dict_guias = dict()
 
-    for guild_id, version in archivos.cargar_pares_valores(VERSIONS_FILE).items():
+    for guild_id, version in archivos.cargar_pares_valores(VERSIONS_PATH).items():
 
         try:
 
@@ -119,6 +100,9 @@ class CustomBot(commands.Bot):
         super().__init__(cmd_prefix, activity=opciones.get("actividad", "nada"), options=opciones)
 
         self.version = BOT_VERSION
+        """
+        La versión actual del bot.
+        """
 
         self.guias = definir_guias()
         """
@@ -126,13 +110,26 @@ class CustomBot(commands.Bot):
         """
 
         self.partidas = dict()
+        """
+        Diccionario donde almacenar las partidas de ahorcado.
+        """
+
+        self.rps_stats = archivos.cargar_stats_ppt()
+
+    def actualizar_guia(self) -> None:
+        """
+        Actualia el atributo 'self.guias' para que sea acorde a la información
+        guardada en los archivos.
+        """
+
+        self.guia = definir_guias()
 
     async def hanged_create(self, ctx: commands.Context, vidas: int, *palabras) -> None:
         """
         Crea una sala de juego.
         """
 
-        hilo = await ctx.message.create_thread(name=f"AHORCADO - Partida {datetime.now()}", auto_archive_duration=60)
+        hilo = await ctx.message.create_thread(name=f"AHORCADO - Partida {datetime.now().strftime(DATE_FORMAT)}", auto_archive_duration=60)
         frase_a_usar = None
 
         spoilertag = "||"  # Por si el usuario la declaró con spoilertags
