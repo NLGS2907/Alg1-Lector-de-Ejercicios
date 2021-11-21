@@ -12,7 +12,6 @@ de la Facultad de Ingeniería de la UBA, aunque puede utilizarse para cualquier 
 
 **Enlace de Invitación:** [Aquí](https://discord.com/api/oauth2/authorize?client_id=889312376036425810&permissions=292057984064&scope=bot)
 
-<br/>
 <hr/>
 
 ### Changelog:
