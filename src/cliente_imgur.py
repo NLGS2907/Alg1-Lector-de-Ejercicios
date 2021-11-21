@@ -15,7 +15,7 @@ class AlbumNoEncontrado(Exception):
     un album.
     """
 
-    pass
+    ...
 
 
 class MemeImgur(Imgur):

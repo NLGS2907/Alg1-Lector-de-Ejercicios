@@ -13,6 +13,12 @@
 # The log file
 *.log
 
+# No CSV file should synchronize with the SSH server
+*.csv
+
+# Temp folder
+temp/
+
 # Created by git when using merge tools for conflicts
 *.BACKUP.*
 *.BASE.*

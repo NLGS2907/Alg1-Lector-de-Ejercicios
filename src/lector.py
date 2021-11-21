@@ -507,7 +507,7 @@ async def mostrar_meme(ctx: Context, *opciones) -> None:
 
         else:
 
-            mensaje_enviado = await ctx.channel.send(status, delete_after=120)
+            mensaje_enviado = await ctx.channel.send(status)
 
         numero = hay_valor_numerico(opciones)
         memes = cliente.get_links_imagenes(cliente_imgur.MEMES_ALBUM_NAME)
@@ -679,7 +679,7 @@ async def mostrar_novedades(ctx: Context):
     await ctx.channel.send(content=WHATSNEW)
 
 
-@bot.command(name="rps", aliases=["ppt"], help="Hace un pequeño juego de piedra-papel-tijeras.", hidden=True)
+@bot.command(name="rps", aliases=["ppt"], usage="<eleccion>", help="Hace un pequeño juego de piedra-papel-tijeras.", hidden=True)
 async def jugar_ppt(ctx: Context, eleccion: Optional[str]=None) -> None:
     """
     Simula un pequeño juego de 'piedra, papel o tijeras'.
