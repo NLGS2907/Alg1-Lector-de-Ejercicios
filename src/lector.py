@@ -688,18 +688,38 @@ async def jugar_ppt(ctx: Context, eleccion: Optional[str]=None) -> None:
     opciones = ("PIEDRA", "PAPEL", "TIJERAS")
     piedra, papel, tijeras = opciones
 
-    if eleccion == "-reset":
+    match eleccion:
 
-        bot.rps_stats[str(ctx.author.id)] = [0, 0, 0]
-        archivos.guardar_stats_ppt(bot.rps_stats)
+        case "-reset":
 
-        await ctx.channel.send(f"¡De acuerdo, {ctx.author.mention}! Ya reseté tus estadísticas a `0` - `0` - `0`. *Imagino no querrá que vean que pierde tanto...*")
-        return
+            bot.rps_stats[str(ctx.author.id)] = [0, 0, 0]
+            archivos.guardar_stats_ppt(bot.rps_stats)
 
-    if not eleccion:
+            await ctx.channel.send(f"¡De acuerdo, {ctx.author.mention}! Ya reseté tus estadísticas a `0` - `0` - `0`. *Imagino no querrá que vean que pierde tanto...*")
+            return
 
-        await ctx.channel.send(content=f"{elegir_frases()}\n\n**¡Elige!** ¿Piedra, Papel o Tijeras?\n", reference=ctx.message.to_reference(), view=interfaces.JuegoPPT(stats=bot.rps_stats))
-        return
+        case "-stats":
+
+            stats = bot.rps_stats.get(str(ctx.author.id), None)
+            mensaje = None
+
+            if stats is None:
+
+                mensaje = f"A ver, {ctx.author.mention}, capo, máquina, no tenés stats porque nunca jugaste."
+
+            else:
+
+                victorias, derrotas, empates = stats
+
+                mensaje = f"{ctx.author.mention}, tus estadísticas son: `{victorias}` victorias, `{derrotas}` derrotas y `{empates}` empates."
+
+            await ctx.channel.send(content=mensaje, reference=ctx.message.to_reference())
+            return
+
+        case None:
+
+            await ctx.channel.send(content=f"{elegir_frases()}\n\n**¡Elige!** ¿Piedra, Papel o Tijeras?\n", reference=ctx.message.to_reference(), view=interfaces.JuegoPPT(stats=bot.rps_stats))
+            return
 
     if eleccion.upper() not in opciones:
 
