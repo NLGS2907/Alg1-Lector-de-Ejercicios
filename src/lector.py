@@ -263,7 +263,7 @@ async def es_numero_meme_valido(mensaje_enviado: Message, indice_meme: int, list
 
     limite_memes = len(lista_memes)
 
-    if all((lista_memes, indice_meme > 0, indice_meme < limite_memes)):
+    if all((lista_memes, indice_meme > 0, indice_meme <= limite_memes)):
 
         return True
 
@@ -711,7 +711,7 @@ async def jugar_ppt(ctx: Context, eleccion: Optional[str]=None) -> None:
 
                 victorias, derrotas, empates = stats
 
-                mensaje = f"{ctx.author.mention}, tus estadísticas son: `{victorias}` victorias, `{derrotas}` derrotas y `{empates}` empates."
+                mensaje = f"{ctx.author.mention}, tus estadísticas son: `{victorias}` Victorias, `{derrotas}` Derrotas y `{empates}` Empates."
 
             await ctx.channel.send(content=mensaje, reference=ctx.message.to_reference())
             return
