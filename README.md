@@ -6,6 +6,7 @@
 <img alt="version" src="https://img.shields.io/badge/version-1.1.0-brightgreen" />
 <img alt="version" src="https://img.shields.io/github/stars/NLGS2907/Alg1-Lector-de-Ejercicios?label=Estrellas&style=social" />
 
+
 Este bot de discord está pensado para usarse principalmente en el discord de la materia Algoritmos y Programación I,
 de la Facultad de Ingeniería de la UBA, aunque puede utilizarse para cualquier servidor que lo quiera.
 </p>
