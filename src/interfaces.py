@@ -450,7 +450,7 @@ class JuegoPPT(View):
         El usuario ha elegido 'Piedra' en una partida de 'Piedra, Papel o Tijeras'.
         """
 
-        await ppt.jugar_partida_ppt("PIEDRA", interaccion.message, self.stats_juego)
+        await ppt.jugar_partida_ppt("PIEDRA", str(interaccion.user.id), interaccion.message, self.stats_juego)
 
     @button(style=ButtonStyle.blurple, custom_id="paper", label="Papel", emoji=Emoji.from_str("\N{roll of paper}"))
     async def elegir_papel(self, boton: Button, interaccion: Interaction) -> None:
@@ -458,7 +458,7 @@ class JuegoPPT(View):
         El usuario ha elegido 'Piedra' en una partida de 'Piedra, Papel o Tijeras'.
         """
 
-        await ppt.jugar_partida_ppt("PAPEL", interaccion.message, self.stats_juego)
+        await ppt.jugar_partida_ppt("PAPEL", str(interaccion.user.id), interaccion.message, self.stats_juego)
 
     @button(style=ButtonStyle.blurple, custom_id="scissors", label="Tijeras", emoji=Emoji.from_str("\N{Black Scissors}"))
     async def elegir_tijeras(self, boton: Button, interaccion: Interaction) -> None:
@@ -466,4 +466,4 @@ class JuegoPPT(View):
         El usuario ha elegido 'Piedra' en una partida de 'Piedra, Papel o Tijeras'.
         """
 
-        await ppt.jugar_partida_ppt("TIJERAS", interaccion.message, self.stats_juego)
+        await ppt.jugar_partida_ppt("TIJERAS", str(interaccion.user.id), interaccion.message, self.stats_juego)

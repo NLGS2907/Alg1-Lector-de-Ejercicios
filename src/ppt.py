@@ -38,7 +38,7 @@ def decidir_partida_ppt(eleccion: str, victoria: str, derrota: str, empate: str)
 
     return condicion_victoria
 
-async def jugar_partida_ppt(eleccion: str, msg: Message, stats_juego: archivos.DiccionarioStats) -> None:
+async def jugar_partida_ppt(eleccion: str, author_id: str, msg: Message, stats_juego: archivos.DiccionarioStats) -> None:
     """
     Juega una partida de 'Piedra, Papel o Tijeras'.
     """
@@ -61,7 +61,7 @@ async def jugar_partida_ppt(eleccion: str, msg: Message, stats_juego: archivos.D
 
     sleep(2.0) # suspenso...
 
-    stats_jugador = stats_juego.get(str(msg.author.id), [0, 0, 0])
+    stats_jugador = stats_juego.get(author_id, [0, 0, 0])
 
     match eleccion:
 
@@ -84,7 +84,7 @@ async def jugar_partida_ppt(eleccion: str, msg: Message, stats_juego: archivos.D
     if cond_partida is not None:
 
         stats_jugador[cond_partida] += 1
-        stats_juego[str(msg.author.id)] = stats_jugador
+        stats_juego[author_id] = stats_jugador
         archivos.guardar_stats_ppt(stats_juego)
 
         contenido = None

@@ -706,4 +706,4 @@ async def jugar_ppt(ctx: Context, eleccion: Optional[str]=None) -> None:
         await ctx.channel.send(f"**[ERROR]** Capo, tenés que elegir entre `{piedra}`, `{papel}` o `{tijeras}`.", reference=ctx.message.to_reference())
         return
 
-    await ppt.jugar_partida_ppt(eleccion, ctx.message, bot.rps_stats)
+    await ppt.jugar_partida_ppt(eleccion, str(ctx.author.id), ctx.message, bot.rps_stats)
