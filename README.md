@@ -3,8 +3,9 @@
 <img alt="exercise_reader.png" align="left" src="img/exercise_reader.png" height=128 width=128 />
 
 <p align="left">
+
 <img alt="version" src="https://img.shields.io/badge/version-1.1.0-brightgreen" />
-<img alt="version" src="https://img.shields.io/github/stars/NLGS2907/Alg1-Lector-de-Ejercicios?label=Estrellas&style=social" />
+<img alt="estrellas" src="https://img.shields.io/github/stars/NLGS2907/Alg1-Lector-de-Ejercicios?label=Estrellas&style=social" />
 
 
 Este bot de discord está pensado para usarse principalmente en el discord de la materia Algoritmos y Programación I,
