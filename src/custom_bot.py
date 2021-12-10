@@ -22,8 +22,8 @@ def nuevo_logger(nombre: str) -> logging.Logger:
     Genera un nuevo registrador.
     """
 
-    formato_mensaje = f"[ %(asctime)s ] - %(levelname)s - %(message)s"
-    formato_fecha = f"%d-%m-%Y %I:%M:%S %p" # Necesariamente distinto de DATE_FORMAT
+    formato_mensaje = "[ %(asctime)s ] - %(levelname)s - %(message)s"
+    formato_fecha = "%d-%m-%Y %I:%M:%S %p" # Necesariamente distinto de DATE_FORMAT
 
     formateador = logging.Formatter(fmt=formato_mensaje, datefmt=formato_fecha)
 
