@@ -168,7 +168,7 @@ def aprobar_materia(nota: int) -> bool:
     return True
 ```
 Yo también sé codear, ejem.""",
-"**¡¡¡Has encontrado el secreto!!!** Toma: https://i.imgur.com/eFo6haC.png \n\nAhora en serio, juguemos."
+"**¡¡¡Has encontrado el secreto!!!** Toma: https://i.imgur.com/eFo6haC.png \n\n\nhora en serio, juguemos."
 ]
 
 WHATSNEW = f""">>> **- Novedades de la versión `{BOT_VERSION}` -**
