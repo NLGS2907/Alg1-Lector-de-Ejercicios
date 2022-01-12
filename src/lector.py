@@ -5,9 +5,8 @@ Módulo dedicado a contener al comportamiento del bot.
 from typing import Optional
 from random import choice
 from os import remove
-from time import sleep
 
-from discord import Thread, Guild, Game, Message, Attachment, Interaction
+from discord import Thread, Guild, Game, Message, Attachment
 from discord.ext.commands import Context, check, is_owner
 from discord.ui import View
 from datetime import datetime
