@@ -5,7 +5,8 @@ Pequeño módulo que implementa la lógica de una partida de ahorcado.
 from typing import Optional
 from random import choice
 
-import archivos
+from ..archivos.archivos import cargar_lineas
+from ..constantes.constantes import WORDS_PATH
 
 class LetraAhorcado:
     """
@@ -15,7 +16,7 @@ class LetraAhorcado:
 
     def __init__(self, valor: str, oculta: bool) -> None:
         """
-        Crea una instancia de tipo 'LetraAhorcado'.
+        Inicializa una instancia de tipo 'LetraAhorcado'.
         """
 
         self.valor = valor
@@ -54,10 +55,10 @@ class Ahorcado:
 
     def __init__(self, frase: Optional[str]=None, **opciones) -> None:
         """
-        Crea una instancia de tipo 'Ahorcado'.
+        Inicializa una instancia de tipo 'Ahorcado'.
         """
 
-        frase_magica = (frase if frase else choice(archivos.cargar_lineas("src/palabras.txt")))
+        frase_magica = (frase if frase else choice(cargar_lineas(WORDS_PATH)))
         self.maximos_intentos = opciones.get("vidas_maximas", 7)
         self.intentos = self.maximos_intentos
 

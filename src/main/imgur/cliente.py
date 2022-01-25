@@ -6,7 +6,7 @@ a Imgur.
 from imgur_python import Imgur, Album
 from os.path import splitext
 
-from constantes import CLIENT_CONFIG, MEMES_ALBUM_NAME
+from ..constantes.constantes import CLIENT_CONFIG, MEMES_ALBUM_NAME
 
 
 class AlbumNoEncontrado(Exception):

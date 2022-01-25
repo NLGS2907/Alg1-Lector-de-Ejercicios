@@ -2,13 +2,12 @@
 Módulo que procesa 
 """
 
-from csv import reader
-from os import listdir, stat
+from typing import Optional
+from json import load, dump
+from os import listdir
 from os.path import isfile, isdir, join, splitext
 
-from typing import Optional, Any
-
-from constantes import EXT, GUIA_PATH, VERSIONS_PATH, STATS_PATH
+from ..constantes.constantes import EXT, GUIA_PATH, PROPERTIES_PATH
 
 DiccionarioPares = dict[str, str]
 
@@ -17,12 +16,25 @@ DiccionarioGuia = dict[str, str | dict[str, str]]
 DiccionarioStats = dict[str, list[int]]
 
 
-class GuiaNoEncontrada(Exception):
+def cargar_json(nombre_archivo: str) -> DiccionarioPares:
     """
-    Pequeña clase para definir un error de guía no encontrada.
+    Lee y carga un archivo JSON.
     """
+    dic_pares_valores = dict()
 
-    ...
+    with open(nombre_archivo, mode='r') as archivo:
+
+        dic_pares_valores = load(archivo)
+
+    return dic_pares_valores
+
+def guardar_json(dic_pares_valores: DiccionarioPares, nombre_archivo: str) -> None:
+    """
+    Recibe un diccionario y guarda la informacion del mismo en un archivo JSON.
+    """
+    with open(nombre_archivo, mode='w') as archivo:
+
+        dump(dic_pares_valores, archivo, indent=4)
 
 
 def archivos_guia(version: str, carpeta: str) -> list[str]:
@@ -36,12 +48,12 @@ def archivos_guia(version: str, carpeta: str) -> list[str]:
     return [u for u in listdir(version_path) if (isfile(join(version_path, u)) and splitext(join(version_path, u))[1] == EXT)]
 
 
-def lista_versiones(carpeta: str=GUIA_PATH) -> list[str]:
+def lista_carpetas(carpeta: str=GUIA_PATH) -> list[str]:
     """
-    Devuelve una lista de todas las versiones válidas que se encuentran
-    en el directorio de guías.
+    Devuelve una lista de todas las carpetas que se encuentran en un
+    directorio dado.
     """
-    return [ver for ver in listdir(carpeta) if isdir(join(carpeta, ver))]
+    return [dir for dir in listdir(carpeta) if isdir(join(carpeta, dir))]
 
 
 def version_es_valida(version: str, carpeta: str=GUIA_PATH) -> bool:
@@ -50,10 +62,10 @@ def version_es_valida(version: str, carpeta: str=GUIA_PATH) -> bool:
     las guías de ejercicios.
     """
 
-    return version in lista_versiones(carpeta)
+    return version in lista_carpetas(carpeta)
 
 
-def cargar_guia(version: str, carpeta: str=GUIA_PATH) -> DiccionarioGuia:
+def cargar_guia(version: str, carpeta: str=GUIA_PATH) -> Optional[DiccionarioGuia]:
     """
     Carga la guía de ejercicios en un diccionario de diccionarios, donde cada
     sub-diccionario tiene los pares clave valor en donde la clave es el numero
@@ -64,7 +76,7 @@ def cargar_guia(version: str, carpeta: str=GUIA_PATH) -> DiccionarioGuia:
 
     if not version_es_valida(version, carpeta):
 
-        raise GuiaNoEncontrada(f"La versión especificada '{version}' no es válida. No se puede cargar un diccionario inexistente.")
+        return
 
     unidades = archivos_guia(version, carpeta)
 
@@ -135,9 +147,9 @@ def actualizar_guia(nueva_version: str, guild_id: str) -> None:
     Cambia la versión de la guía para un servidor en particular.
     """
 
-    dic_versiones = cargar_pares_valores(VERSIONS_PATH)
-    dic_versiones[guild_id] = nueva_version
-    guardar_pares_valores(dic_versiones, VERSIONS_PATH)
+    propiedades = cargar_json(PROPERTIES_PATH)
+    propiedades["versiones_guia"][guild_id] = nueva_version
+    guardar_json(propiedades, PROPERTIES_PATH)
 
 
 def cargar_lineas(nombre_archivo: str) -> list[str]:
@@ -155,84 +167,3 @@ def cargar_lineas(nombre_archivo: str) -> list[str]:
             lineas.append(linea.rstrip())
 
     return lineas
-
-
-def cargar_pares_valores(nombre_archivo: str) -> DiccionarioPares:
-    """
-    Lee el archivo de prefijos y devuelve un diccionario con
-    cada server y su prefijo asignado mapeados en un diccionario.
-    """
-
-    dic_pares_valores = dict()
-
-    with open(nombre_archivo, 'r') as archivo:
-
-        prefijos = reader(archivo, delimiter='=')
-
-        for clave, valor in prefijos:
-
-            dic_pares_valores[clave] = valor
-
-    return dic_pares_valores
-
-
-def cargar_valor(nombre_archivo: str, llave: Any, default: Any=None) -> Optional[Any]:
-    """
-    Carga un solo valor de un diccionario de pares.
-    """
-
-    dic_pares_valores = cargar_pares_valores(nombre_archivo)
-
-    return dic_pares_valores.get(llave, default)
-
-
-def guardar_pares_valores(dic_pares_valores: DiccionarioPares, nombre_archivo: str) -> None:
-    """
-    Recibe un diccionario y guarda la información de este en un archivo CSV.
-    """
-
-    lista_a_imprimir = list()
-
-    with open(nombre_archivo, 'w') as archivo:
-
-        for clave, valor in dic_pares_valores.items():
-
-            lista_a_imprimir.append(f"{clave}={valor}")
-
-        archivo.write('\n'.join(lista_a_imprimir))
-
-
-def cargar_stats_ppt(nombre_archivo: str=STATS_PATH) -> DiccionarioStats:
-    """
-    Mira en un archivo (por defecto 'src/rps_stats.csv') y crea
-    un diccionario con los datos procesados.
-    """
-
-    diccionario_estadisticas = dict()
-
-    with open(nombre_archivo, mode='r') as archivo:
-
-        stats_usuarios = reader(archivo, delimiter='=')
-
-        for usuario, stats in stats_usuarios:
-
-            diccionario_estadisticas[usuario] = [int(stat) for stat in stats.split('-')]
-
-    return diccionario_estadisticas
-
-
-def guardar_stats_ppt(dic_stats: DiccionarioStats, nombre_archivo: str=STATS_PATH) -> None:
-    """
-    Guarda los datos de un diccionario de estadísticas en un archivo
-    (por defecto 'src/rps_stats.csv').
-    """
-
-    lista_a_imprimir = list()
-
-    with open(nombre_archivo, mode='w') as archivo:
-
-        for usuario, stats in dic_stats.items():
-
-            lista_a_imprimir.append(f"{usuario}={'-'.join([str(stat) for stat in stats])}")
-
-        archivo.write('\n'.join(lista_a_imprimir))

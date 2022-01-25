@@ -13,16 +13,12 @@ Repositorio: https://github.com/NLGS2907/Alg1-Lector-de-Ejercicios
 [01/12/22] Reboot requerido.
 """
 
-from constantes import TOKEN
+from .constantes.constantes import TOKEN
+from .lector.lector import Lector
 
-from lector import bot, log
+def main() -> None:
 
-def main():
-
-    bot.run(TOKEN)
-
-    log.info(f"{bot.user} se desconectó satisfactoriamente.\n")
-
+    Lector().run(TOKEN)
     return 0
 
 

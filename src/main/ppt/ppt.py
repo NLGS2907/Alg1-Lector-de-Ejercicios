@@ -7,7 +7,8 @@ from typing import Optional
 from random import choice
 from time import sleep
 
-import archivos
+from ..archivos.archivos import DiccionarioStats, cargar_json, guardar_json
+from ..constantes.constantes import PROPERTIES_PATH
 
 def decidir_partida_ppt(eleccion: str, victoria: str, derrota: str, empate: str) -> Optional[int]:
     """
@@ -38,7 +39,7 @@ def decidir_partida_ppt(eleccion: str, victoria: str, derrota: str, empate: str)
 
     return condicion_victoria
 
-async def jugar_partida_ppt(eleccion: str, author_id: str, msg: Message, stats_juego: archivos.DiccionarioStats) -> None:
+async def jugar_partida_ppt(eleccion: str, author_id: str, msg: Message, stats_juego: DiccionarioStats) -> None:
     """
     Juega una partida de 'Piedra, Papel o Tijeras'.
     """
@@ -85,7 +86,10 @@ async def jugar_partida_ppt(eleccion: str, author_id: str, msg: Message, stats_j
 
         stats_jugador[cond_partida] += 1
         stats_juego[author_id] = stats_jugador
-        archivos.guardar_stats_ppt(stats_juego)
+        
+        propiedades = cargar_json(PROPERTIES_PATH)
+        propiedades["stats_ppt"] = stats_juego
+        guardar_json(propiedades, PROPERTIES_PATH)
 
         contenido = None
 

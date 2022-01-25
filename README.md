@@ -4,7 +4,7 @@
 
 <p align="left">
 
-<img alt="version" src="https://img.shields.io/badge/version-1.1.0-brightgreen" />
+<img alt="version" src="https://img.shields.io/badge/version-1.2.0-brightgreen" />
 <img alt="estrellas" src="https://img.shields.io/github/stars/NLGS2907/Alg1-Lector-de-Ejercicios?label=Estrellas&style=social" />
 
 
@@ -18,7 +18,9 @@ de la Facultad de Ingeniería de la UBA, aunque puede utilizarse para cualquier 
 
 ### Changelog:
 
-**[v1.1.0](#v110)** ***<- La más nueva***
+**[v1.2.0](#v120)** ***<- La más nueva***
+
+[v1.1.0](#v110)
 
 [v1.0.4](#v104)
 
@@ -33,6 +35,17 @@ de la Facultad de Ingeniería de la UBA, aunque puede utilizarse para cualquier 
 
 <hr/>
 
+## v1.2.0
+
+* **Reformado el Código.** Ahora hace uso de `Cogs` para mejor organización
+de los comandos.
+
+* **Modularización.** Siguiendo la mejora de solidez técnica descrita arriba, muchas funciones
+y clases fueron separadas en sus propios módulos.
+
+* **Algunos Comandos ahora usan `Embeds.** Esto permite una presentación más prolija.
+
+<hr style="height:2px" />
 
 ## v1.1.0
 

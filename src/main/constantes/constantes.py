@@ -2,9 +2,8 @@
 Módulo para almacenar constantes, y para evitar import loops.
 """
 
-from random import choices
-
 from dotenv import load_dotenv
+
 load_dotenv()
 
 from os import getenv
@@ -41,7 +40,7 @@ ROL_DIEGO_ID = 653341579389435927
 
 ROL_DOCENTE_ID = 653341523886342145
 
-BOT_VERSION = "1.1.0"
+BOT_VERSION = "1.2.0"
 """
 La versión del bot a ser usada.
 
@@ -62,11 +61,7 @@ La versión de la guía por defecto, si la especificada no se encontrase.
 
 # Las siguientes direcciones son relativas al directorio raíz, no de la carpeta 'src'
 
-PREFIXES_PATH = "src/prefixes.csv"
-
-VERSIONS_PATH = "src/versions.csv"
-
-STATS_PATH = "src/rps_stats.csv"
+PROPERTIES_PATH = "src/main/propiedades.json"
 
 GUIA_PATH = "guia"
 """
@@ -78,6 +73,8 @@ LOG_PATH = "lector.log"
 El path donde se encuentra el registro.
 """
 
+WORDS_PATH = "src/main/palabras.txt"
+
 DATE_FORMAT = "%Y-%m-%d_%H-%M-%S_%f"
 
 REPO_URL = "https://github.com/NLGS2907/Alg1-Lector-de-Ejercicios"
@@ -87,53 +84,7 @@ La URL del repositorio donde está el código fuente del bot.
 
 MESSAGE_FORMAT = "**{mention}** ha consultado:\n\n>>> **Unidad** {unidad} - \"{titulo}\"  |  **Ejercicio** {ejercicio}:\n\n**{unidad}.{ejercicio}.** {enunciado}"
 
-INFO_MESSAGE = {
-
-'1' : """>>> **- Lector de Ejercicios (v{version_bot}) -\t(1 / 2)**
-
-Versión de la guía para este servidor: `{version}`
-
-`{prefix}info|i -dm` muestra esta lista.
-
-`{prefix}ej|ejercicio|enunciado <unidad> <ejercicio> -dm` para mostrar el ejercicio de la unidad correspondiente de la guía.
-
-`{prefix}random|aleatorio|r <unidad posible>, <sentido> -dm` para mostrar un ejercicio al azar. 'unidad_posible' es de
-dónde empezar a buscar, y 'sentido' es el parámetro de búsqueda, y toma los valores '=', '<', '<=',
-'>' o '>='.
-Por ejemplo, `{prefix}random 12 <=` devuelve un ejercicio aleatorio de alguna guía anterior o igual a la guía 12.
-
-`{prefix}prefix|prefijo <nuevo_prefijo>` cambia el prefijo de los comandos a 'nuevo_prefijo'.
-
-`{prefix}guia|guia_version|gver <nueva_version>` cambia la versión de la guía que utilizar, si es una versión válida.
-
-`{prefix}meme -add|-agregar|<numero>` para generar un meme aleatorio, o el de la posición `numero`, o con el parámetro `add` para intentar añadirlo a la colección. 
-""",
-
-'2' : """>>> **- Lector de Ejercicios (v{version_bot}) -\t(2 / 2)**
-
-Versión de la guía para este servidor: `{version}`
-
-`{prefix}hanged|ahorcado <vidas> <*frase>` para reservar una sala de ahorcado. Esta es en forma de un hilo temporal.
-Si se hace una partida personalizada con `<*frase>` determinada por el usuario, se recomienda encerrarlo en '\|\|'.
-Así, \|\|palabra\|\| se ve como ||palabra||. Esto sirve para desalentar ver la respuesta de primeras.
-
-También, si se está dentro de una sala de ahorcado:
-
-`{prefix}guess|adivinar <caracter>` para tratar de adivinar un solo caracter de la frase oculta.
-
-`{prefix}display|mostrar` para mostrar de nuevo la pantalla del juego de ahorcado. Ahora esta nueva pantalla será la
-que se actualice para mostrar el avance del juego.
-
-`{prefix}clear|clean|cls <limite> | -full` para limpiar los mensajes del bot. `<limite>` es la cantidad de mensajes
-que verificar (no los que serán borrados, aunque puede ser el caso). `full` elimina no sólo los mensajes del bot
-si no también los de todos los usuarios que invocan sus comandos.
-
-`{prefix}version|ver` para mostrar en un mensaje breve la versión actual del bot. 
-
-
-*desarrollado por Franco 'NLGS' Lighterman Reismann.*
-"""
-}
+INFO_MESSAGE = "src/main/info_msg.json"
 
 EXT = ".txt"
 """
@@ -168,7 +119,7 @@ def aprobar_materia(nota: int) -> bool:
     return True
 ```
 Yo también sé codear, ejem.""",
-"**¡¡¡Has encontrado el secreto!!!** Toma: https://i.imgur.com/eFo6haC.png \n\n\nhora en serio, juguemos."
+"**¡¡¡Has encontrado el secreto!!!** Toma: https://i.imgur.com/eFo6haC.png \n\n\nAhora en serio, juguemos."
 ]
 
 WHATSNEW = f""">>> **- Novedades de la versión `{BOT_VERSION}` -**
@@ -204,15 +155,3 @@ hay `80946` combinaciones posibles. Unas pocas más.
 
 * **El bot ahora es más** ¿...competitivo?
 """
-
-
-def elegir_frases(opciones: list[str]=RPS_PHRASES) -> str:
-    """
-    Elige con distinta probabilidad las opciones
-    """
-
-    num_opciones = len(opciones)
-
-    pesos = ([10] * (num_opciones - 1) if num_opciones > 1 else []) + [1]
-
-    return ''.join(choices(opciones, weights=pesos))
