@@ -28,13 +28,13 @@ def cargar_json(nombre_archivo: str) -> DiccionarioPares:
 
     return dic_pares_valores
 
-def guardar_json(dic_pares_valores: DiccionarioPares, nombre_archivo: str) -> None:
+def guardar_json(dic_pares_valores: DiccionarioPares, nombre_archivo: str, sangria: int=4) -> None:
     """
     Recibe un diccionario y guarda la informacion del mismo en un archivo JSON.
     """
     with open(nombre_archivo, mode='w') as archivo:
 
-        dump(dic_pares_valores, archivo, indent=4)
+        dump(dic_pares_valores, archivo, indent=sangria)
 
 
 def archivos_guia(version: str, carpeta: str) -> list[str]:
