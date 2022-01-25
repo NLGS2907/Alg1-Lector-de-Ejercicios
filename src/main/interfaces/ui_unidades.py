@@ -7,11 +7,11 @@ from typing import Optional
 from discord import Interaction, SelectOption
 from discord.ui import Select, select
 
-from ..archivos.archivos import DiccionarioGuia, actualizar_guia, cargar_guia, lista_unidades, lista_carpetas
-from .ui_general import VistaGeneral
+from ..archivos.archivos import (DiccionarioGuia, actualizar_guia, cargar_guia,
+                                 lista_carpetas, lista_unidades)
+from ..constantes.constantes import DEFAULT_VERSION
 from .ui_ejercicios import SelectorEjercicios
-
-from ..constantes.constantes import  DEFAULT_VERSION
+from .ui_general import VistaGeneral
 
 
 class SelectorGuia(VistaGeneral):
@@ -29,7 +29,10 @@ class SelectorGuia(VistaGeneral):
         self.version_actual = version_actual
 
 
-    @select(placeholder="Seleccione una versión de la guía", custom_id="selector_de_guia", options=[SelectOption(label=ver) for ver in lista_carpetas()], max_values=1)
+    @select(placeholder="Seleccione una versión de la guía",
+            custom_id="selector_de_guia",
+            options=[SelectOption(label=ver) for ver in lista_carpetas()],
+            max_values=1)
     async def seleccionar_guia(self, seleccion: Select, interaccion: Interaction) -> None:
         """
         Muestra y selecciona una versión específica de la guía.
@@ -38,10 +41,13 @@ class SelectorGuia(VistaGeneral):
         version_vieja = self.version_actual
         nueva_version = seleccion.values[0] # Debería tener sólo un elemento
         self.version_actual = nueva_version
-        
+
         actualizar_guia(nueva_version, str(interaccion.message.guild.id))
 
-        await interaccion.response.edit_message(content=f"**[AVISO]** La versión de la guía fue cambiada{f' de `{version_vieja}`' if version_vieja else ''} a `{nueva_version}` exitosamente.", view=None)
+        await interaccion.response.edit_message(content="**[AVISO]** La versión de la guía " +
+                            f"fue cambiada{f' de `{version_vieja}`' if version_vieja else ''} a " +
+                            f"`{nueva_version}` exitosamente.",
+                                                view=None)
 
 
 class MenuSelectorUnidad(Select):
@@ -66,19 +72,31 @@ class MenuSelectorUnidad(Select):
 
         self.guia = guia
 
-        opciones = [SelectOption(label=f"Unidad {unidad}", value=unidad, description=self.guia[unidad]["titulo"]) for unidad in lista_unidades(self.guia)]
+        opciones = [SelectOption(label=f"Unidad {unidad}",
+                                 value=unidad,
+                                 description=self.guia[unidad]["titulo"])
 
-        super().__init__(custom_id=custom_id, placeholder=placeholder, min_values=min_values, max_values=max_values, options=opciones, disabled=disabled, row=row)
+                                 for unidad in lista_unidades(self.guia)]
+
+        super().__init__(custom_id=custom_id,
+                         placeholder=placeholder,
+                         min_values=min_values,
+                         max_values=max_values,
+                         options=opciones,
+                         disabled=disabled,
+                         row=row)
 
 
-    async def callback(self, interaccion: Interaction) -> None:
+    async def callback(self, interaction: Interaction) -> None:
         """
         Procesa la unidad elegida por el usuario del menú selector.
         """
 
         unidad_elegida = self.values[0]
 
-        await interaccion.response.edit_message(content="Elija el ejercicio", view=SelectorEjercicios(guia=self.guia, unidad=unidad_elegida))
+        await interaction.response.edit_message(content="Elija el ejercicio",
+                                                view=SelectorEjercicios(guia=self.guia,
+                                                                        unidad=unidad_elegida))
 
 
 class SelectorUnidad(VistaGeneral):

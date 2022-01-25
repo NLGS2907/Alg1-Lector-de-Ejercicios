@@ -2,16 +2,18 @@
 Interfaces para los Ejercicios.
 """
 
-from typing import Optional
 from random import choice
+from typing import Optional
 
-from discord import Interaction, Message, PartialEmoji as Emoji, SelectOption
-from discord.ui import Button, button, Select
+from discord import Interaction, Message
+from discord import PartialEmoji as Emoji
+from discord import SelectOption
 from discord.enums import ButtonStyle
+from discord.ui import Button, Select, button
 
-from ..archivos.archivos import DiccionarioGuia, DiccionarioPares, cargar_guia, lista_ejercicios, lista_unidades 
-
-from ..constantes.constantes import MESSAGE_FORMAT, DEFAULT_VERSION
+from ..archivos.archivos import (DiccionarioGuia, DiccionarioPares,
+                                 cargar_guia, lista_ejercicios, lista_unidades)
+from ..constantes.constantes import DEFAULT_VERSION, MESSAGE_FORMAT
 from .ui_general import VistaGeneral
 
 
@@ -44,12 +46,19 @@ class MenuSelectorEjercicio(Select):
 
         self.unidad = unidad
 
-        opciones = [SelectOption(label=f"Ejercicio {ejercicio}", value=ejercicio) for ejercicio in lista_ejercicios(self.guia, unidad)]
+        opciones = [SelectOption(label=f"Ejercicio {ejercicio}", value=ejercicio)
+                    for ejercicio in lista_ejercicios(self.guia, unidad)]
 
-        super().__init__(custom_id=custom_id, placeholder=placeholder, min_values=min_values, max_values=max_values, options=opciones, disabled=disabled, row=row)
+        super().__init__(custom_id=custom_id,
+                         placeholder=placeholder,
+                         min_values=min_values,
+                         max_values=max_values,
+                         options=opciones,
+                         disabled=disabled,
+                         row=row)
 
 
-    async def callback(self, interaccion: Interaction) -> None:
+    async def callback(self, interaction: Interaction) -> None:
         """
         Procesa el ejercicio elegido por el usuario del menú selector.
         """
@@ -57,11 +66,15 @@ class MenuSelectorEjercicio(Select):
         ejercicio = self.values[0]
         enunciado = self.guia[self.unidad][ejercicio]
 
-        mensaje = MESSAGE_FORMAT.format(mention=interaccion.user.mention, unidad=self.unidad, titulo=self.guia[self.unidad]["titulo"], ejercicio=ejercicio, enunciado=enunciado)
+        mensaje = MESSAGE_FORMAT.format(mention=interaction.user.mention,
+                                        unidad=self.unidad,
+                                        titulo=self.guia[self.unidad]["titulo"],
+                                        ejercicio=ejercicio,
+                                        enunciado=enunciado)
 
         interfaz = NavegadorEjercicios(guia=self.guia, unidad=self.unidad, ejercicio=ejercicio)
 
-        await interaccion.response.edit_message(content=mensaje, view=interfaz)
+        await interaction.response.edit_message(content=mensaje, view=interfaz)
 
 
 class SelectorEjercicios(VistaGeneral):
@@ -100,7 +113,6 @@ class NavegadorEjercicios(VistaGeneral):
         self.actualizar_ejercicios()
 
         self.unidades = lista_unidades(self.guia)
-        self.max_unidades = len(self.unidades)
 
         self.actualizar_botones()
 
@@ -140,9 +152,9 @@ class NavegadorEjercicios(VistaGeneral):
         """
 
         if any(((boton.custom_id == "u_left" and self.unidad_actual == self.unidades[0]),
-               (boton.custom_id == "ex_left" and self.ejercicio_actual == self.ejercicios[0]),
-               (boton.custom_id == "ex_right" and self.ejercicio_actual == str(self.max_ejercicios)),
-               (boton.custom_id == "u_right") and self.unidad_actual == str(self.max_unidades))):
+              (boton.custom_id == "ex_left" and self.ejercicio_actual == self.ejercicios[0]),
+              (boton.custom_id == "ex_right" and self.ejercicio_actual == str(self.max_ejercicios)),
+              (boton.custom_id == "u_right") and self.unidad_actual == str(len(self.unidades)))):
 
             boton.disabled = True
 
@@ -177,8 +189,10 @@ class NavegadorEjercicios(VistaGeneral):
         await interaccion.response.edit_message(content=contenido_mensaje, view=self)
 
 
-    @button(style=ButtonStyle.grey, custom_id="u_left", emoji=Emoji.from_str("\N{Black Left-Pointing Double Triangle}"))
-    async def unidad_anterior(self, boton: Button, interaccion: Interaction) -> None:
+    @button(style=ButtonStyle.grey,
+            custom_id="u_left",
+            emoji=Emoji.from_str("\N{Black Left-Pointing Double Triangle}"))
+    async def unidad_anterior(self, _: Button, interaccion: Interaction) -> None:
         """
         Retrocede hasta el último ejercicio de la unidad anterior.
         """
@@ -196,8 +210,10 @@ class NavegadorEjercicios(VistaGeneral):
         await self.actualizar_mensaje(interaccion)
 
 
-    @button(style=ButtonStyle.grey, custom_id="ex_left", emoji=Emoji.from_str("\N{Leftwards Black Arrow}"))
-    async def ejercicio_anterior(self, boton: Button, interaccion: Interaction) -> None:
+    @button(style=ButtonStyle.grey,
+            custom_id="ex_left",
+            emoji=Emoji.from_str("\N{Leftwards Black Arrow}"))
+    async def ejercicio_anterior(self, _: Button, interaccion: Interaction) -> None:
         """
         Se intenta ir a la página anterior del mensaje INFO.
         """
@@ -211,8 +227,10 @@ class NavegadorEjercicios(VistaGeneral):
         await self.actualizar_mensaje(interaccion)
 
 
-    @button(style=ButtonStyle.grey, custom_id="ex_right", emoji=Emoji.from_str("\N{Black Rightwards Arrow}"))
-    async def ejercicio_posterior(self, boton: Button, interaccion: Interaction) -> None:
+    @button(style=ButtonStyle.grey,
+    custom_id="ex_right",
+    emoji=Emoji.from_str("\N{Black Rightwards Arrow}"))
+    async def ejercicio_posterior(self, _: Button, interaccion: Interaction) -> None:
         """
         Se intenta ir a la página posterior del mensaje INFO.
         """
@@ -226,8 +244,10 @@ class NavegadorEjercicios(VistaGeneral):
         await self.actualizar_mensaje(interaccion)
 
 
-    @button(style=ButtonStyle.grey, custom_id="u_right", emoji=Emoji.from_str("\N{Black Right-Pointing Double Triangle}"))
-    async def unidad_posterior(self, boton: Button, interaccion: Interaction) -> None:
+    @button(style=ButtonStyle.grey,
+            custom_id="u_right",
+            emoji=Emoji.from_str("\N{Black Right-Pointing Double Triangle}"))
+    async def unidad_posterior(self, _: Button, interaccion: Interaction) -> None:
         """
         Retrocede hasta el primer ejercicio de la unidad siguiente.
         """
@@ -245,8 +265,10 @@ class NavegadorEjercicios(VistaGeneral):
         await self.actualizar_mensaje(interaccion)
 
 
-    @button(style=ButtonStyle.grey, custom_id="ex_random", emoji=Emoji.from_str("\N{Anticlockwise Downwards and Upwards Open Circle Arrows}"))
-    async def ejercicio_aleatorio(self, boton: Button, interaccion: Interaction) -> None:
+    @button(style=ButtonStyle.grey,
+            custom_id="ex_random",
+            emoji=Emoji.from_str("\N{Anticlockwise Downwards and Upwards Open Circle Arrows}"))
+    async def ejercicio_aleatorio(self, _: Button, interaccion: Interaction) -> None:
         """
         Muestra un ejercicio completamente aleatorio de toda
         la guía.
@@ -254,7 +276,7 @@ class NavegadorEjercicios(VistaGeneral):
 
         self.unidad_actual = choice(self.unidades)
         self.actualizar_ejercicios()
-        self.ejercicio = choice(self.ejercicios)
+        self.ejercicio_actual = choice(self.ejercicios)
 
         self.actualizar_botones()
 

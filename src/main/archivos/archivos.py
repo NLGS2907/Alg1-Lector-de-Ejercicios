@@ -1,11 +1,11 @@
 """
-Módulo que procesa 
+Módulo que procesa archivos.
 """
 
-from typing import Optional
-from json import load, dump
+from json import dump, load
 from os import listdir
-from os.path import isfile, isdir, join, splitext
+from os.path import isdir, isfile, join, splitext
+from typing import Optional
 
 from ..constantes.constantes import EXT, GUIA_PATH, PROPERTIES_PATH
 
@@ -20,9 +20,9 @@ def cargar_json(nombre_archivo: str) -> DiccionarioPares:
     """
     Lee y carga un archivo JSON.
     """
-    dic_pares_valores = dict()
+    dic_pares_valores = {}
 
-    with open(nombre_archivo, mode='r') as archivo:
+    with open(nombre_archivo, mode='r', encoding="utf-8") as archivo:
 
         dic_pares_valores = load(archivo)
 
@@ -32,7 +32,7 @@ def guardar_json(dic_pares_valores: DiccionarioPares, nombre_archivo: str, sangr
     """
     Recibe un diccionario y guarda la informacion del mismo en un archivo JSON.
     """
-    with open(nombre_archivo, mode='w') as archivo:
+    with open(nombre_archivo, mode='w', encoding="utf-8") as archivo:
 
         dump(dic_pares_valores, archivo, indent=sangria)
 
@@ -45,7 +45,8 @@ def archivos_guia(version: str, carpeta: str) -> list[str]:
     """
 
     version_path = join(carpeta, version)
-    return [u for u in listdir(version_path) if (isfile(join(version_path, u)) and splitext(join(version_path, u))[1] == EXT)]
+    return [u for u in listdir(version_path)
+            if (isfile(join(version_path, u)) and splitext(join(version_path, u))[1] == EXT)]
 
 
 def lista_carpetas(carpeta: str=GUIA_PATH) -> list[str]:
@@ -76,7 +77,7 @@ def cargar_guia(version: str, carpeta: str=GUIA_PATH) -> Optional[DiccionarioGui
 
     if not version_es_valida(version, carpeta):
 
-        return
+        return None
 
     unidades = archivos_guia(version, carpeta)
 
@@ -84,8 +85,8 @@ def cargar_guia(version: str, carpeta: str=GUIA_PATH) -> Optional[DiccionarioGui
 
     for unidad in range(1, len(unidades) + 1):
 
-        dic_unidad = dict()
-        lista_ej = list()
+        dic_unidad = {}
+        lista_ej = []
         nombre_ej = ''
 
         with open(f"{carpeta}/{version}/guia_{unidad}.txt", encoding="utf-8") as archivo:
@@ -106,7 +107,7 @@ def cargar_guia(version: str, carpeta: str=GUIA_PATH) -> Optional[DiccionarioGui
                 elif valor == '<': # Empezar a leer ejercicio
 
                     nombre_ej = llave
-                    lista_ej = list()
+                    lista_ej = []
 
                 elif llave in ('t', 'n', 'tn', ''): # Para formatear lineas
 
@@ -132,7 +133,10 @@ def lista_unidades(guia: DiccionarioGuia) -> list[str]:
     Dada una guía, devuelve una lista de sus unidades.
     """
 
-    return [unidad for unidad in guia][1:] # Se escluye la clave 'version'
+    copia_guia = guia.copy()
+    copia_guia.pop("version") # Se escluye la clave 'version'
+
+    return list(copia_guia)
 
 def lista_ejercicios(guia: DiccionarioGuia, unidad: DiccionarioPares) -> list[str]:
     """
@@ -140,7 +144,11 @@ def lista_ejercicios(guia: DiccionarioGuia, unidad: DiccionarioPares) -> list[st
     lista con los números de ejercicios.
     """
 
-    return [ejercicio for ejercicio in guia[unidad].keys()][1:] # Se excluye la clave 'titulo'
+    copia_unidad = guia[unidad].copy()
+    # Se excluye la clave 'titulo'
+    copia_unidad.pop("titulo")
+
+    return list(copia_unidad)
 
 def actualizar_guia(nueva_version: str, guild_id: str) -> None:
     """
@@ -158,7 +166,7 @@ def cargar_lineas(nombre_archivo: str) -> list[str]:
     un valor en cada una.
     """
 
-    lineas = list()
+    lineas = []
 
     with open(nombre_archivo, encoding="utf-8") as archivo:
 

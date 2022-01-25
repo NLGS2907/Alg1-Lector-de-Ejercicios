@@ -5,11 +5,11 @@ Cog para escuchar eventos del Bot.
 from discord import Guild, Thread
 from discord.ext.commands import Cog, Context
 
-from .general import CogGeneral
-from ..logger.logger import log
 from ..archivos.archivos import cargar_json, guardar_json
-
-from ..constantes.constantes import DEFAULT_PREFIX, DEFAULT_VERSION, PROPERTIES_PATH
+from ..constantes.constantes import (DEFAULT_PREFIX, DEFAULT_VERSION,
+                                     PROPERTIES_PATH)
+from ..logger.logger import log
+from .general import CogGeneral
 
 
 class CogEventos(CogGeneral):
@@ -23,7 +23,7 @@ class CogEventos(CogGeneral):
         El bot se conectó y está listo para usarse.
         """
 
-        log.info(f"¡{self.bot.user} conectado y listo para utilizarse!")
+        log.info("¡%s conectado y listo para utilizarse!", self.bot.user)
 
     @Cog.listener()
     async def on_command(self, ctx: Context):
@@ -31,7 +31,15 @@ class CogEventos(CogGeneral):
         El usuario está tratando de invocar un comando.
         """
 
-        log.info(f"El usuario {ctx.author} está tratando de invocar '{ctx.command}' en el canal '#{ctx.channel.name}' del server '{ctx.guild.name}' mediante el mensaje '{ctx.message.content}'")
+        formato_log = {"autor": ctx.author,
+                       "cmd": ctx.command,
+                       "canal": ctx.channel.name,
+                       "guild": ctx.guild.name,
+                       "msg": ctx.message.content}
+
+        log.info("El usuario %(autor)s está tratando de invocar '%(cmd)s' " % formato_log +
+                 "en el canal '#%(canal)s' del server '%(guild)s' " % formato_log +
+                 "mediante el mensaje '%(msg)s'" % formato_log)
 
     @Cog.listener()
     async def on_command_completion(self, ctx: Context):
@@ -39,7 +47,10 @@ class CogEventos(CogGeneral):
         El usuario ejecutó el comando satisfactoriamente.
         """
 
-        log.info(f"{ctx.author} ha invocado '{ctx.command}' satisfactoriamente")
+        formato_log = {"autor": ctx.author,
+                       "cmd": ctx.command}
+
+        log.info("%(autor)s ha invocado '%(cmd)s' satisfactoriamente", formato_log)
 
 
     @Cog.listener()
@@ -48,7 +59,7 @@ class CogEventos(CogGeneral):
         El bot se conectó por primera vez a un servidor.
         """
 
-        log.info(f"El bot se conectó a '{guild.name}'")
+        log.info("El bot se conectó a '%s'", guild.name)
 
         propiedades = cargar_json(PROPERTIES_PATH)
 
@@ -61,7 +72,7 @@ class CogEventos(CogGeneral):
 
 
     @Cog.listener()
-    async def on_thread_update(self, before: Thread, after: Thread) -> None:
+    async def on_thread_update(self, _: Thread, after: Thread) -> None:
         """
         Un hilo fue actualizado. Si esta actualización fue que el hilo en
         cuestión fue archivado, y si es uno de las partidas de ahorcado,
@@ -73,5 +84,7 @@ class CogEventos(CogGeneral):
         if partida and after.archived:
 
             self.bot.partidas.pop(str(after.id))
-            await after.parent.send(f"**[AVISO]** Partida `{after.name}` fue eliminada al ser archivado (probablemente por la hora de inactividad).")
+            await after.parent.send(content=f"**[AVISO]** Partida `{after.name}` fue " +
+                                    "eliminada al ser archivado (probablemente por la hora " +
+                                    "de inactividad).")
             await after.delete()

@@ -16,6 +16,7 @@ Repositorio: https://github.com/NLGS2907/Alg1-Lector-de-Ejercicios
 from .constantes.constantes import TOKEN
 from .lector.lector import Lector
 
+
 def main() -> None:
 
     Lector().run(TOKEN)

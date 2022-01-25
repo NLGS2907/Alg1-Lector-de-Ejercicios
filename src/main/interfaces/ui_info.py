@@ -2,12 +2,14 @@
 Interfaz para el comando 'info'.
 """
 
-from discord import Interaction, Message, PartialEmoji as Emoji
-from discord.ui import Button, button
+from discord import Interaction, Message
+from discord import PartialEmoji as Emoji
 from discord.enums import ButtonStyle
+from discord.ui import Button, button
 
 from ..archivos.archivos import cargar_json
-from ..constantes.constantes import REPO_URL, DEFAULT_PREFIX, BOT_VERSION, DEFAULT_VERSION, INFO_MESSAGE
+from ..constantes.constantes import (BOT_VERSION, DEFAULT_PREFIX,
+                                     DEFAULT_VERSION, INFO_MESSAGE, REPO_URL)
 from ..embebido.embebido import Embebido
 from .ui_general import VistaGeneral
 
@@ -22,7 +24,7 @@ class InfoUI(VistaGeneral):
                  version_bot: str=BOT_VERSION,
                  version_guia: str=DEFAULT_VERSION,
                  prefijo: str=DEFAULT_PREFIX,
-                 opciones_embebido=cargar_json(INFO_MESSAGE)) -> None:
+                 opciones_embebido=None) -> None:
         """
         Inicializa una instancia de 'InfoUI'.
         """
@@ -32,13 +34,16 @@ class InfoUI(VistaGeneral):
         self.version_bot: str = version_bot
         self.version_guia: str = version_guia
         self.prefijo: str = prefijo
-        self.opciones_embebido = opciones_embebido
+        self.opciones_embebido = (cargar_json(INFO_MESSAGE)
+                                  if not opciones_embebido
+                                  else opciones_embebido)
 
         cantidad_campos: int = len(self.opciones_embebido["campos"])
         self.elementos_por_pagina: int = 6
 
         self.pagina = 1
-        self.max_paginas = (cantidad_campos // self.elementos_por_pagina) + (1 if (cantidad_campos % self.elementos_por_pagina) else 0)
+        self.max_paginas = ((cantidad_campos // self.elementos_por_pagina) +
+                            (1 if (cantidad_campos % self.elementos_por_pagina) else 0))
 
         self.add_item(Button(style=ButtonStyle.grey, label="Repositorio", url=REPO_URL))
 
@@ -85,16 +90,20 @@ class InfoUI(VistaGeneral):
         opciones_a_usar = self.opciones_embebido.copy()
         opciones_a_usar["campos"] = opciones_a_usar["campos"][desde:hasta]
 
-        nuevo_embebido = Embebido(version_bot=self.version_bot,
-                                  version_guia=self.version_guia,
-                                  prefijo=self.prefijo,
+        formatos = {"version_bot": self.version_bot,
+                    "version_guia": self.version_guia,
+                    "prefijo": self.prefijo}
+
+        nuevo_embebido = Embebido(formatos=formatos,
                                   opciones=opciones_a_usar)
 
         return await interaccion.response.edit_message(view=self, embed=nuevo_embebido)
 
 
-    @button(style=ButtonStyle.grey, custom_id="pg_left", emoji=Emoji.from_str("\N{Leftwards Black Arrow}"), disabled=True)
-    async def pagina_anterior(self, boton: Button, interaccion: Interaction) -> None:
+    @button(style=ButtonStyle.grey,
+            custom_id="pg_left",
+            emoji=Emoji.from_str("\N{Leftwards Black Arrow}"), disabled=True)
+    async def pagina_anterior(self, _: Button, interaccion: Interaction) -> None:
         """
         Se intenta ir a la página anterior del mensaje INFO.
         """
@@ -106,8 +115,10 @@ class InfoUI(VistaGeneral):
         await self.actualizar_mensaje(interaccion)
 
 
-    @button(style=ButtonStyle.grey, custom_id="pg_right", emoji=Emoji.from_str("\N{Black Rightwards Arrow}"), disabled=False)
-    async def pagina_posterior(self, boton: Button, interaccion: Interaction) -> None:
+    @button(style=ButtonStyle.grey,
+            custom_id="pg_right",
+            emoji=Emoji.from_str("\N{Black Rightwards Arrow}"), disabled=False)
+    async def pagina_posterior(self, _: Button, interaccion: Interaction) -> None:
         """
         Se intenta ir a la página posterior del mensaje INFO.
         """

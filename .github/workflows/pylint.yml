@@ -21,4 +21,4 @@ jobs:
         python -m pip install pylint
     - name: Analizando el código con Pylint
       run: |
-        pylint $(git ls-files '*.py')
+        pylint $(git ls-files '*.py') --fail-under=7.0 --ignore=main.py --ignore-paths=src/tests

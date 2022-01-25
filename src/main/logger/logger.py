@@ -6,6 +6,7 @@ import logging
 
 from ..constantes.constantes import LOG_PATH
 
+
 def nuevo_logger(nombre: str) -> logging.Logger:
     """
     Genera un nuevo registrador.
@@ -22,12 +23,12 @@ def nuevo_logger(nombre: str) -> logging.Logger:
     consola_handler = logging.StreamHandler()
     consola_handler.setFormatter(formateador)
 
-    log = logging.getLogger(name=nombre)
-    log.setLevel(logging.INFO)
-    log.addHandler(archivo_handler)
-    log.addHandler(consola_handler)
+    log_a_devolver = logging.getLogger(name=nombre)
+    log_a_devolver.setLevel(logging.INFO)
+    log_a_devolver.addHandler(archivo_handler)
+    log_a_devolver.addHandler(consola_handler)
 
-    return log
+    return log_a_devolver
 
 
 log = nuevo_logger("lector")

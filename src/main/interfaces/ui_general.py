@@ -3,9 +3,11 @@ Interfaz general para el uso de herencia.
 """
 
 from typing import Optional
-from discord import Interaction, PartialEmoji as Emoji
+
+from discord import Interaction
+from discord import PartialEmoji as Emoji
 from discord.enums import ButtonStyle
-from discord.ui import View, button, Button
+from discord.ui import Button, View, button
 
 
 class VistaGeneral(View):
@@ -31,10 +33,17 @@ class VistaGeneral(View):
 
             item.disabled = True
 
-    @button(style=ButtonStyle.red, custom_id="exit", label="Cerrar", row=2, emoji=Emoji.from_str("\N{Heavy Multiplication X}"))
-    async def cerrar_interfaz(self, boton: Button, interaccion: Interaction) -> None:
+    @button(style=ButtonStyle.red,
+            custom_id="exit",
+            label="Cerrar",
+            row=2,
+            emoji=Emoji.from_str("\N{Heavy Multiplication X}"))
+    async def cerrar_interfaz(self, _: Button, interaccion: Interaction) -> None:
         """
         Cierra la interfaz actual.
         """
 
-        await interaccion.message.edit(content="*Borrando Mensaje...*", view=None, embed=None, delete_after=3.0)
+        await interaccion.message.edit(content="*Borrando Mensaje...*",
+                                       view=None,
+                                       embed=None,
+                                       delete_after=3.0)

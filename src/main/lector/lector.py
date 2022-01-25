@@ -2,41 +2,43 @@
 Módulo dedicado a contener la clase personalizada 'CustomBot'.
 """
 
-from typing import Callable, Optional
-from discord import Message, Game
-from discord.ext.commands import Bot, Context
 from datetime import datetime
+from platform import system
+from typing import Callable, Optional
 
+from discord import Game, Message
+from discord.ext.commands import Bot, Context
+
+from ..ahorcado.ahorcado import Ahorcado
+from ..archivos.archivos import DiccionarioGuia, cargar_guia, cargar_json
 from ..auxiliar.auxiliar import get_prefijo
-from ..imgur.cliente import MemeImgur
-from ..logger.logger import log
-from ..cogs.ejercicios import CogEjercicios
-from ..cogs.hanged import CogHanged
-from ..cogs.rps import CogRPS
 from ..cogs.admin import CogAdmin
+from ..cogs.ejercicios import CogEjercicios
 from ..cogs.eventos import CogEventos
+from ..cogs.hanged import CogHanged
 from ..cogs.imgur import CogImgur
 from ..cogs.misc import CogMisc
-from ..ahorcado.ahorcado import Ahorcado
-from ..archivos.archivos import cargar_guia, cargar_json, DiccionarioGuia
-
-from ..constantes.constantes import BOT_VERSION, DATE_FORMAT, DEFAULT_VERSION, PROPERTIES_PATH
+from ..cogs.rps import CogRPS
+from ..constantes.constantes import (BOT_VERSION, CLIENT_CONFIG, DATE_FORMAT,
+                                     DEFAULT_VERSION, PROPERTIES_PATH)
+from ..imgur.cliente import Memegur
+from ..logger.logger import log
 
 # Para que no tire error en Windows al cerrar el Bot.
 
-from platform import system
-from asyncio import set_event_loop_policy
 
 try:
 
-    from asyncio import WindowsSelectorEventLoopPolicy
+    from asyncio import WindowsSelectorEventLoopPolicy, set_event_loop_policy
 
     if system() == "Windows":
+
         set_event_loop_policy(WindowsSelectorEventLoopPolicy())
 
 except ImportError:
 
-    log.warning("No se pudo importar 'WindowsSelectorEventLoopPolicy', probablemente porque esto no es Windows.")
+    log.warning("No se pudo importar 'WindowsSelectorEventLoopPolicy', probablemente porque " +
+                "esto no es Windows.")
 
 
 class Lector(Bot):
@@ -51,7 +53,7 @@ class Lector(Bot):
         con posibilidad de cambiarla en algún momento en el futuro.
         """
 
-        dict_guias = dict()
+        dict_guias = {}
         propiedades_guias = cargar_json(PROPERTIES_PATH)["versiones_guia"]
 
         for guild_id, version in propiedades_guias.items():
@@ -60,15 +62,25 @@ class Lector(Bot):
 
             if version_a_usar is None:
 
-                log.warning(f"La versión '{version}' no fue encontrada, configurando la versión predeterminada '{DEFAULT_VERSION}' para id {guild_id}...")
+                formato_log = {"version": version,
+                               "default_ver": DEFAULT_VERSION,
+                               "guild_id": guild_id}
+
+                log.warning("La versión '%(version)s' no fue encontrada, " % formato_log +
+                            "configurando la versión predeterminada " +
+                            "'%(default_ver)s' para id %(guild_id)s..." % formato_log)
                 version_a_usar = DEFAULT_VERSION
                 log.warning("listo.")
 
-        dict_guias[guild_id] = version_a_usar
+            dict_guias[guild_id] = version_a_usar
+
         return dict_guias
 
 
-    def __init__(self, cmd_prefix: Callable=get_prefijo, actividad=Game(name="!info"), **opciones) -> None:
+    def __init__(self,
+                 cmd_prefix: Callable=get_prefijo,
+                 actividad=Game(name="!info"),
+                 **opciones) -> None:
         """
         Inicializa una instancia de tipo 'CustomBot'.
         """
@@ -82,7 +94,7 @@ class Lector(Bot):
         La versión actual del bot.
         """
 
-        self.cliente = MemeImgur()
+        self.cliente = Memegur(CLIENT_CONFIG)
         """
         El cliente de Imgur encargado de manejar las imágenes que pide el bot.
         """
@@ -92,7 +104,7 @@ class Lector(Bot):
         El diccionario de guías, posiblemente diferente para cada servidor.
         """
 
-        self.partidas = dict()
+        self.partidas = {}
         """
         Diccionario donde almacenar las partidas de ahorcado.
         """
@@ -133,7 +145,8 @@ class Lector(Bot):
         bot es un comando.
         """
 
-        return (not self.es_ultimo_mensaje(msg) and msg.content.startswith(get_prefijo(self, msg))) or self.es_mensaje_de_bot(msg)
+        return ((not self.es_ultimo_mensaje(msg) and msg.content.startswith(get_prefijo(self, msg)))
+                or self.es_mensaje_de_bot(msg))
 
 
     def actualizar_guia(self) -> None:
@@ -150,7 +163,9 @@ class Lector(Bot):
         Inicializa una sala de juego.
         """
 
-        hilo = await ctx.message.create_thread(name=f"AHORCADO - Partida {datetime.now().strftime(DATE_FORMAT)}", auto_archive_duration=60)
+        hilo = await ctx.message.create_thread(name="AHORCADO - Partida " +
+                                               f"{datetime.now().strftime(DATE_FORMAT)}",
+                                               auto_archive_duration=60)
         frase_a_usar = None
 
         spoilertag = "||"  # Por si el usuario la declaró con spoilertags
@@ -195,7 +210,8 @@ class Lector(Bot):
 
         partida = self.encontrar_partida(str(ctx.channel.id))
 
-        if any((not partida, partida.intentos <= 0, not len(char) == 1)):  # 'letra' debe ser, efectivamente, uan cadena de un solo caracter
+        # 'letra' debe ser, efectivamente, uan cadena de un solo caracter
+        if any((not partida, partida.intentos <= 0, not len(char) == 1)):
 
             return
 
@@ -203,7 +219,8 @@ class Lector(Bot):
 
         if char in partida.caracteres_usados:
 
-            await ctx.channel.send(f"¡Mal ahí, {ctx.author.mention}! ¡El caracter `{char}` ya fue utilizado! Probá con otra cosa...")
+            await ctx.channel.send(f"¡Mal ahí, {ctx.author.mention}! ¡El caracter `{char}` " +
+                                   "ya fue utilizado! Probá con otra cosa...")
             return
 
         if char in [l.valor for l in partida.frase]:
@@ -219,12 +236,14 @@ class Lector(Bot):
         else:
 
             partida.intentos -= 1
-            await ctx.channel.send(f"¡Ole! ¡{ctx.author.mention} ha dicho el caracter `{char}`, que no se encuentra en la palabra! Quedan {partida.intentos} intentos...")
+            await ctx.channel.send(f"¡Ole! ¡{ctx.author.mention} ha dicho el caracter `{char}`, " +
+                                   "que no se encuentra en la palabra! " +
+                                   f"Quedan {partida.intentos} intentos...")
 
         partida.caracteres_usados.append(char)
 
         mensaje = await ctx.channel.fetch_message(partida.display_id)
-        await mensaje.edit(str(partida))
+        await mensaje.edit(content=str(partida))
 
 
     async def fin_del_juego(self, ctx: Context, es_victoria: bool) -> None:
@@ -239,10 +258,15 @@ class Lector(Bot):
 
         if es_victoria:
 
-            await ctx.channel.parent.send(f"Resultado de partida `{ctx.channel.name}`: **[VICTORIA]**\n\n¡{ctx.author.mention} se hizo con la victoria con la letra `{ultimo_caracter}`, y con `{partida_terminada.intentos}` vida{'' if es_una_vida else 's'} de sobra! En efecto, la frase era `{frase_magica}`.")
+            await ctx.channel.parent.send(content=f"Resultado de partida `{ctx.channel.name}`: " +
+            f"**[VICTORIA]**\n\n¡{ctx.author.mention} se hizo con la victoria con la letra " +
+            f"`{ultimo_caracter}`, y con `{partida_terminada.intentos}` " +
+            f"vida{'' if es_una_vida else 's'} de sobra! En efecto, la frase era `{frase_magica}`.")
 
         else:
 
-            await ctx.channel.parent.send(f"Resultado de partida `{ctx.channel.name}`: **[DERROTA]**\n\n¡Vergüenza para {ctx.author.mention}! Ha fastidiado la partida diciendo el caracter `{ultimo_caracter}`. La frase era `{frase_magica}`.")
+            await ctx.channel.parent.send(content=f"Resultado de partida `{ctx.channel.name}`: " +
+            f"**[DERROTA]**\n\n¡Vergüenza para {ctx.author.mention}! Ha fastidiado la partida " +
+            f"diciendo el caracter `{ultimo_caracter}`. La frase era `{frase_magica}`.")
 
         await ctx.channel.delete()

@@ -3,10 +3,11 @@ Módulo dedicado a contener al cliente que procesa solicitudes
 a Imgur.
 """
 
-from imgur_python import Imgur, Album
 from os.path import splitext
 
-from ..constantes.constantes import CLIENT_CONFIG, MEMES_ALBUM_NAME
+from imgur_python import Album, Imgur
+
+from ..constantes.constantes import MEMES_ALBUM_NAME
 
 
 class AlbumNoEncontrado(Exception):
@@ -18,17 +19,13 @@ class AlbumNoEncontrado(Exception):
     ...
 
 
-class MemeImgur(Imgur):
+class Memegur(Imgur):
     """
     Clase personalizada para sobrecargar 'Imgur'.
     """
 
-    def __init__(self, config: dict[str, str]=CLIENT_CONFIG):
-
-        super().__init__(config)
-
-
-    def _get_response_data(self, solicitud: dict) -> dict:
+    @staticmethod
+    def _get_response_data(solicitud: dict) -> dict:
         """
         Atajo para devolver los datos de la respuesta a una solicitud.
         """
@@ -45,7 +42,7 @@ class MemeImgur(Imgur):
 
         album_a_devolver = None
 
-        for album in self._get_response_data(self.albums()):
+        for album in Memegur._get_response_data(self.albums()):
 
             if not album:
 
@@ -53,7 +50,7 @@ class MemeImgur(Imgur):
 
             if album["title"] == nombre_a_buscar:
 
-                album_a_devolver = self._get_response_data(self.album_get(album["id"]))
+                album_a_devolver = Memegur._get_response_data(self.album_get(album["id"]))
                 break
 
         return album_a_devolver
@@ -79,9 +76,9 @@ class MemeImgur(Imgur):
 
         if not album:
 
-            return list()
+            return []
 
-        imagenes = self._get_response_data(self.album_images(album["id"]))
+        imagenes = Memegur._get_response_data(self.album_images(album["id"]))
 
         return [imagen["link"] for imagen in imagenes]
 
@@ -98,9 +95,10 @@ class MemeImgur(Imgur):
 
             raise AlbumNoEncontrado(f"El album '{titulo_album}' no existe o no fue encontrado.")
 
-        for imagen in self._get(self.album_images(album["id"])):
+        for imagen in Memegur._get_response_data(self.album_images(album["id"])):
 
-            if splitext(imagen["name"])[0] == splitext(nombre_imagen)[0]: # La extensión del archivo es ignorada
+            # La extensión del archivo es ignorada
+            if splitext(imagen["name"])[0] == splitext(nombre_imagen)[0]:
 
                 return True
 

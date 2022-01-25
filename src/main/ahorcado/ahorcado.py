@@ -2,11 +2,12 @@
 Pequeño módulo que implementa la lógica de una partida de ahorcado.
 """
 
-from typing import Optional
 from random import choice
+from typing import Optional
 
 from ..archivos.archivos import cargar_lineas
 from ..constantes.constantes import WORDS_PATH
+
 
 class LetraAhorcado:
     """
@@ -64,13 +65,12 @@ class Ahorcado:
 
         self.display_id = 0  # Es inicializado después con el primer mensaje
 
-        self.caracteres_usados = list()
-
-        self.frase = list()
+        self.caracteres_usados = []
+        self.frase = []
 
         for char in frase_magica:
 
-            self.frase.append(LetraAhorcado(char, (False if char == ' ' else True)))
+            self.frase.append(LetraAhorcado(char, (not char == ' ')))
 
     def __str__(self) -> str:
         """
@@ -81,7 +81,7 @@ class Ahorcado:
 
         caracteres_usados = (" - ".join(self.caracteres_usados) if self.caracteres_usados else '-')
 
-        piezas = list()
+        piezas = []
 
         simbolos = ('O', '|', '/', '\\', '|', '/', '\\')
 
@@ -89,7 +89,9 @@ class Ahorcado:
 
             piezas.append(simbolos[7 - (i + 1)] if self.intentos < (i + 1) else '')
 
-        torso = (f"{piezas[2]} {piezas[1]} {piezas[3]}" if not piezas[2] and not piezas[3] else f"{piezas[2]}{piezas[1]}{piezas[3]}")
+        torso = (f"{piezas[2]} {piezas[1]} {piezas[3]}"
+                 if (not piezas[2] and not piezas[3])
+                 else (f"{piezas[2]}{piezas[1]}{piezas[3]}"))
 
         estado = f"""```
     

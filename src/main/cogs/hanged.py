@@ -2,7 +2,7 @@
 Cog para comandos del ahorcado.
 """
 
-from discord.ext.commands import command, Context
+from discord.ext.commands import Context, command
 
 from .general import CogGeneral
 
@@ -12,7 +12,10 @@ class CogHanged(CogGeneral):
     Cog para comandos relacionados al ahorcado.
     """
 
-    @command(name="hanged", aliases=["ahorcado"], usage="<vidas> <*frase>", help="Interactúa con un juego de ahorcado.")
+    @command(name="hanged",
+             aliases=["ahorcado"],
+             usage="[vidas [frase]]",
+             help="Interactúa con un juego de ahorcado.")
     async def crear_sala(self, ctx: Context, vidas: str='7', *frase) -> None:
         """
         Dependiendo de los comandos que se pasen, interactúa con
@@ -24,7 +27,10 @@ class CogHanged(CogGeneral):
             await self.bot.hanged_create(ctx, int(vidas), *frase)
 
 
-    @command(name="guess", aliases=["adivinar"], usage="<caracter>", help="Comando para adivinar una letra en el comando.")
+    @command(name="guess",
+             aliases=["adivinar"],
+             usage="caracter",
+             help="Comando para adivinar una letra en el comando.")
     async def adivinar_letra(self, ctx: Context, letra: str=''):
         """
         Adivina una letra en una partida en curso de ahorcado.
@@ -39,7 +45,9 @@ class CogHanged(CogGeneral):
             await self.bot.fin_del_juego(ctx, es_victoria)
 
 
-    @command(name="display", aliases=["mostrar"], help="Muestra la pantalla del juego de ahorcado, por si es muy molesto scrollear.")
+    @command(name="display",
+             aliases=["mostrar"],
+             help="Muestra la pantalla del juego de ahorcado, por si es muy molesto scrollear.")
     async def mostrar_juego(self, ctx: Context) -> None:
         """
         Muestra el estado actual de un juego de ahorcado, si

@@ -2,9 +2,10 @@
 Interfaz para un juego de \"Piedras, Papel o Tijeras\".
 """
 
-from discord import Interaction, PartialEmoji as Emoji
-from discord.ui import Button, button
+from discord import Interaction
+from discord import PartialEmoji as Emoji
 from discord.enums import ButtonStyle
+from discord.ui import Button, button
 
 from ..archivos.archivos import DiccionarioStats
 from ..ppt.ppt import jugar_partida_ppt
@@ -22,29 +23,46 @@ class JuegoPPT(VistaGeneral):
         """
 
         super().__init__()
-
         self.stats_juego = stats
 
-    @button(style=ButtonStyle.blurple, custom_id="rock", label="Piedra", emoji=Emoji.from_str("\N{rock}"))
-    async def elegir_piedra(self, boton: Button, interaccion: Interaction) -> None:
+    @button(style=ButtonStyle.blurple,
+            custom_id="rock",
+            label="Piedra",
+            emoji=Emoji.from_str("\N{rock}"))
+    async def elegir_piedra(self, _: Button, interaccion: Interaction) -> None:
         """
         El usuario ha elegido 'Piedra' en una partida de 'Piedra, Papel o Tijeras'.
         """
 
-        await jugar_partida_ppt("PIEDRA", str(interaccion.user.id), interaccion.message, self.stats_juego)
+        await jugar_partida_ppt("PIEDRA",
+                                str(interaccion.user.id),
+                                interaccion.message,
+                                self.stats_juego)
 
-    @button(style=ButtonStyle.blurple, custom_id="paper", label="Papel", emoji=Emoji.from_str("\N{roll of paper}"))
-    async def elegir_papel(self, boton: Button, interaccion: Interaction) -> None:
+    @button(style=ButtonStyle.blurple,
+            custom_id="paper",
+            label="Papel",
+            emoji=Emoji.from_str("\N{roll of paper}"))
+    async def elegir_papel(self, _: Button, interaccion: Interaction) -> None:
         """
         El usuario ha elegido 'Piedra' en una partida de 'Piedra, Papel o Tijeras'.
         """
 
-        await jugar_partida_ppt("PAPEL", str(interaccion.user.id), interaccion.message, self.stats_juego)
+        await jugar_partida_ppt("PAPEL",
+                                str(interaccion.user.id),
+                                interaccion.message,
+                                self.stats_juego)
 
-    @button(style=ButtonStyle.blurple, custom_id="scissors", label="Tijeras", emoji=Emoji.from_str("\N{Black Scissors}"))
-    async def elegir_tijeras(self, boton: Button, interaccion: Interaction) -> None:
+    @button(style=ButtonStyle.blurple,
+            custom_id="scissors",
+            label="Tijeras",
+            emoji=Emoji.from_str("\N{Black Scissors}"))
+    async def elegir_tijeras(self, _: Button, interaccion: Interaction) -> None:
         """
         El usuario ha elegido 'Piedra' en una partida de 'Piedra, Papel o Tijeras'.
         """
 
-        await jugar_partida_ppt("TIJERAS", str(interaccion.user.id), interaccion.message, self.stats_juego)
+        await jugar_partida_ppt("TIJERAS",
+                                str(interaccion.user.id),
+                                interaccion.message,
+                                self.stats_juego)

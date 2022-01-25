@@ -2,20 +2,20 @@
 Cog para comandos de ejercicios.
 """
 
-from typing import Optional
 from random import choice
-from discord.ext.commands import command, Context, check
+from typing import Optional
 
-from .general import CogGeneral
-from ..auxiliar.auxiliar import mandar_dm, es_rol_valido
-from ..logger.logger import log
-from ..interfaces.ui_ejercicios import SelectorEjercicios
-from ..interfaces.ui_unidades import SelectorUnidad
-from ..interfaces.ui_ejercicios import NavegadorEjercicios
-from ..interfaces.ui_unidades import SelectorGuia
-from ..archivos.archivos import actualizar_guia, DiccionarioGuia, lista_ejercicios, lista_unidades, lista_carpetas, version_es_valida
+from discord.ext.commands import Context, check, command
 
+from ..archivos.archivos import (DiccionarioGuia, actualizar_guia,
+                                 lista_carpetas, lista_ejercicios,
+                                 lista_unidades, version_es_valida)
+from ..auxiliar.auxiliar import es_rol_valido
 from ..constantes.constantes import MESSAGE_FORMAT
+from ..interfaces.ui_ejercicios import NavegadorEjercicios, SelectorEjercicios
+from ..interfaces.ui_unidades import SelectorGuia, SelectorUnidad
+from ..logger.logger import log
+from .general import CogGeneral
 
 
 class CogEjercicios(CogGeneral):
@@ -33,7 +33,7 @@ class CogEjercicios(CogGeneral):
         y así debería mantenerse porque no se recomienda mutarlo.
         """
 
-        return unidad in [parte for parte in guia.keys()]
+        return unidad and unidad in list(guia.keys())
 
 
     @staticmethod
@@ -50,11 +50,13 @@ class CogEjercicios(CogGeneral):
 
             return False, False
 
-        return True, ejercicio in [ej for ej in guia[unidad].keys()]
+        return True, ejercicio and ejercicio in list(guia[unidad].keys())
 
 
     @staticmethod
-    async def mostrar_unidad_y_ejercicio_validos(ctx: Context, unidad: Optional[str]=None, ejercicio: Optional[str]=None) -> bool:
+    async def mostrar_unidad_y_ejercicio_validos(ctx: Context,
+                                                 unidad: Optional[str],
+                                                 ejercicio: Optional[str]) -> bool:
         """
         Muestra por pantalla errores que le indican al usuario si los valores
         ingresados para la unidad y el ejercicio son inválidos.
@@ -68,35 +70,47 @@ class CogEjercicios(CogGeneral):
 
             if unidad is None:
 
-                await ctx.channel.send(content="Por favor elija el número de unidad", view=SelectorUnidad(guia=guia))
+                await ctx.channel.send(content="Por favor elija el número de unidad",
+                                       view=SelectorUnidad(guia=guia))
 
             else:
 
                 unidades = lista_unidades(guia)
-
-                await ctx.channel.send(f"**[ERROR]** El número de unidad `{unidad}` no es válido. Los valores aceptados son:\n\n{' - '.join([f'`{u}`' for u in unidades])}")
+                await ctx.channel.send(f"**[ERROR]** El número de unidad `{unidad}` no es válido."
+                    + f"Los valores aceptados son:\n\n{' - '.join([f'`{u}`' for u in unidades])}")
 
             return False
 
-        elif not ej_existe:
+        if not ej_existe:
 
             if ejercicio is None:
 
-                await ctx.channel.send(content="Por favor elija un ejercicio", view=SelectorEjercicios(guia=guia, unidad=unidad))
+                await ctx.channel.send(content="Por favor elija un ejercicio",
+                                       view=SelectorEjercicios(guia=guia, unidad=unidad))
 
             else:
 
                 ejercicios = lista_ejercicios(guia, unidad)
-
-                await ctx.channel.send(f"**[ERROR]** El número de ejercicio `{ejercicio}` no es válido. Los valores aceptados son:\n\n{' - '.join([f'`{ej}`' for ej in ejercicios])}")
+                await ctx.channel.send(f"**[ERROR]** El número de ejercicio `{ejercicio}` no " +
+                                       "es válido. Los valores aceptados son:\n\n" +
+                                       f"{' - '.join([f'`{ej}`' for ej in ejercicios])}")
 
             return False
 
         return True
 
 
-    @command(name="ej", aliases=["ejercicio", "enunciado"], usage="<unidad> <ejercicio> -dm", help="Muestra ejercicios de la guía.")
-    async def leer_ejercicio(self, ctx: Context, unidad: Optional[str]=None, ejercicio: Optional[str]=None, *opciones) -> None:
+    @command(name="ej",
+             aliases=["ejercicio", "enunciado"],
+             usage="[unidad [ejercicio]]",
+             help="Muestra ejercicios de la guía.")
+    async def leer_ejercicio(self,
+                             ctx: Context,
+        	                 unidad: Optional[str]=None,
+                             ejercicio: Optional[str]=None) -> None:
+        """
+        Lee un ejercicio y lo manda por el canal correspondiente.
+        """
 
         guia = self.bot.guias[str(ctx.guild.id)]
 
@@ -106,21 +120,25 @@ class CogEjercicios(CogGeneral):
 
         enunciado = guia[unidad][ejercicio]
 
-        mensaje = MESSAGE_FORMAT.format(mention=ctx.author.mention, unidad=unidad, titulo=guia[unidad]["titulo"], ejercicio=ejercicio, enunciado=enunciado)
+        mensaje = MESSAGE_FORMAT.format(mention=ctx.author.mention,
+                                        unidad=unidad,
+                                        titulo=guia[unidad]["titulo"],
+                                        ejercicio=ejercicio,
+                                        enunciado=enunciado)
 
-        interfaz = NavegadorEjercicios(guia=guia, unidad=unidad, ejercicio=ejercicio)
+        vista = NavegadorEjercicios(guia=guia, unidad=unidad, ejercicio=ejercicio)
 
-        if "-dm" in opciones:
-
-            await mandar_dm(ctx, mensaje, vista=interfaz)
-
-        else:
-
-            await ctx.channel.send(mensaje, view=interfaz)
+        await ctx.channel.send(mensaje, view=vista)
 
 
-    @command(name="random", aliases=["aleatorio", 'r'], usage="<unidad posible>, <sentido> -dm", help="Muestra un ejercicio aleatorio de la guía.")
-    async def ejercicio_al_azar(self, ctx: Context, unidad_posible: Optional[str]=None, sentido: str='=', *opciones) -> None:
+    @command(name="random",
+             aliases=["aleatorio", 'r'],
+             usage="[unidad posible [sentido]]",
+             help="Muestra un ejercicio aleatorio de la guía.")
+    async def ejercicio_al_azar(self,
+                                ctx: Context,
+                                unidad_posible: Optional[str]=None,
+                                sentido: str='=') -> None:
         """
         Muestra un ejercicio al azar de la guía.
 
@@ -142,7 +160,9 @@ class CogEjercicios(CogGeneral):
 
         guia = self.bot.guias[str(ctx.guild.id)]
 
-        unidad_pivote = (unidad_posible if (unidad_posible and CogEjercicios.existe_unidad(unidad_posible, guia)) else choice(list(guia.keys())))
+        unidad_pivote = (unidad_posible
+                         if CogEjercicios.existe_unidad(unidad_posible, guia)
+                         else choice(list(guia.keys())))
         expresion_busqueda = None
         unidad_elegida = ''
         ejercicio_elegido = ''
@@ -152,7 +172,7 @@ class CogEjercicios(CogGeneral):
             case '=':
 
                 unidad_elegida = unidad_pivote
-                ejercicio_elegido = choice([ej for ej in guia[unidad_pivote].keys()])
+                ejercicio_elegido = choice(list(guia[unidad_pivote].keys()))
 
             case '<':
 
@@ -174,14 +194,20 @@ class CogEjercicios(CogGeneral):
 
         if expresion_busqueda:
 
-            unidad_elegida = choice([unidad for unidad in list(guia.keys())[1:] if expresion_busqueda(int(unidad))])
-        
-        ejercicio_elegido = choice([ej for ej in guia[unidad_elegida].keys()])
+            unidad_elegida = choice([unidad for unidad in list(guia.keys())[1:]
+                                    if expresion_busqueda(int(unidad))])
 
-        await self.leer_ejercicio(ctx, unidad_elegida, ejercicio_elegido, ("-dm" if ("-dm" in opciones) else ''))
+        ejercicio_elegido = choice(list(guia[unidad_elegida].keys()))
+
+        await self.leer_ejercicio(ctx,
+                                  unidad=unidad_elegida,
+                                  ejercicio=ejercicio_elegido)
 
 
-    @command(name="guia", aliases=["guia_version", "gver"], usage="<nueva_version>", help="Cambia la versión de la guía.")
+    @command(name="guia",
+             aliases=["guia_version", "gver"],
+             usage="nueva_version",
+             help="Cambia la versión de la guía.")
     @check(es_rol_valido)
     async def cambiar_version_guia(self, ctx: Context, nueva_version: Optional[str]=None) -> None:
         """
@@ -192,20 +218,30 @@ class CogEjercicios(CogGeneral):
 
         if nueva_version is not None and not version_es_valida(nueva_version):
 
-            await ctx.channel.send(f"**[ERROR]** La versión especificada `{nueva_version}` no es válida.\nLas versiones válidas son:\n{versiones}", delete_after=10)
+            await ctx.channel.send(f"**[ERROR]** La versión especificada `{nueva_version}` " +
+                                   f"no es válida.\nLas versiones válidas son:\n{versiones}",
+                                   delete_after=10.0)
             return
 
         version_vieja = self.bot.guias[str(ctx.guild.id)]["version"]
 
         if not nueva_version:
 
-            await ctx.channel.send(f"Por favor seleccione una versión de la guía", view=SelectorGuia(version_actual=version_vieja))
+            await ctx.channel.send(content="Por favor seleccione una versión de la guía",
+                                   view=SelectorGuia(version_actual=version_vieja))
 
         else:
 
             actualizar_guia(nueva_version, str(ctx.guild.id))
-            await ctx.channel.send(f"**[AVISO]** La versión de la guía fue cambiada de `{version_vieja}` a `{nueva_version}` exitosamente.", delete_after=30)
+            await ctx.channel.send("**[AVISO]** La versión de la guía fue cambiada de " +
+                                   f"`{version_vieja}` a `{nueva_version}` exitosamente.",
+                                   delete_after=30.0)
 
         self.bot.actualizar_guia()
 
-        log.info(f"La versión de la guía en '{ctx.guild.name}' fue cambiada de '{version_vieja}' a '{nueva_version}'")
+        formato_log = {"guild": ctx.guild.name,
+                       "old_ver": version_vieja,
+                       "new_ver": nueva_version}
+
+        log.info("La versión de guía en '%(guild)s' fue cambiada de '%(old_ver)s' a '%(new_ver)s'",
+                 formato_log)
