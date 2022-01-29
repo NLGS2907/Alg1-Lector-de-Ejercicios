@@ -71,8 +71,11 @@ class CogEjercicios(CogGeneral):
 
             if unidad is None:
 
-                await ctx.channel.send(content="Por favor elija el número de unidad",
-                                       view=SelectorUnidad(guia=guia))
+                vista = SelectorUnidad(guia=guia)
+                mensaje_enviado = await ctx.channel.send(
+                                       content="Por favor elija el número de unidad",
+                                       view=vista)
+                vista.msg = mensaje_enviado
 
             else:
 
@@ -87,8 +90,10 @@ class CogEjercicios(CogGeneral):
 
             if ejercicio is None:
 
-                await ctx.channel.send(content="Por favor elija un ejercicio",
-                                       view=SelectorEjercicios(guia=guia, unidad=unidad))
+                vista = SelectorEjercicios(guia=guia, unidad=unidad)
+                mensaje_enviado = await ctx.channel.send(content="Por favor elija un ejercicio",
+                                       view=vista)
+                vista.msg = mensaje_enviado
 
             else:
 
@@ -133,7 +138,8 @@ class CogEjercicios(CogGeneral):
         embebido = Embebido(opciones=enunciado)
         vista = NavegadorEjercicios(guia=guia, unidad=unidad, ejercicio=ejercicio)
 
-        await ctx.channel.send(content=mensaje, embed=embebido, view=vista)
+        mensaje_enviado = await ctx.channel.send(content=mensaje, embed=embebido, view=vista)
+        vista.msg = mensaje_enviado
 
 
     @command(name="random",
@@ -233,8 +239,11 @@ class CogEjercicios(CogGeneral):
 
         if not nueva_version:
 
-            await ctx.channel.send(content="Por favor seleccione una versión de la guía",
-                                   view=SelectorGuia(version_actual=version_vieja))
+            vista = SelectorGuia(version_actual=version_vieja)
+            mensaje_enviado = await ctx.channel.send(
+                                        content="Por favor seleccione una versión de la guía",
+                                        view=vista)
+            vista.msg = mensaje_enviado
 
         else:
 

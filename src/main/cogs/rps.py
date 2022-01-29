@@ -82,10 +82,13 @@ class CogRPS(CogGeneral):
 
             case None:
 
-                await ctx.channel.send(content=f"{CogRPS.elegir_frases(RPS_PHRASES)}\n\n" +
-                                       "**¡Elige!** ¿Piedra, Papel o Tijeras?\n",
-                                       reference=ctx.message.to_reference(),
-                                       view=JuegoPPT(stats=self.bot.rps_stats))
+                vista = JuegoPPT(stats=self.bot.rps_stats)
+                mensaje_enviado = await ctx.channel.send(
+                                        content=f"{CogRPS.elegir_frases(RPS_PHRASES)}\n\n" +
+                                        "**¡Elige!** ¿Piedra, Papel o Tijeras?\n",
+                                        reference=ctx.message.to_reference(),
+                                        view=vista)
+                vista.msg = mensaje_enviado
                 return
 
         if eleccion.upper() not in opciones:

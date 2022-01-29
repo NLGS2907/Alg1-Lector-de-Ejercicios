@@ -101,9 +101,11 @@ class MenuSelectorUnidad(Select):
 
         unidad_elegida = self.values[0]
 
-        await interaction.response.edit_message(content="Elija el ejercicio",
-                                                view=SelectorEjercicios(guia=self.guia,
-                                                                        unidad=unidad_elegida))
+        vista = SelectorEjercicios(guia=self.guia, unidad=unidad_elegida)
+        mensaje_enviado = await interaction.response.edit_message(content="Elija el ejercicio",
+                                                                  view=vista)
+        vista.msg = mensaje_enviado
+        self.view.limpiar_mensaje()
 
 
 class SelectorUnidad(VistaGeneral):

@@ -38,6 +38,7 @@ class JuegoPPT(VistaGeneral):
                                 str(interaccion.user.id),
                                 interaccion.message,
                                 self.stats_juego)
+        self.limpiar_mensaje()
 
     @button(style=ButtonStyle.blurple,
             custom_id="paper",
@@ -52,6 +53,7 @@ class JuegoPPT(VistaGeneral):
                                 str(interaccion.user.id),
                                 interaccion.message,
                                 self.stats_juego)
+        self.limpiar_mensaje()
 
     @button(style=ButtonStyle.blurple,
             custom_id="scissors",
@@ -66,3 +68,4 @@ class JuegoPPT(VistaGeneral):
                                 str(interaccion.user.id),
                                 interaccion.message,
                                 self.stats_juego)
+        self.limpiar_mensaje()

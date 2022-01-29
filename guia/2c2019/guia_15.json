@@ -199,7 +199,8 @@
         "campos": {
             "Ejemplo:": [
                 "```python",
-                "pascal(5, 2) -> 10",
+                ">>> pascal(5, 2)",
+                "10",
                 "```"
             ]
         },

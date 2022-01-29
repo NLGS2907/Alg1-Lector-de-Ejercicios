@@ -88,8 +88,7 @@ class InfoUI(VistaGeneral):
         hasta = self.pagina * self.elementos_por_pagina
 
         opciones_a_usar = self.opciones_embebido.copy()
-        opciones_a_usar["campos"] = {clave: valor for clave, valor
-                                    in list(opciones_a_usar["campos"].items())[desde:hasta]}
+        opciones_a_usar["campos"] = dict(list(opciones_a_usar["campos"].items())[desde:hasta])
 
         formatos = {"version_bot": self.version_bot,
                     "version_guia": self.version_guia,
@@ -98,7 +97,11 @@ class InfoUI(VistaGeneral):
         nuevo_embebido = Embebido(opciones=opciones_a_usar,
                                   formatos=formatos)
 
-        return await interaccion.response.edit_message(view=self, embed=nuevo_embebido)
+        mensaje_editado = await interaccion.response.edit_message(embed=nuevo_embebido,
+                                                                  view=self)
+        self.msg = mensaje_editado
+
+        return mensaje_editado
 
 
     @button(style=ButtonStyle.grey,

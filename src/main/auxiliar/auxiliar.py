@@ -33,7 +33,8 @@ async def mandar_dm(ctx: Context,
     """
 
     await ctx.author.create_dm()
-    await ctx.author.dm_channel.send(content=contenido, view=vista, embed=embed)
+    mensaje_enviado = await ctx.author.dm_channel.send(content=contenido, view=vista, embed=embed)
+    vista.msg = mensaje_enviado
     await ctx.message.delete()
 
 

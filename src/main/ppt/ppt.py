@@ -124,4 +124,6 @@ async def jugar_partida_ppt(eleccion: str,
                        f"y `{empates}` Empates.")
 
         await mensaje_partida.edit(content=f"Vos elegiste `{eleccion}` y yo `{opcion_elegida}`:" +
-                                           f"\n\n{contenido}\n\n{aviso_stats}")
+                                           f"\n\n{contenido}\n\n{aviso_stats}",
+                                   delete_after=10.0,
+                                   view=None)

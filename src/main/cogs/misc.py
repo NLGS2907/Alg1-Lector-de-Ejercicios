@@ -6,7 +6,7 @@ from discord.ext.commands import Context, command
 
 from ..archivos.archivos import cargar_json
 from ..auxiliar.auxiliar import mandar_dm
-from ..constantes.constantes import INFO_MESSAGE, USER_CONSULT, WHATSNEW
+from ..constantes.constantes import INFO_MESSAGE, USER_CONSULT, WHATSNEW_MESSAGE
 from ..embebido.embebido import Embebido
 from ..interfaces.ui_info import InfoUI
 from .general import CogGeneral
@@ -41,18 +41,19 @@ class CogMisc(CogGeneral):
         embed = Embebido(opciones=opciones_iniciales,
                          formatos=formatos)
 
-        mensaje = USER_CONSULT.format(mencion=ctx.author.mention)
+        contenido = USER_CONSULT.format(mencion=ctx.author.mention)
 
         if "-dm" in opciones:
 
             await mandar_dm(ctx,
-                            contenido=mensaje,
+                            contenido=contenido,
                             vista=info_ui, embed=embed)
 
         else:
 
-            await ctx.channel.send(content=mensaje,
+            mensaje_enviado = await ctx.channel.send(content=contenido,
                                    view=info_ui, embed=embed)
+            info_ui.msg = mensaje_enviado
 
 
     @command(name="version",
@@ -83,4 +84,9 @@ class CogMisc(CogGeneral):
         Muestra las novedades de la versión más nueva del bot.
         """
 
-        await ctx.channel.send(content=WHATSNEW, delete_after=60)
+        opciones = cargar_json(WHATSNEW_MESSAGE)
+        formatos = {"version_bot": self.bot.version}
+
+        embebido = Embebido(opciones=opciones, formatos=formatos)
+
+        await ctx.channel.send(embed=embebido, delete_after=60.0)

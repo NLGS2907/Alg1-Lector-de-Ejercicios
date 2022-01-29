@@ -89,9 +89,13 @@ class MenuSelectorEjercicio(Select):
 
         mensaje = USER_CONSULT.format(mencion=interaction.user.mention)
         embebido = Embebido(opciones=enunciado)
-        interfaz = NavegadorEjercicios(guia=self.guia, unidad=self.unidad, ejercicio=ejercicio)
+        vista = NavegadorEjercicios(guia=self.guia, unidad=self.unidad, ejercicio=ejercicio)
 
-        await interaction.response.edit_message(content=mensaje, embed=embebido, view=interfaz)
+        mensaje_editado = await interaction.response.edit_message(content=mensaje,
+                                                                  embed=embebido,
+                                                                  view=vista)
+        vista.msg = mensaje_editado
+        self.view.limpiar_mensaje()
 
 
 class SelectorEjercicios(VistaGeneral):
@@ -209,9 +213,10 @@ class NavegadorEjercicios(VistaGeneral):
         contenido_mensaje = USER_CONSULT.format(mencion=interaccion.user.mention)
         embebido = self.get_embebido_enunciado()
 
-        await interaccion.response.edit_message(content=contenido_mensaje,
-                                                embed=embebido,
-                                                view=self)
+        mensaje_editado = await interaccion.response.edit_message(content=contenido_mensaje,
+                                                                  embed=embebido,
+                                                                  view=self)
+        self.msg = mensaje_editado
 
 
     @button(style=ButtonStyle.grey,
