@@ -165,11 +165,11 @@ class Lector(Bot):
 
         hilo = await ctx.message.create_thread(name="AHORCADO - Partida " +
                                                f"{datetime.now().strftime(DATE_FORMAT)}",
-                                               auto_archive_duration=60)
+                                               auto_archive_duration=5.0)
         frase_a_usar = None
 
         spoilertag = "||"  # Por si el usuario la declaró con spoilertags
-        frase = ' '.join(' '.join(palabras).replace(spoilertag, '').split()).upper()
+        frase = ' '.join(' '.join(palabras).replace(spoilertag, '').split())
 
         if frase:  # El usuario indicó una  con la que jugar
 
@@ -187,16 +187,16 @@ class Lector(Bot):
         que corresponde al ID pasado.
         """
 
-        partida = None
+        partida_a_devolver = None
 
-        for id_partida in self.partidas:
+        for id_partida, partida in self.partidas.items():
 
             if str(id_a_encontrar) == id_partida:
 
-                partida = self.partidas[id_partida]
+                partida_a_devolver = partida
                 break
 
-        return partida
+        return partida_a_devolver
 
 
     async def hanged_guess(self, ctx: Context, char: str) -> None:
@@ -215,11 +215,10 @@ class Lector(Bot):
 
             return
 
-        char = char.upper()
-
         await ctx.message.delete(delay=0.5)
 
         fue_usado, esta_presente = partida.adivinar(char)
+        char = char.upper()
 
         if fue_usado:
 

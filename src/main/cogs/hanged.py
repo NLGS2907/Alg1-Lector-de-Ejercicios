@@ -2,6 +2,7 @@
 Cog para comandos del ahorcado.
 """
 
+from email import message
 from discord.ext.commands import Context, command
 
 from .general import CogGeneral
@@ -31,10 +32,18 @@ class CogHanged(CogGeneral):
              aliases=["adivinar"],
              usage="caracter",
              help="Comando para adivinar una letra en el comando.")
-    async def adivinar_letra(self, ctx: Context, letra: str=''):
+    async def adivinar_letra(self, ctx: Context, letra: str='') -> None:
         """
         Adivina una letra en una partida en curso de ahorcado.
         """
+
+        if not self.bot.encontrar_partida(str(ctx.channel.id)):
+
+            await ctx.message.delete()
+            await ctx.channel.send(f"**[AVISO]** No se puede usar el comando `{ctx.command}`" +
+                                   " aquí, pues esto no es un hilo de una partida iniciada.",
+                                   delete_after=10.0)
+            return
 
         await self.bot.hanged_guess(ctx, letra)
 

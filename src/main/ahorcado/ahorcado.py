@@ -45,7 +45,7 @@ class Ahorcado:
 
         for char in frase_magica:
 
-            self.frase.append(LetraAhorcado(char, (not char == ' ')))
+            self.frase.append(LetraAhorcado(char.upper(), (not char == ' ')))
 
 
     def __str__(self) -> str:
@@ -86,6 +86,14 @@ class Ahorcado:
         return estado
 
 
+    def get_frase(self) -> str:
+        """
+        Devuelve una cadena de la frase.
+        """
+
+        return ''.join([char.valor for char in self.frase])
+
+
     def adivinar(self, char: str) -> tuple[bool, bool]:
         """
         Intenta adivinar una letra de ahorcado.
@@ -94,12 +102,17 @@ class Ahorcado:
         la frase.
         """
 
-        if char in self.caracteres_usados:
+        if not len(char) == 1:
 
-            # Si está en los caracteres usados, es que estaba en la frase
-            return True, True
+            raise ValueError(f"'{char}' debe ser una cadena de un (1) solo caracter")
 
-        self.caracteres_usados.append(char)
+        char = char.upper()
+        fue_usado = char in self.caracteres_usados
+        esta_presente = None
+
+        if not fue_usado:
+
+            self.caracteres_usados.append(char)
 
         if char in [l.valor for l in self.frase]:
 
@@ -109,10 +122,14 @@ class Ahorcado:
 
                     letrita.oculta = False
 
-            return False, True
+            esta_presente = True
 
-        self.intentos -= 1
-        return False, False
+        else:
+
+            self.intentos -= 1
+            esta_presente = False
+
+        return fue_usado, esta_presente
 
 
     def definir_display(self, display_id: int) -> None:
