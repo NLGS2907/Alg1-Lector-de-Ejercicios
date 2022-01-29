@@ -210,37 +210,35 @@ class Lector(Bot):
 
         partida = self.encontrar_partida(str(ctx.channel.id))
 
-        # 'letra' debe ser, efectivamente, uan cadena de un solo caracter
+        # 'letra' debe ser, efectivamente, una cadena de un solo caracter
         if any((not partida, partida.intentos <= 0, not len(char) == 1)):
 
             return
 
         char = char.upper()
 
-        if char in partida.caracteres_usados:
+        await ctx.message.delete(delay=0.5)
+
+        fue_usado, esta_presente = partida.adivinar(char)
+
+        if fue_usado:
 
             await ctx.channel.send(f"¡Mal ahí, {ctx.author.mention}! ¡El caracter `{char}` " +
-                                   "ya fue utilizado! Probá con otra cosa...")
+                                   "ya fue utilizado! Probá con otra cosa...",
+                                   delete_after=10.0)
             return
 
-        if char in [l.valor for l in partida.frase]:
+        if esta_presente:
 
-            for letrita in partida.frase:
-
-                if letrita.valor == char:
-
-                    letrita.oculta = False
-
-            await ctx.channel.send(f"¡{ctx.author.mention} ha acertado el caracter `{char}`!")
+            await ctx.channel.send(f"¡{ctx.author.mention} ha acertado el caracter `{char}`!",
+                                   delete_after=10.0)
 
         else:
 
-            partida.intentos -= 1
             await ctx.channel.send(f"¡Ole! ¡{ctx.author.mention} ha dicho el caracter `{char}`, " +
                                    "que no se encuentra en la palabra! " +
-                                   f"Quedan {partida.intentos} intentos...")
-
-        partida.caracteres_usados.append(char)
+                                   f"Quedan {partida.intentos} intentos...",
+                                   delete_after=15.0)
 
         mensaje = await ctx.channel.fetch_message(partida.display_id)
         await mensaje.edit(content=str(partida))

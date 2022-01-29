@@ -24,11 +24,10 @@ class Ahorcado:
 
         with open(nombre_archivo, encoding="utf-8") as archivo:
 
-            for linea in archivo:
-
-                lineas.append(linea.rstrip())
+            lineas = [linea.rstrip() for linea in archivo]
 
         return lineas
+
 
     def __init__(self, frase: Optional[str]=None, **opciones) -> None:
         """
@@ -47,6 +46,7 @@ class Ahorcado:
         for char in frase_magica:
 
             self.frase.append(LetraAhorcado(char, (not char == ' ')))
+
 
     def __str__(self) -> str:
         """
@@ -85,12 +85,43 @@ class Ahorcado:
 ```"""
         return estado
 
+
+    def adivinar(self, char: str) -> tuple[bool, bool]:
+        """
+        Intenta adivinar una letra de ahorcado.
+        Devuelve una tupla de dos valores booleanos, siendo el primero si
+        la letra está en los caracteres usados, y el segundo si está en
+        la frase.
+        """
+
+        if char in self.caracteres_usados:
+
+            # Si está en los caracteres usados, es que estaba en la frase
+            return True, True
+
+        self.caracteres_usados.append(char)
+
+        if char in [l.valor for l in self.frase]:
+
+            for letrita in self.frase:
+
+                if letrita.valor == char:
+
+                    letrita.oculta = False
+
+            return False, True
+
+        self.intentos -= 1
+        return False, False
+
+
     def definir_display(self, display_id: int) -> None:
         """
         Define el ID del primer mensaje que es la pantalla del juego de ahorcado.
         """
 
         self.display_id = display_id
+
 
     def termino_juego(self) -> tuple[bool, bool]:
         """

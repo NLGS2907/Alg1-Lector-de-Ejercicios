@@ -43,7 +43,7 @@ class VistaGeneral(View):
     Vista general hecha para que se herede de ella.
     """
 
-    def __init__(self, ui_timeout: Optional[float]=5.0) -> None:
+    def __init__(self, ui_timeout: Optional[float]=120.0) -> None:
         """
         Inicializa una instancia de 'VistaGeneral'.
         """

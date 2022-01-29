@@ -13,6 +13,19 @@ class LetraAhorcado:
         Inicializa una instancia de tipo 'LetraAhorcado'.
         """
 
+        if not isinstance(valor, str):
+
+            raise TypeError(f"'{valor}' es de tipo '{type(valor).__name__}'." +
+                            "Debería ser de tipo 'str'")
+
+        if not len(valor) == 1:
+
+            raise ValueError(f"'{valor}' debe ser un string de un (1) solo caracter")
+
+        if not isinstance(oculta, bool):
+
+            raise TypeError(f"Valor de 'oculta' ({oculta}) debería ser 'True' or 'False'.")
+
         self.valor = valor
         self._oculta = oculta
 

@@ -37,16 +37,14 @@ def guardar_json(dic_pares_valores: DiccionarioPares, nombre_archivo: str, sangr
         dump(dic_pares_valores, archivo, indent=sangria)
 
 
-def archivos_guia(version: str, carpeta: str) -> list[str]:
+def actualizar_guia(nueva_version: str, guild_id: str) -> None:
     """
-    Dado un directorio, devuelve una lista de strings con todos los nombres
-    de los archivos que contienen las unidades de la guía, si y sólo si éstas
-    son de la extensión utilizada para contener los enunciados.
+    Cambia la versión de la guía para un servidor en particular.
     """
 
-    version_path = join(carpeta, version)
-    return [u for u in listdir(version_path)
-            if (isfile(join(version_path, u)) and splitext(join(version_path, u))[1] == EXT)]
+    propiedades = cargar_json(PROPERTIES_PATH)
+    propiedades["versiones_guia"][guild_id] = nueva_version
+    guardar_json(propiedades, PROPERTIES_PATH)
 
 
 def lista_carpetas(carpeta: str=GUIA_PATH) -> list[str]:
@@ -65,6 +63,21 @@ def version_es_valida(version: str, carpeta: str=GUIA_PATH) -> bool:
 
     return version in lista_carpetas(carpeta)
 
+
+def archivos_guia(version: str, carpeta: str) -> Optional[list[str]]:
+    """
+    Dado un directorio, devuelve una lista de strings con todos los nombres
+    de los archivos que contienen las unidades de la guía, si y sólo si éstas
+    son de la extensión utilizada para contener los enunciados.
+    """
+
+    if not version_es_valida(version):
+
+        return None
+
+    version_path = join(carpeta, version)
+    return [u for u in listdir(version_path)
+            if (isfile(join(version_path, u)) and splitext(join(version_path, u))[1] == EXT)]
 
 def cargar_guia(version: str, carpeta: str=GUIA_PATH) -> Optional[DiccionarioGuia]:
     """
@@ -99,7 +112,7 @@ def lista_unidades(guia: DiccionarioGuia) -> list[str]:
 
     return list(copia_guia)
 
-def lista_ejercicios(guia: DiccionarioGuia, unidad: DiccionarioPares) -> list[str]:
+def lista_ejercicios(guia: DiccionarioGuia, unidad: str) -> list[str]:
     """
     Dada una guía de ejercicios y la unidad, devuelve una
     lista con los números de ejercicios.
@@ -110,12 +123,3 @@ def lista_ejercicios(guia: DiccionarioGuia, unidad: DiccionarioPares) -> list[st
     copia_unidad.pop("titulo")
 
     return list(copia_unidad)
-
-def actualizar_guia(nueva_version: str, guild_id: str) -> None:
-    """
-    Cambia la versión de la guía para un servidor en particular.
-    """
-
-    propiedades = cargar_json(PROPERTIES_PATH)
-    propiedades["versiones_guia"][guild_id] = nueva_version
-    guardar_json(propiedades, PROPERTIES_PATH)
