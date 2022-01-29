@@ -75,6 +75,8 @@ class CogMisc(CogGeneral):
 
             await ctx.channel.send(mensaje)
 
+        await ctx.message.delete(delay=5.0)
+
     @command(name="whatsnew",
              aliases=["quehaydenuevo", "nuevo"],
              help="Muestra las novedades de la versión actual.",
@@ -89,4 +91,5 @@ class CogMisc(CogGeneral):
 
         embebido = Embebido(opciones=opciones, formatos=formatos)
 
-        await ctx.channel.send(embed=embebido, delete_after=60.0)
+        await ctx.message.delete(delay=5.0)
+        await ctx.channel.send(embed=embebido, delete_after=30.0)

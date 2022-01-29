@@ -64,7 +64,7 @@ def version_es_valida(version: str, carpeta: str=GUIA_PATH) -> bool:
     return version in lista_carpetas(carpeta)
 
 
-def archivos_guia(version: str, carpeta: str) -> Optional[list[str]]:
+def archivos_guia(version: str, carpeta: str) -> Optional[set[str]]:
     """
     Dado un directorio, devuelve una lista de strings con todos los nombres
     de los archivos que contienen las unidades de la guía, si y sólo si éstas
