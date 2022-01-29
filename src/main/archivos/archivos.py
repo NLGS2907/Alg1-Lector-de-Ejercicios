@@ -76,8 +76,8 @@ def archivos_guia(version: str, carpeta: str) -> Optional[list[str]]:
         return None
 
     version_path = join(carpeta, version)
-    return [u for u in listdir(version_path)
-            if (isfile(join(version_path, u)) and splitext(join(version_path, u))[1] == EXT)]
+    return set(u for u in listdir(version_path)
+            if (isfile(join(version_path, u)) and splitext(join(version_path, u))[1] == EXT))
 
 def cargar_guia(version: str, carpeta: str=GUIA_PATH) -> Optional[DiccionarioGuia]:
     """

@@ -55,16 +55,8 @@ class TestArchivos(unittest.TestCase):
         Debería haber exactamente 17 archivos JSON.
         """
 
-        lista_archivos = archivos_guia("2c2019", "guia")
-        lista_esperada = ["guia_1.json",
-                          "guia_10.json",
-                          "guia_11.json",
-                          "guia_12.json",
-                          "guia_13.json",
-                          "guia_14.json",
-                          "guia_15.json",
-                          "guia_16.json",
-                          "guia_17.json",
+        set_archivos = archivos_guia("2c2019", "guia")
+        set_esperado = {"guia_1.json",
                           "guia_2.json",
                           "guia_3.json",
                           "guia_4.json",
@@ -72,9 +64,17 @@ class TestArchivos(unittest.TestCase):
                           "guia_6.json",
                           "guia_7.json",
                           "guia_8.json",
-                          "guia_9.json"]
+                          "guia_9.json",
+                          "guia_10.json",
+                          "guia_11.json",
+                          "guia_12.json",
+                          "guia_13.json",
+                          "guia_14.json",
+                          "guia_15.json",
+                          "guia_16.json",
+                          "guia_17.json"}
 
-        self.assertEqual(lista_archivos, lista_esperada)
+        self.assertEqual(set_archivos, set_esperado)
         self.assertEqual(archivos_guia("2x2019", "guia"), None)
         with self.assertRaises(FileNotFoundError):
 
