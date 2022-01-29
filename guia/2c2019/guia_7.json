@@ -1,0 +1,257 @@
+{
+    "titulo": "Tuplas y Listas",
+    "1": {
+        "titulo": [
+
+        ],
+        "descripcion": [
+            "Escribir una función que reciba una tupla de elementos e indique si se encuentran",
+            "ordenados de menor a mayor o no."
+        ],
+        "campos": {
+
+        },
+        "pie": [
+
+        ]
+    },
+    "2": {
+        "titulo": [
+
+        ],
+        "descripcion": [
+            "**Dominó**"
+        ],
+        "campos": {
+            "a)": [
+                "Escribir una función que indique si dos fichas de dominó encajan o no.",
+                "Las fichas son recibidas en dos tuplas, por ejemplo: `(3, 4)` y `(5, 4)`."
+            ],
+            "b)": [
+                "Escribir una función que indique si dos fichas de dominó encajan o no.",
+                "Las fichas son recibidas en una cadena, por ejemplo: `3-4` `2-5`. **¹**"
+            ]
+        },
+        "pie": [
+            "¹ Nota: Utilizar la función `split` de las cadenas."
+        ]
+    },
+    "3": {
+        "titulo": [
+
+        ],
+        "descripcion": [
+            "**Campaña electoral**"
+        ],
+        "campos": {
+            "a)": [
+                "Escribir una función que reciba una tupla con nombres, y para cada nombre imprima",
+                "el mensaje *Estimado <nombre>, vote por mí*."
+            ],
+            "b)": [
+                "Escribir una función que reciba una tupla con nombres, una posición de origen *p*",
+                "y una cantidad *n*, e imprima el mensaje anterior para los *n* nombres que se",
+                "encuentran a partir de la posición *p*."
+            ],
+            "c)": [
+                "Modificar las funciones anteriores para que tengan en cuenta el género del",
+                "destinatario, para ello, deberán recibir una tupla de tuplas, conteniendo el",
+                "nombre y el género."
+            ]
+        },
+        "pie": [
+
+        ]
+    },
+    "4": {
+        "titulo": [
+
+        ],
+        "descripcion": [
+            "**Vectores**"
+        ],
+        "campos": {
+            "a)": [
+                "Escribir una función que reciba dos vectores y devuelva su producto escalar."
+            ],
+            "b)": [
+                "Escribir una función que reciba dos vectores y devuelva si son o no ortogonales."
+            ],
+            "c)": [
+                "Escribir una función que reciba dos vectores y devuelva si son paralelos o no."
+            ],
+            "d)": [
+                "Escribir una función que reciba un vector y devuelva su norma."
+            ]
+        },
+        "pie": [
+
+        ]
+    },
+    "5": {
+        "titulo": [
+
+        ],
+        "descripcion": [
+            "Dada una lista de números enteros, escribir una función que:"
+        ],
+        "campos": {
+            "a)": [
+                "Devuelva una lista con todos los que sean primos."
+            ],
+            "b)": [
+                "Devuelva la sumatoria y el promedio de los valores."
+            ],
+            "c)": [
+                "Devuelva una lista con el factorial de cada uno de esos números."
+            ]
+        },
+        "pie": [
+
+        ]
+    },
+    "6": {
+        "titulo": [
+
+        ],
+        "descripcion": [
+            "Dada una lista de números enteros y un entero *k*, escribir una función que:"
+        ],
+        "campos": {
+            "a)": [
+                "Devuelva tres listas, una con los menores, otra con los mayores y otra con los iguales a *k*."
+            ],
+            "b)": [
+                "Devuelva una lista con aquellos que son múltiplos de *k*."
+            ]
+        },
+        "pie": [
+
+        ]
+    },
+    "7": {
+        "titulo": [
+
+        ],
+        "descripcion": [
+            "Escribir una función que reciba una lista de tuplas (Apellido, Nombre, Inicial_segundo_nombre)",
+            "y devuelva una lista de cadenas donde cada una contenga primero el nombre, luego la",
+            "inicial con un punto, y luego el apellido."
+        ],
+        "campos": {
+
+        },
+        "pie": [
+
+        ]
+    },
+    "8": {
+        "titulo": [
+
+        ],
+        "descripcion": [
+            "**Inversión de Listas**"
+        ],
+        "campos": {
+            "a)": [
+                "Realizar una función que, dada una lista, devuelva una nueva lista cuyo contenido",
+                "sea igual a la original pero invertida.",
+                "Así, dada la lista `['Di', 'buen', 'día', 'a', 'papa']`, deberá devolver `['papa', 'a', 'día', 'buen', 'Di']`."
+            ],
+            "b)": [
+                "Realizar otra función que invierta la lista, pero en lugar de devolver una nueva,",
+                "modifique la lista dada para invertirla, **sin** usar listas auxiliares."
+            ]
+        },
+        "pie": [
+
+        ]
+    },
+    "9": {
+        "titulo": [
+
+        ],
+        "descripcion": [
+            "Escribir una función `empaquetar` para una lista, donde empaquetar significa indicar",
+            "la repetición de valores consecutivos mediante una tupla (valor, cantidad de repeticiones).",
+            "Por ejemplo, `empaquetar([1, 1, 1, 3, 5, 1, 1, 3, 3])` debe devolver `[(1, 3), (3, 1), (5, 1), (1, 2), (3, 2)]`."
+        ],
+        "campos": {
+
+        },
+        "pie": [
+
+        ]
+    },
+    "10": {
+        "titulo": [
+
+        ],
+        "descripcion": [
+            "**Matrices**"
+        ],
+        "campos": {
+            "a)": [
+                "Escribir una función que reciba dos matrices y devuelva la suma."
+            ],
+            "b)": [
+                "Escribir una función que reciba dos matrices y devuelva el producto."
+            ],
+            "c)": [
+                "**⋆** Escribir una función que opere sobre una matriz y mediante",
+                "*eliminación gaussiana* devuelva una matriz triangular superior."
+            ],
+            "d)": [
+                "**⋆** Escribir una función que indique si un grupo de vectores, recibidos",
+                "mediante una lista, son linealmente independientes o no."
+            ]
+        },
+        "pie": [
+
+        ]
+    },
+    "11": {
+        "titulo": [
+
+        ],
+        "descripcion": [
+            "**⋆ Plegado de un texto**\n",
+
+            "Escribir una función que reciba un texto y una longitud, y devuelva una lista de",
+            "cadenas de como máximo esa longitud.",
+            "Las líneas deben ser cortadas correctamente en los espacios (sin cortar las palabras)."
+        ],
+        "campos": {
+
+        },
+        "pie": [
+
+        ]
+    },
+    "12": {
+        "titulo": [
+
+        ],
+        "descripcion": [
+            "**Funciones que reciben funciones**"
+        ],
+        "campos": {
+            "a)": [
+                "Escribir una funcion llamada `map`, que reciba una función y una lista y devuelva",
+                "la lista que resulta de aplicar la función recibida a cada uno de los elementos de",
+                "la lista recibida."
+            ],
+            "b)": [
+                "Escribir una función llamada `filter`, que reciba una función y una lista y devuelva",
+                "una lista con los elementos de la lista recibida para los cuales la función recibida",
+                "devuelve un valor verdadero."
+            ],
+            "c)": [
+                "¿En qué ejercicios de esta guía podría haber utilizado estas funciones?"
+            ]
+        },
+        "pie": [
+
+        ]
+    }
+}

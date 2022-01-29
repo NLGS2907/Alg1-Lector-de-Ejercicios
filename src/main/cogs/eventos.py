@@ -72,7 +72,7 @@ class CogEventos(CogGeneral):
 
 
     @Cog.listener()
-    async def on_thread_update(self, _: Thread, after: Thread) -> None:
+    async def on_thread_update(self, _before: Thread, after: Thread) -> None:
         """
         Un hilo fue actualizado. Si esta actualización fue que el hilo en
         cuestión fue archivado, y si es uno de las partidas de ahorcado,
@@ -84,6 +84,11 @@ class CogEventos(CogGeneral):
         if partida and after.archived:
 
             self.bot.partidas.pop(str(after.id))
+
+            formato_log = {"nombre": after.name,
+                           "guild": after.guild.name}
+
+            log.info("Partida '%(nombre)s' archivada en '%(guild)s'", formato_log)
             await after.parent.send(content=f"**[AVISO]** Partida `{after.name}` fue " +
                                     "eliminada al ser archivado (probablemente por la hora " +
                                     "de inactividad).")

@@ -1,0 +1,194 @@
+{
+    "titulo": "Pilas y Colas",
+    "1": {
+        "titulo": [
+
+        ],
+        "descripcion": [
+            "Escribir una clase `TorreDeControl` que modele el trabajo de una torre de control de un",
+            "aeropuerto con una pista de aterrizaje. Los aviones que están esperando para aterrizar",
+            "tienen prioridad sobre los que están esperando para despegar.\n",
+
+            "La clase debe funcionar conforme al siguiente ejemplo:",
+            "```python",
+            ">>> torre = TorreDeControl()",
+            ">>> torre.nuevo_arribo('AR156')",
+            ">>> torre.nueva_partida('KLM1267')",
+            ">>> torre.nuevo_arribo('AR32')",
+            ">>> torre.ver_estado()",
+            "Vuelos esperando para aterrizar: AR156, AR32",
+            "Vuelos esperando para despegar: KLM1267",
+            ">>> torre.asignar_pista()",
+            "El vuelo AR156 aterrizó con éxito.",
+            ">>> torre.asignar_pista()",
+            "El vuelo AR32 aterrizó con éxito.",
+            ">>> torre.asignar_pista()",
+            "El vuelo KLM1267 despegó con éxito.",
+            ">>> torre.asignar_pista()",
+            "No hay vuelos en espera.",
+            "```"
+        ],
+        "campos": {
+
+        },
+        "pie": [
+
+        ]
+    },
+    "2": {
+        "titulo": [
+
+        ],
+        "descripcion": [
+            "Escribir las clases `Impresora` y `Oficina` que permita modelar el funcionamiento de",
+            "un conjunto de impresoras conectadas en red."
+        ],
+        "campos": {
+            "Una impresora:": [
+                "**•** Tiene un nombre, y una capacidad máxima de tinta.",
+                "**•** Permite encolar un documento para imprimir (recibiendo el nombre del documento).",
+                "**•** Permite imprimir el documento que está al frente de la cola.",
+                "\t**–** Si no hay documentos encolados, se muestra un mensaje informándolo.",
+                "\t**–** Si no hay tinta suficiente, se muestra un mensaje informándolo.",
+                "\t**–** En caso contrario, se muestra el nombre del documento, y se gasta 1 unidad de tinta.",
+                "**•** Permite cargar el cartucho de tinta."
+            ],
+            "Una oficina:": [
+                "**•** Permite agregar una impresora",
+                "**•** Permite obtener una impresora por nombre",
+                "**•** Permite quitar una impresora por nombre",
+                "**•** Permite obtener la impresora que tenga menos documentos encolados."
+            ],
+            "Ejemplo:": [
+                "```python",
+                ">>> o = Oficina()",
+                ">>> o.agregar_impresora(Impresora('HP1234', 1))",
+                ">>> o.agregar_impresora(Impresora('Epson666', 5))",
+                ">>> o.impresora('HP1234').encolar('tp1.pdf')",
+                ">>> o.impresora('Epson666').encolar('tp2.pdf')",
+                ">>> o.impresora('HP1234').encolar('tp3.pdf')",
+                ">>> o.obtener_impresora_libre().encolar('tp4.pdf') # se encola en Epson666",
+                ">>> o.impresora('HP1234').imprimir()",
+                "tp1.pdf impreso",
+                ">>> o.impresora('HP1234').imprimir()",
+                "No tengo tinta :(",
+                ">>> o.impresora('HP1234').cargar_tinta()",
+                ">>> o.impresora('HP1234').imprimir()",
+                "tp3.pdf impreso",
+                "```"
+            ]
+        },
+        "pie": [
+
+        ]
+    },
+    "3": {
+        "titulo": [
+
+        ],
+        "descripcion": [
+            "En la parada del colectivo 130 pueden ocurrir dos eventos diferentes:\n",
+
+            "\t**•** Llega una persona.",
+            "\t**•** Llega un colectivo con 𝑛 asientos libres, y se suben al mismo todas las",
+            "\t  personas que están esperando, en orden de llegada, hasta que no quedan asientos libres.\n",
+
+            "Cada evento se representa con una tupla que incluye:\n",
+
+            "\t**•** El instante de tiempo (cantidad de segundos desde el inicio del día)",
+            "\t**•** El tipo de evento, que puede ser 'p' (persona) o 'c' (colectivo).",
+            "\t**•** En el caso de un evento de tipo 'c' hay un tercer elemento que es la cantidad de asientos libres.\n",
+
+            "Escribir una función que recibe una lista de eventos, ordenados cronológicamente,",
+            "y devuelva el promedio de tiempo de espera de los pasajeros en la parada."
+        ],
+        "campos": {
+            "Ejemplo:": [
+                "```python",
+                "promedio_espera([(35,'p'), (43,'p'), (80,'c',1), (98,'p'), (142,'c',2)])",
+                "-> 62.6667 (calculado como (45+99+44) / 3)",
+                "```"
+            ]
+        },
+        "pie": [
+
+        ]
+    },
+    "4": {
+        "titulo": [
+
+        ],
+        "descripcion": [
+            "**Juego de Cartas**"
+        ],
+        "campos": {
+            "a)": [
+                "Crear una clase `Carta` que contenga un palo y un valor."
+            ],
+            "b)": [
+                "Crear una clase `Solitario` que permita apilar las cartas una arriba de otra,",
+                "pero sólo permita apilar una carta si es de un número inmediatamente inferior",
+                "y de distinto palo a la carta que está en el tope.",
+                "Si se intenta apilar una carta incorrecta, debe lanzar una excepción."
+            ]
+        },
+        "pie": [
+
+        ]
+    },
+    "5": {
+        "titulo": [
+
+        ],
+        "descripcion": [
+            "Crear una clase `PilaConMaximo` que soporte las operaciones de `Pila`",
+            "(`apilar(elemento)` y `desapilar()`), y además incluya el método `obtener_maximo()`",
+            "en tiempo constante."
+        ],
+        "campos": {
+
+        },
+        "pie": [
+            "Ayuda: Usar dos pilas, una para guardar los elementos y otra para guardar los máximos."
+        ]
+    },
+    "6": {
+        "titulo": [
+
+        ],
+        "descripcion": [
+            "Escribir una función que recibe una expresión matemática (en forma de cadena) y",
+            "devuelve `True` si los paréntesis (**'()'**), corchetes (**'[]'**) y llaves (**'{}'**)",
+            "están correctamente balanceados, o `False` en caso contrario."
+        ],
+        "campos": {
+            "Ejemplos": [
+                "```python",
+                "validar('(x+y)/2') -> True",
+                "validar('[8*4(x+y)]+{2/5}') -> True",
+                "validar('(x+y]/2') -> False",
+                "validar('1+)2(+3') -> False",
+                "```"
+            ]
+        },
+        "pie": [
+
+        ]
+    },
+    "7": {
+        "titulo": [
+
+        ],
+        "descripcion": [
+            "Escribir una función llamada `tail` que recibe un archivo y un número *N* e imprime",
+            "las últimas *N* líneas del archivo.",
+            "Durante el transcurso de la función no puede haber más de *N* líneas en memoria."
+        ],
+        "campos": {
+
+        },
+        "pie": [
+
+        ]
+    }
+}

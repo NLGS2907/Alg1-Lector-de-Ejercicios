@@ -31,8 +31,8 @@ class TestArchivos(unittest.TestCase):
 
             dic_cargado = cargar_json(arch_temp)
 
-            self.assertEquals(dic_simple_str, '{"a": 1, "b": 2, "c": 3, "d": [4, 5]}') # Si se guardó bien
-            self.assertEquals(dic_cargado, dic_simple) # Si se cargó bien
+            self.assertEqual(dic_simple_str, '{"a": 1, "b": 2, "c": 3, "d": [4, 5]}') # Si se guardó bien
+            self.assertEqual(dic_cargado, dic_simple) # Si se cargó bien
             with self.assertRaises(FileNotFoundError):
                 cargar_json("__path_basura__")
 

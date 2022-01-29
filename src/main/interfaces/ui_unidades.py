@@ -10,6 +10,7 @@ from discord.ui import Select, select
 from ..archivos.archivos import (DiccionarioGuia, actualizar_guia, cargar_guia,
                                  lista_carpetas, lista_unidades)
 from ..constantes.constantes import DEFAULT_VERSION
+from ..logger.logger import log
 from .ui_ejercicios import SelectorEjercicios
 from .ui_general import VistaGeneral
 
@@ -44,6 +45,12 @@ class SelectorGuia(VistaGeneral):
 
         actualizar_guia(nueva_version, str(interaccion.message.guild.id))
 
+        formato_log = {"guild": interaccion.guild.name,
+                       "old_ver": version_vieja,
+                       "new_ver": nueva_version}
+
+        log.info("En '%(guild)s', la versión de la guía fue cambiada " % formato_log +
+                 "de %(old_ver)s a %(new_ver)s exitosamente" % formato_log)
         await interaccion.response.edit_message(content="**[AVISO]** La versión de la guía " +
                             f"fue cambiada{f' de `{version_vieja}`' if version_vieja else ''} a " +
                             f"`{nueva_version}` exitosamente.",
@@ -73,8 +80,8 @@ class MenuSelectorUnidad(Select):
         self.guia = guia
 
         opciones = [SelectOption(label=f"Unidad {unidad}",
-                                 value=unidad,
-                                 description=self.guia[unidad]["titulo"])
+                                 description=self.guia[unidad]["titulo"],
+                                 value=unidad)
 
                                  for unidad in lista_unidades(self.guia)]
 

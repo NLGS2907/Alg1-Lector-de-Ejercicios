@@ -10,9 +10,9 @@ from typing import Optional
 from ..constantes.constantes import EXT, GUIA_PATH, PROPERTIES_PATH
 
 DiccionarioPares = dict[str, str]
-
-DiccionarioGuia = dict[str, str | dict[str, str]]
-
+DiccionarioEjercicio = dict[str, list[str] | dict[str, list[str]]]
+DiccionarioUnidad = dict[str, str | DiccionarioEjercicio]
+DiccionarioGuia = dict[str, str | DiccionarioUnidad]
 DiccionarioStats = dict[str, list[int]]
 
 
@@ -85,46 +85,7 @@ def cargar_guia(version: str, carpeta: str=GUIA_PATH) -> Optional[DiccionarioGui
 
     for unidad in range(1, len(unidades) + 1):
 
-        dic_unidad = {}
-        lista_ej = []
-        nombre_ej = ''
-
-        with open(f"{carpeta}/{version}/guia_{unidad}.txt", encoding="utf-8") as archivo:
-
-            for linea in archivo:
-
-                if any((not linea, linea == '\n', linea[0] == '#')):
-
-                    continue
-
-                llave, *valor = linea.rstrip().split('=', 1)
-                valor = ''.join(valor)
-
-                if llave == "titulo":
-
-                    dic_unidad[llave] = valor
-
-                elif valor == '<': # Empezar a leer ejercicio
-
-                    nombre_ej = llave
-                    lista_ej = []
-
-                elif llave in ('t', 'n', 'tn', ''): # Para formatear lineas
-
-                    tab = '\t' if llave in ('t', "tn") else ''
-                    new_line = '\n' if llave in ('n', "tn") else ''
-
-                    lista_ej.append(f"{tab}{valor}{new_line}")
-
-                elif llave == '>': # Termina de leer ejercicio
-
-                    dic_unidad[nombre_ej] = '\n'.join(lista_ej)
-
-                else:
-
-                    lista_ej.append(llave)
-
-        guia[str(unidad)] = dic_unidad
+        guia[str(unidad)] = cargar_json(f"{carpeta}/{version}/guia_{unidad}{EXT}")
 
     return guia
 
@@ -158,20 +119,3 @@ def actualizar_guia(nueva_version: str, guild_id: str) -> None:
     propiedades = cargar_json(PROPERTIES_PATH)
     propiedades["versiones_guia"][guild_id] = nueva_version
     guardar_json(propiedades, PROPERTIES_PATH)
-
-
-def cargar_lineas(nombre_archivo: str) -> list[str]:
-    """
-    Devuelve una lista de las lineas de un archivo que tiene solo
-    un valor en cada una.
-    """
-
-    lineas = []
-
-    with open(nombre_archivo, encoding="utf-8") as archivo:
-
-        for linea in archivo:
-
-            lineas.append(linea.rstrip())
-
-    return lineas

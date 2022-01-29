@@ -4,13 +4,16 @@
 
 <p align="left">
 
-<img alt="version" src="https://img.shields.io/badge/version-1.2.0-brightgreen" />
-<img alt="estrellas" src="https://img.shields.io/github/stars/NLGS2907/Alg1-Lector-de-Ejercicios?label=Estrellas&style=social" />
-
+![version](https://img.shields.io/badge/version-1.2.0-brightgreen)
+![estrellas](https://img.shields.io/github/stars/NLGS2907/Alg1-Lector-de-Ejercicios?label=Estrellas&style=social)
+![Tests](https://github.com/NLGS2907/Alg1-Lector-de-Ejercicios/actions/workflows/tests.yml/badge.svg)
+![Pylint](https://github.com/NLGS2907/Alg1-Lector-de-Ejercicios/actions/workflows/pylint.yml/badge.svg)
 
 Este bot de discord está pensado para usarse principalmente en el discord de la materia Algoritmos y Programación I,
 de la Facultad de Ingeniería de la UBA, aunque puede utilizarse para cualquier servidor que lo quiera.
 </p>
+
+<hr/>
 
 **Enlace de Invitación:** [Aquí](https://discord.com/api/oauth2/authorize?client_id=889312376036425810&permissions=292057984064&scope=bot)
 
@@ -37,13 +40,15 @@ de la Facultad de Ingeniería de la UBA, aunque puede utilizarse para cualquier 
 
 ## v1.2.0
 
-* **Reformado el Código.** Ahora hace uso de `Cogs` para mejor organización
-de los comandos.
+* **Migración a Pycord.** La librería que se venía usando, [discord.py](https://github.com/Rapptz/discord.py), cesó su mantenimiento, y por lo
+tanto el bot migró a usar [pycord](https://github.com/Pycord-Development/pycord), un *fork* de discord.py casi idéntico y más actualizado.
+
+* **Reformados los comandos.** Ahora hace uso de `Cogs` para mejor organización de los mismos.
 
 * **Modularización.** Siguiendo la mejora de solidez técnica descrita arriba, muchas funciones
 y clases fueron separadas en sus propios módulos.
 
-* **Algunos Comandos ahora usan `Embeds.** Esto permite una presentación más prolija.
+* **Algunos Comandos ahora usan `Embeds`.** Esto permite una presentación más prolija.
 
 <hr style="height:2px" />
 

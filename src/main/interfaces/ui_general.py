@@ -9,6 +9,8 @@ from discord import PartialEmoji as Emoji
 from discord.enums import ButtonStyle
 from discord.ui import Button, View, button
 
+from ..logger.logger import log
+
 
 class VistaGeneral(View):
     """
@@ -33,12 +35,14 @@ class VistaGeneral(View):
 
             item.disabled = True
 
+        log.info("Vista Deshabilitada")
+
     @button(style=ButtonStyle.red,
             custom_id="exit",
             label="Cerrar",
             row=2,
             emoji=Emoji.from_str("\N{Heavy Multiplication X}"))
-    async def cerrar_interfaz(self, _: Button, interaccion: Interaction) -> None:
+    async def cerrar_interfaz(self, _boton: Button, interaccion: Interaction) -> None:
         """
         Cierra la interfaz actual.
         """

@@ -37,7 +37,7 @@ async def mandar_dm(ctx: Context,
     await ctx.message.delete()
 
 
-def get_prefijo(_: Bot, mensaje: Message) -> str:
+def get_prefijo(_bot: Bot, mensaje: Message) -> str:
     """
     Se fija en el diccionario de prefijos y devuelve el que
     corresponda al servidor de donde se convoca el comando.

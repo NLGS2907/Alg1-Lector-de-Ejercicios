@@ -11,7 +11,8 @@ from ..archivos.archivos import (DiccionarioGuia, actualizar_guia,
                                  lista_carpetas, lista_ejercicios,
                                  lista_unidades, version_es_valida)
 from ..auxiliar.auxiliar import es_rol_valido
-from ..constantes.constantes import MESSAGE_FORMAT
+from ..constantes.constantes import TITLE_FORMAT, USER_CONSULT
+from ..embebido.embebido import Embebido
 from ..interfaces.ui_ejercicios import NavegadorEjercicios, SelectorEjercicios
 from ..interfaces.ui_unidades import SelectorGuia, SelectorUnidad
 from ..logger.logger import log
@@ -76,7 +77,8 @@ class CogEjercicios(CogGeneral):
             else:
 
                 unidades = lista_unidades(guia)
-                await ctx.channel.send(f"**[ERROR]** El número de unidad `{unidad}` no es válido."
+                log.error("El número de unidad especificado '%s' es inválido", unidad)
+                await ctx.channel.send(f"**[ERROR]** El número de unidad `{unidad}` no es válido. "
                     + f"Los valores aceptados son:\n\n{' - '.join([f'`{u}`' for u in unidades])}")
 
             return False
@@ -91,6 +93,7 @@ class CogEjercicios(CogGeneral):
             else:
 
                 ejercicios = lista_ejercicios(guia, unidad)
+                log.error("El número de ejercicio especificado '%s' es inválido", ejercicio)
                 await ctx.channel.send(f"**[ERROR]** El número de ejercicio `{ejercicio}` no " +
                                        "es válido. Los valores aceptados son:\n\n" +
                                        f"{' - '.join([f'`{ej}`' for ej in ejercicios])}")
@@ -120,15 +123,17 @@ class CogEjercicios(CogGeneral):
 
         enunciado = guia[unidad][ejercicio]
 
-        mensaje = MESSAGE_FORMAT.format(mention=ctx.author.mention,
-                                        unidad=unidad,
-                                        titulo=guia[unidad]["titulo"],
-                                        ejercicio=ejercicio,
-                                        enunciado=enunciado)
+        if not enunciado["titulo"]:
 
+            enunciado["titulo"] = [TITLE_FORMAT.format(unidad=unidad,
+                                                      titulo=guia[unidad]["titulo"],
+                                                      ejercicio=ejercicio)]
+
+        mensaje = USER_CONSULT.format(mencion=ctx.author.mention)
+        embebido = Embebido(opciones=enunciado)
         vista = NavegadorEjercicios(guia=guia, unidad=unidad, ejercicio=ejercicio)
 
-        await ctx.channel.send(mensaje, view=vista)
+        await ctx.channel.send(content=mensaje, embed=embebido, view=vista)
 
 
     @command(name="random",
@@ -218,6 +223,7 @@ class CogEjercicios(CogGeneral):
 
         if nueva_version is not None and not version_es_valida(nueva_version):
 
+            log.error("La versión de la guía especificada '%s' es inválida", nueva_version)
             await ctx.channel.send(f"**[ERROR]** La versión especificada `{nueva_version}` " +
                                    f"no es válida.\nLas versiones válidas son:\n{versiones}",
                                    delete_after=10.0)
@@ -233,6 +239,13 @@ class CogEjercicios(CogGeneral):
         else:
 
             actualizar_guia(nueva_version, str(ctx.guild.id))
+
+            formato_log = {"guild": ctx.guild.name,
+                           "old_ver": version_vieja,
+                           "new_ver": nueva_version}
+
+            log.info("En '%(guild)s', la versión de la guía fue cambiada " % formato_log +
+                     "de %(old_ver)s a %(new_ver)s exitosamente" % formato_log)
             await ctx.channel.send("**[AVISO]** La versión de la guía fue cambiada de " +
                                    f"`{version_vieja}` a `{nueva_version}` exitosamente.",
                                    delete_after=30.0)

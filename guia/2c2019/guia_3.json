@@ -1,0 +1,94 @@
+{
+    "titulo": "Funciones",
+    "1": {
+        "titulo": [
+
+        ],
+        "descripcion": [
+            "Escribir dos funciones que permitan calcular:"
+        ],
+        "campos": {
+            "a)": [
+                "La duración en segundos de un intervalo dado en horas, minutos y segundos."
+            ],
+            "b)": [
+                "La duración en horas, minutos y segundos de un intervalo dado en segundos."
+            ]
+        },
+        "pie": [
+
+        ]
+    },
+    "2": {
+        "titulo": [
+
+        ],
+        "descripcion": [
+            "Usando las funciones del ejercicio anterior, escribir un programa que pida al usuario dos intervalos expresados en horas, minutos y segundos, sume sus duraciones, y muestre por pantalla la duración total en horas, minutos y segundos."
+        ],
+        "campos": {
+
+        },
+        "pie": [
+
+        ]
+    },
+    "3": {
+        "titulo": [
+
+        ],
+        "descripcion": [
+            "Escribir una función que, dados cuatro números, devuelva el mayor producto de dos de ellos.",
+            "Por ejemplo, si recibe los números `1, 5, -2, -4` debe devolver `8`, que es el producto más grande ",
+            "que se puede obtener entre ellos `(8 = (−2) × (−4))`."
+        ],
+        "campos": {
+
+        },
+        "pie": [
+
+        ]
+    },
+    "4": {
+        "titulo": [
+
+        ],
+        "descripcion": [
+            "**Área de Polígonos**"
+        ],
+        "campos": {
+            "a)": [
+                "Escribir una función que reciba las coordenadas de un vector en ℝ³ (x, y, z) y devuelva la norma del",
+                "vector, dada por ‖ (x1, y1, z1) × (x2, y2, z2)‖ = √(𝑥² + 𝑦² + 𝑧²).",
+                "Ejemplo: `diferencia(8, 7, -3, 5, 3, 2)` → `(3, 4, -5)`"
+            ],
+            "b)": [
+                "Escribir una función que reciba las coordenadas de dos vectores en ℝ³ (x1, y1, z1, x2, y2, z2) y",
+                "devuelva las coordenadas del vector diferencia (debe devolver 3 valores numéricos).",
+                "Ejemplo: `diferencia(8, 7, -3, 5, 3, 2)` → `(3, 4, -5)`"
+            ],
+            "c)": [
+                "Escribir una función que reciba las coordenadas de dos vectores en ℝ³ y devuelva las coordenadas del",
+                "producto vectorial, definido como:",
+                "(x1, y1, z1) × (x2, y2, z2) = (y1 · z2 - z1 · y2, z1 · x2 - x1 · z2, x1 · y2 - y1 · x2)",
+                "Ejemplo: `producto_vec(1, 4, -2, 3, -1, 0)` → `(-2, -6, -13)`"
+            ],
+            "d)": [
+                "Utilizando las funciones anteriores, escribir una función que reciba las coordenadas de 3 puntos en",
+                "ℝ³ y devuelva el área del triángulo que conforman. **¹**",
+                "Ejemplo: `area_triangulo(5, 8, -1, -2, 3, 4, -3, 3, 0)` → `19.4551`"
+            ],
+            "e)": [
+                "Escribir una función que reciba las coordenadas de 4 puntos en el plano ℝ² (x1, y1, x2, y2, x3, y3, x4, y4)",
+                "que conforman un cuadrilátero convexo, y devuelva el área del mismo. **²**",
+                "Ejemplo: `area_cuadrilatero(4, 3, 5, 10, -2, 8, -3, -5)` → `65`"
+            ]
+        },
+        "pie": [
+            "¹ Ayuda: Si 𝐴, 𝐵 y 𝐶 son 3 puntos en el espacio, la norma del producto vectorial AB × AC es igual",
+            "  al doble del área del triángulo 𝐴𝐵𝐶.",
+            "² Ayuda: Aprovechar las funciones escritas anteriormente, asumiendo que los puntos",
+            "  dados están en ℝ³ con coordenada 𝑧 = 0."
+        ]
+    }
+}

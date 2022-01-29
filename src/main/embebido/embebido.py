@@ -4,9 +4,6 @@ Módulo para contener Embeds personalizados.
 
 from discord import Colour, Embed
 
-from ..constantes.constantes import (BOT_VERSION, DEFAULT_PREFIX,
-                                     DEFAULT_VERSION)
-
 
 class Embebido(Embed):
     """
@@ -15,40 +12,48 @@ class Embebido(Embed):
 
     def __init__(self,
                  *,
-                 formatos: dict[str, str],
-                 opciones) -> None:
+                 opciones,
+                 formatos: dict[str, str]=None) -> None:
         """
         Inicializa una instancia de 'Embebido'.
         """
 
-        self.version_bot: str = formatos.get("version_bot", BOT_VERSION)
-        self.version_guia: str = formatos.get("version_guia", DEFAULT_VERSION)
-        self.prefijo: str = formatos.get("prefijo", DEFAULT_PREFIX)
+        self.formatos = {} if formatos is None else formatos
 
-        titulo: str = opciones.get("titulo", '')
-        descripcion: str = opciones.get("descripcion", '')
+        titulo: list[str] = opciones.get("titulo", [])
+        descripcion: list[str] = opciones.get("descripcion", [])
         color: int = opciones.get("color", Colour.dark_grey())
-        campos: list[tuple[str, str]] = opciones.get("campos", [])
-        pie: str = opciones.get("pie", '')
+        campos: dict[str, list[str]] = opciones.get("campos", {})
+        pie: list[str] = opciones.get("pie", [])
 
-        super().__init__(title=self.custom_format(titulo),
-                         description=self.custom_format(descripcion),
+        super().__init__(title=self.custom_format(Embebido.unir(titulo)),
+                         description=self.custom_format(Embebido.unir(descripcion)),
                          colour=color)
 
-        for nombre, valor in campos:
+        for nombre, valores in campos.items():
 
             self.add_field(name=self.custom_format(nombre),
-                           value=self.custom_format(valor),
+                           value=self.custom_format(Embebido.unir(valores)),
                            inline=False)
 
-        self.set_footer(text=self.custom_format(pie))
+        self.set_footer(text=self.custom_format(Embebido.unir(pie)))
 
 
-    def custom_format(self, string: str) -> str:
+    @staticmethod
+    def unir(lista: list[str]) -> str:
         """
-        Formatea un string de una manera personalizada.
+        Une los strings de una lista con nuevas líneas.
         """
 
-        return string.format(version_bot=self.version_bot,
-                             version_guia=self.version_guia,
-                             prefix=self.prefijo)
+        return '\n'.join(lista) if lista else ''
+
+    def custom_format(self, cadena: str) -> str:
+        """
+        Formatea una cadena de manera personalizada.
+        """
+
+        for clave, valor in self.formatos.items():
+
+            cadena = cadena.replace('{' + clave + '}', valor)
+
+        return cadena

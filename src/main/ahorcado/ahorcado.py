@@ -5,61 +5,37 @@ Pequeño módulo que implementa la lógica de una partida de ahorcado.
 from random import choice
 from typing import Optional
 
-from ..archivos.archivos import cargar_lineas
+from .letra_ahorcado import LetraAhorcado
 from ..constantes.constantes import WORDS_PATH
-
-
-class LetraAhorcado:
-    """
-    Pequeña clase para representar la letra de una frase
-    en el ahorcado.
-    """
-
-    def __init__(self, valor: str, oculta: bool) -> None:
-        """
-        Inicializa una instancia de tipo 'LetraAhorcado'.
-        """
-
-        self.valor = valor
-        self._oculta = oculta
-
-    def __str__(self):
-        """
-        Muestra la letra con su valor y si está oculta o no.
-        Está pensado para fines de Debug.
-        """
-
-        return f"Valor: {self.valor} | Oculta: {self._oculta}"
-
-    @property
-    def oculta(self) -> bool:
-        """
-        Propiedad que funciona como wrapper para 'self._oculto'.
-        """
-
-        return self._oculta
-
-    @oculta.setter
-    def oculta(self, nuevo_valor: bool) -> None:
-        """
-        La letra, una vez descubierta, no debe poderse volver a cubrir.
-        """
-
-        if not nuevo_valor:
-
-            self._oculta = nuevo_valor
 
 class Ahorcado:
     """
     Clase implementada para hacer un juego de ahorcado.
     """
 
+    @staticmethod
+    def cargar_palabras(nombre_archivo: str) -> list[str]:
+        """
+        Devuelve una lista de las lineas de un archivo que tiene solo
+        un valor en cada una.
+        """
+
+        lineas = []
+
+        with open(nombre_archivo, encoding="utf-8") as archivo:
+
+            for linea in archivo:
+
+                lineas.append(linea.rstrip())
+
+        return lineas
+
     def __init__(self, frase: Optional[str]=None, **opciones) -> None:
         """
         Inicializa una instancia de tipo 'Ahorcado'.
         """
 
-        frase_magica = (frase if frase else choice(cargar_lineas(WORDS_PATH)))
+        frase_magica = (frase if frase else choice(Ahorcado.cargar_palabras(WORDS_PATH)))
         self.maximos_intentos = opciones.get("vidas_maximas", 7)
         self.intentos = self.maximos_intentos
 

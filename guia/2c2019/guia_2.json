@@ -1,0 +1,170 @@
+{
+    "titulo": "Programas Sencillos",
+    "1": {
+        "titulo": [
+            
+        ],
+        "descripcion": [
+            "Escribir una función que reciba una cantidad de pesos, una tasa de interés y un número de años y devuelva el monto final a obtener. La fórmula a utilizar es:",
+            "*𝐶𝑛 = 𝐶 × (1 + 𝑥/100) ^ 𝑛*",
+            "Donde *𝐶* es el capital inicial, *𝑥* es la tasa de interés y *𝑛* es el número de años a calcular."
+        ],
+        "campos": {
+
+        },
+        "pie": [
+            
+        ]
+    },
+    "2": {
+        "titulo": [
+            
+        ],
+        "descripcion": [
+            "Utilizando la función del ejercicio anterior (ejercicio **2.1**), escribir un programa que le pregunte",
+            "al usuario la cantidad de pesos inicial, la tasa de interés y el número de años y muestre el monto final a obtener."
+        ],
+        "campos": {
+
+        },
+        "pie": [
+            
+        ]
+    },
+    "3": {
+        "titulo": [
+            
+        ],
+        "descripcion": [
+            "Escribir una función que convierta un valor dado en grados Fahrenheit a grados Celsius.",
+            "Recordar que la fórmula para la conversión es:",
+            "*𝐹 = (9/5) × 𝐶 + 32*"
+        ],
+        "campos": {
+
+        },
+        "pie": [
+            
+        ]
+    },
+    "4": {
+        "titulo": [
+            
+        ],
+        "descripcion": [
+            "Escribir un programa que utilice la función anterior para generar una tabla de conversión de temperaturas, desde 0 °F hasta 120 °F, de 10 en 10."
+        ],
+        "campos": {
+
+        },
+        "pie": [
+            
+        ]
+    },
+    "5": {
+        "titulo": [
+            
+        ],
+        "descripcion": [
+
+        ],
+        "campos": {
+            "a)": [
+                "Escribir una función que dado un número entero devuelva 1 si el mismo es impar y 0 si fuera par."
+            ],
+            "b)": [
+                "Escribir una función que dado un número entero devuelva 0 si el mismo es impar y 1 si fuera par."
+            ],
+            "c)": [
+                "Escribir una función que dado un número entero devuelva el dígito de las unidades.",
+                "Por ejemplo, para `153` debe devolver `3`"
+            ],
+            "d)": [
+                "Escribir una función que dado un número devuelva el primer número múltiplo de 10 inferior a él.",
+                "Por ejemplo, para `153` debe devolver `150`"
+            ]
+        },
+        "pie": [
+            
+        ]
+    },
+    "6": {
+        "titulo": [
+            
+        ],
+        "descripcion": [
+            "Escribir un programa que imprima todos los números pares entre dos números que se le pidan al usuario."
+        ],
+        "campos": {
+
+        },
+        "pie": [
+            
+        ]
+    },
+    "7": {
+        "titulo": [
+            
+        ],
+        "descripcion": [
+            "Escribir un programa que le pregunte al usuario un número *𝑛* e imprima los primeros *𝑛* números triangulares, junto con su índice.",
+            "Los números triangulares se obtienen mediante la suma de los números naturales desde 1 hasta *𝑛*.",
+            "Es decir, si se piden los primeros 5 números triangulares, el programa debe imprimir:",
+            "```python",
+            "1 - 1",
+            "2 - 3",
+            "3 - 6",
+            "4 - 10",
+            "5 - 15",
+            "```"
+        ],
+        "campos": {
+
+        },
+        "pie": "Nota: Hacerlo usando y sin usar la ecuación Σ 𝑛 𝑖=1 𝑖 = 𝑛 (𝑛 + 1)/2. ¿Cuál realiza más operaciones?"
+    },
+    "8": {
+        "titulo": [
+            
+        ],
+        "descripcion": [
+            "Escribir un programa que tome una cantidad *𝑚* de valores ingresados por el usuario, a cada uno le calcule el factorial",
+            "(utilizando la función escrita en el ejercicio **1.5**) e imprima el resultado junto con el número de orden correspondiente."
+        ],
+        "campos": {
+
+        },
+        "pie": [
+            
+        ]
+    },
+    "9": {
+        "titulo": [
+            
+        ],
+        "descripcion": [
+            "Escribir un programa que imprima por pantalla todas las fichas de dominó, de una por línea y sin repetir."
+        ],
+        "campos": {
+
+        },
+        "pie": [
+            
+        ]
+    },
+    "10": {
+        "titulo": [
+            
+        ],
+        "descripcion": [
+            "Modificar el programa anterior (ejercicio **2.9**) para que pueda generar fichas de un juego",
+            "que puede tener números de 0 a *𝑛*."
+        ],
+        "campos": {
+
+        },
+        "pie": [
+            
+        ]
+    }
+}

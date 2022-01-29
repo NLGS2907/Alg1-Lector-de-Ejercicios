@@ -66,6 +66,7 @@ class CogImgur(CogGeneral):
 
             return True
 
+        log.error("Número de Meme '%s' inválido", indice_meme)
         await mensaje_enviado.edit(f"**[ERROR]** El número de meme `{indice_meme}` ingresado " +
                                    "no es válido.\n\nLas opciones disponibles " +
                                    f"incluyen de `1` a `{limite_memes}`.")
@@ -145,6 +146,7 @@ class CogImgur(CogGeneral):
 
         if not adjunto_meme:
 
+            log.error("Ningún Meme encontrado")
             await ctx.channel.send("**[ERROR]** No se ha encontrado ningún meme.", delete_after=10)
             return
 

@@ -75,6 +75,8 @@ El path donde se encuentra el registro.
 
 WORDS_PATH = "src/main/txt/palabras.txt"
 
+INFO_MESSAGE = "src/main/json/info_msg.json"
+
 DATE_FORMAT = "%Y-%m-%d_%H-%M-%S_%f"
 
 REPO_URL = "https://github.com/NLGS2907/Alg1-Lector-de-Ejercicios"
@@ -82,11 +84,11 @@ REPO_URL = "https://github.com/NLGS2907/Alg1-Lector-de-Ejercicios"
 La URL del repositorio donde está el código fuente del bot.
 """
 
-MESSAGE_FORMAT = "**{mention}** ha consultado:\n\n>>> **Unidad** {unidad} - \"{titulo}\"  |  **Ejercicio** {ejercicio}:\n\n**{unidad}.{ejercicio}.** {enunciado}"
+USER_CONSULT = "**{mencion}** ha consultado:"
 
-INFO_MESSAGE = "src/main/json/info_msg.json"
+TITLE_FORMAT = "**Unidad** {unidad} - \"{titulo}\"  |  **Ejercicio** {ejercicio}"
 
-EXT = ".txt"
+EXT = ".json"
 """
 La extensión de archivo usada para almacenar el texto que son los ejercicios
 de la guía.

@@ -88,14 +88,15 @@ class InfoUI(VistaGeneral):
         hasta = self.pagina * self.elementos_por_pagina
 
         opciones_a_usar = self.opciones_embebido.copy()
-        opciones_a_usar["campos"] = opciones_a_usar["campos"][desde:hasta]
+        opciones_a_usar["campos"] = {clave: valor for clave, valor
+                                    in list(opciones_a_usar["campos"].items())[desde:hasta]}
 
         formatos = {"version_bot": self.version_bot,
                     "version_guia": self.version_guia,
                     "prefijo": self.prefijo}
 
-        nuevo_embebido = Embebido(formatos=formatos,
-                                  opciones=opciones_a_usar)
+        nuevo_embebido = Embebido(opciones=opciones_a_usar,
+                                  formatos=formatos)
 
         return await interaccion.response.edit_message(view=self, embed=nuevo_embebido)
 
@@ -103,7 +104,7 @@ class InfoUI(VistaGeneral):
     @button(style=ButtonStyle.grey,
             custom_id="pg_left",
             emoji=Emoji.from_str("\N{Leftwards Black Arrow}"), disabled=True)
-    async def pagina_anterior(self, _: Button, interaccion: Interaction) -> None:
+    async def pagina_anterior(self, _boton: Button, interaccion: Interaction) -> None:
         """
         Se intenta ir a la página anterior del mensaje INFO.
         """
@@ -118,7 +119,7 @@ class InfoUI(VistaGeneral):
     @button(style=ButtonStyle.grey,
             custom_id="pg_right",
             emoji=Emoji.from_str("\N{Black Rightwards Arrow}"), disabled=False)
-    async def pagina_posterior(self, _: Button, interaccion: Interaction) -> None:
+    async def pagina_posterior(self, _boton: Button, interaccion: Interaction) -> None:
         """
         Se intenta ir a la página posterior del mensaje INFO.
         """

@@ -35,6 +35,12 @@ class CogAdmin(CogGeneral):
         propiedades["prefijos"][str(ctx.guild.id)] = nuevo_prefijo
         guardar_json(propiedades, PROPERTIES_PATH)
 
+        formato_log = {"guild": ctx.guild.name,
+                        "bf_pfx": prefijo_viejo,
+                        "aft_pfx": nuevo_prefijo}
+
+        log.info("El prefijo en '%(guild)s' fue cambiado de " % formato_log +
+                 "'%(bf_pfx)s' a '%(aft_pfx)s' exitosamente." % formato_log)
         await ctx.channel.send("**[AVISO]** El prefijo de los comandos fue cambiado de " +
                                f"`{prefijo_viejo}` a `{nuevo_prefijo}` exitosamente.",
                                delete_after=30.0)

@@ -1,0 +1,156 @@
+{
+    "titulo": "Objetos",
+    "1": {
+        "titulo": [
+
+        ],
+        "descripcion": [
+
+        ],
+        "campos": {
+            "a)": [
+                "Implementar la clase `Intervalo(desde, hasta)` que representa un intervalo entre",
+                "dos instantes de tiempo (números enteros expresados en segundos), con la condición",
+                "`desde < hasta`."
+            ],
+            "b)": [
+                "Implementar el método `duracion` que devuelve la duración en segundos del intervalo."
+            ],
+            "c)": [
+                "Implementar el método `interseccion` que recibe otro intervalo y devuelve un nuevo",
+                "intervalo resultante de la intersección entre ambos, o lanzar una excepción si la",
+                "intersección es nula."
+            ],
+            "d)": [
+                "Implementar el método `union` que recibe otro intervalo.",
+                "Si los intervalos no son adyacentes ni intersectan, debe lanzar una excepción.",
+                "En caso contrario devuelve un nuevo intervalo resultante de la unión entre ambos."
+            ]
+        },
+        "pie": [
+
+        ]
+    },
+    "2": {
+        "titulo": [
+
+        ],
+        "descripcion": [
+
+        ],
+        "campos": {
+            "a)": [
+                "Crear una clase `Fraccion`, que cuente con dos atributos: `dividendo` y `divisor`,",
+                "que se asignan en el constructor, y se imprimen como *X/Y* en el método `__str__`."
+            ],
+            "b)": [
+                "Implementar el método `__add__` que recibe otra fracción y devuelve una nueva",
+                "fracción con la suma de ambas."
+            ],
+            "c)": [
+                "Implementar el método `__mul__` que recibe otra fracción y devuelve una nueva",
+                "fracción con el producto de ambas."
+            ],
+            "d)": [
+                "Crear un método `simplificar` que modifica la fracción actual de forma que los",
+                "valores del dividendo y divisor sean los menores posibles."
+            ]
+        },
+        "pie": [
+
+        ]
+    },
+    "3": {
+        "titulo": [
+
+        ],
+        "descripcion": [
+
+        ],
+        "campos": {
+            "a)": [
+                "Crear una clase `Vector`, que en su constructor reciba una lista de elementos que",
+                "serán sus coordenadas. En el método `__str__` se imprime su contenido con el formato *[x, y, z]*."
+            ],
+            "b)": [
+                "Implementar el método `__add__` que reciba otro vector, verifique si tienen la misma",
+                "cantidad de elementos y devuelva un nuevo vector con la suma de ambos.",
+                "Si no tienen la misma cantidad de elementos debe levantar una excepción."
+            ],
+            "c)": [
+                "Implementar el método `__mul__` que reciba un número y devuelva un nuevo vector,",
+                "con los elementos multiplicados por ese número."
+            ]
+        },
+        "pie": [
+
+        ]
+    },
+    "4": {
+        "titulo": [
+
+        ],
+        "descripcion": [
+            "Escribir una clase `Caja` para representar cuánto dinero hay en una caja de un negocio,",
+            "desglosado por tipo de billete (por ejemplo, en el quiosco de la esquina hay 6 billetes",
+            "de 500 pesos, 7 de 100 pesos y 4 monedas de 2 pesos).",
+            "Las denominaciones permitidas son `1`, `2`, `5`, `10`, `20`, `50`, `100`, `200`, `500`",
+            "y `1000` pesos.",
+            "Debe comportarse según el siguiente ejemplo:",
+            "```python",
+            ">>> c = Caja({500: 6, 300: 7, 2: 4})",
+            "ValueError: Denominación \"300\" no permitida",
+            ">>> c = Caja({500: 6, 100: 7, 2: 4})",
+            ">>> str(c)",
+            "'Caja {500: 6, 100: 7, 2: 4} total: 3708 pesos'",
+            ">>> c.agregar({250: 2})",
+            "ValueError: Denominación \"250\" no permitida",
+            ">>> c.agregar({50: 2, 2: 1})",
+            ">>> str(c)",
+            "'Caja {500: 6, 100: 7, 50: 2, 2: 5} total: 3810 pesos'",
+            ">>> c.quitar({50: 3, 100: 1})",
+            "ValueError: No hay suficientes billetes de denominación \"50\"",
+            ">>> c.quitar({50: 2, 100: 1})",
+            "200",
+            ">>> str(c)",
+            "'Caja {500: 6, 100: 6, 2: 5} total: 3610 pesos'",
+            "```"
+        ],
+        "campos": {
+
+        },
+        "pie": [
+
+        ]
+    },
+    "5": {
+        "titulo": [
+
+        ],
+        "descripcion": [
+            "Crear las clases `Materia` y `Carrera`, que se comporten según el siguiente ejemplo:",
+            "```python",
+            "=>>> analisis2 = Materia(\"61.03\", \"Análisis 2\", 8)",
+            "=>>> fisica2 = Materia(\"62.01\", \"Física 2\", 8)",
+            ">>> algo1 = Materia(\"75.40\", \"Algoritmos 1\", 6)",
+            "=>>> c = Carrera([analisis2, fisica2, algo1])",
+            ">>> str(c)",
+            "Créditos: 0 -- Promedio: N/A -- Materias aprobadas:",
+            ">>> c.aprobar(\"95.14\", 7)",
+            "ValueError: La materia 95.14 no es parte del plan de estudios",
+            ">>> c.aprobar(\"75.40\", 10)",
+            ">>> c.aprobar(\"62.01\", 7)",
+            ">>> str(c)",
+            "Créditos: 14 -- Promedio: 8.5 -- Materias aprobadas:",
+            "75.40 Algoritmos 1 (10)",
+            "62.01 Física 2 (7)",
+            "```"
+        ],
+        "campos": {
+
+        },
+        "pie": [
+
+        ]
+    }
+}
