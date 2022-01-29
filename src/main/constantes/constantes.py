@@ -138,11 +138,14 @@ Yo también sé codear, ejem.""",
 
 WHATSNEW = f""">>> **- Novedades de la versión `{BOT_VERSION}` -**
 
+* **Migración a Pycord.** La librería que se venía usando, `**discord.py**`, cesó su mantenimiento,
+y por lo tanto el bot migró a usar `**pycord**`, un *fork* de discord.py casi idéntico y más actualizado.
+
 * **Reformado el Código.** Ahora hace uso de `Cogs` para mejor organización
 de los comandos.
 
 * **Modularización.** Siguiendo la mejora de solidez técnica descrita arriba, muchas funciones
 y clases fueron separadas en sus propios módulos.
 
-* **Algunos Comandos ahora usan `Embeds.** Esto permite una presentación más prolija.
+* **Algunos Comandos ahora usan `Embeds`.** Esto permite una presentación más prolija.
 """

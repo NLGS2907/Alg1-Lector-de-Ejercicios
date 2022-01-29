@@ -84,20 +84,3 @@ class CogMisc(CogGeneral):
         """
 
         await ctx.channel.send(content=WHATSNEW, delete_after=60)
-
-
-    @command(name="test")
-    async def prueba(self, ctx: Context, num: str='1', ej: str='1'):
-
-        guia = cargar_json(f"guia/2c2019_exp/guia_{num}.json")
-
-        ejercicio = guia[ej]
-
-        if not ejercicio["titulo"]:
-
-            ejercicio["titulo"] = [f"**Unidad** {num} - \"{guia['titulo']}\" | **Ejercicio** {ej}"]
-
-        embebido = Embebido(opciones=ejercicio)
-        mensaje = USER_CONSULT.format(mencion=ctx.author.mention)
-
-        await ctx.channel.send(content=mensaje, embed=embebido)
