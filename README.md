@@ -21,19 +21,15 @@ de la Facultad de Ingeniería de la UBA, aunque puede utilizarse para cualquier 
 
 ### Changelog:
 
-**[v1.2.0](#v120)** ***<- La más nueva***
-
-[v1.1.0](#v110)
-
-[v1.0.4](#v104)
-
-[v1.0.3](#v103)
-
-[v1.0.2](#v102)
-
-[v1.0.1](#v101)
-
-[v1.0.0](#v100)
+|       Version     |
+|     :---------:   |
+|**[v1.2.0](#v120)**| 
+|  [v1.1.0](#v110)  |
+|  [v1.0.4](#v104)  |
+|  [v1.0.3](#v103)  |
+|  [v1.0.2](#v102)  |
+|  [v1.0.1](#v101)  |
+|  [v1.0.0](#v100)  |
 
 
 <hr/>
