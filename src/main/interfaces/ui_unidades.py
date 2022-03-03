@@ -7,10 +7,10 @@ from typing import Optional
 from discord import Interaction, SelectOption
 from discord.ui import Select, select
 
-from ..archivos.archivos import (DiccionarioGuia, actualizar_guia, cargar_guia,
-                                 lista_carpetas, lista_unidades)
-from ..constantes.constantes import DEFAULT_VERSION
-from ..logger.logger import log
+from ..archivos import (DiccionarioGuia, actualizar_guia, cargar_guia,
+                        lista_carpetas, lista_unidades)
+from ..constantes import DEFAULT_VERSION
+from ..logger import log
 from .ui_ejercicios import SelectorEjercicios
 from .ui_general import VistaGeneral
 

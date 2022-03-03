@@ -11,10 +11,11 @@ from discord import SelectOption
 from discord.enums import ButtonStyle
 from discord.ui import Button, Select, button
 
-from ..archivos.archivos import (DiccionarioEjercicio, DiccionarioGuia, DiccionarioPares,
-                                 cargar_guia, lista_ejercicios, lista_unidades)
-from ..constantes.constantes import DEFAULT_VERSION, TITLE_FORMAT, USER_CONSULT
-from ..embebido.embebido import Embebido
+from ..archivos import (DiccionarioEjercicio, DiccionarioGuia,
+                        DiccionarioPares, cargar_guia, lista_ejercicios,
+                        lista_unidades)
+from ..constantes import DEFAULT_VERSION, TITLE_FORMAT, USER_CONSULT
+from ..embebido import Embebido
 from .ui_general import VistaGeneral
 
 

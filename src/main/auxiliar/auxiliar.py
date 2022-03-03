@@ -8,10 +8,9 @@ from discord import Embed, Message
 from discord.ext.commands import Bot, Context
 from discord.ui import View
 
-from ..archivos.archivos import cargar_json
-from ..constantes.constantes import (ALGORITMOS_ESSAYA_ID, DEFAULT_PREFIX,
-                                     PROPERTIES_PATH, ROL_DIEGO_ID,
-                                     ROL_DOCENTE_ID)
+from ..archivos import cargar_json
+from ..constantes import (ALGORITMOS_ESSAYA_ID, DEFAULT_PREFIX,
+                          PROPERTIES_PATH, ROL_DIEGO_ID, ROL_DOCENTE_ID)
 
 
 def es_rol_valido(ctx: Context) -> bool:

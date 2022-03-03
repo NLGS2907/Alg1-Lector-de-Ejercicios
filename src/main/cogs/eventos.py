@@ -5,10 +5,9 @@ Cog para escuchar eventos del Bot.
 from discord import Guild, Thread
 from discord.ext.commands import Cog, Context
 
-from ..archivos.archivos import cargar_json, guardar_json
-from ..constantes.constantes import (DEFAULT_PREFIX, DEFAULT_VERSION,
-                                     PROPERTIES_PATH)
-from ..logger.logger import log
+from ..archivos import cargar_json, guardar_json
+from ..constantes import DEFAULT_PREFIX, DEFAULT_VERSION, PROPERTIES_PATH
+from ..logger import log
 from .general import CogGeneral
 
 

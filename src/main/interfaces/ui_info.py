@@ -7,10 +7,10 @@ from discord import PartialEmoji as Emoji
 from discord.enums import ButtonStyle
 from discord.ui import Button, button
 
-from ..archivos.archivos import cargar_json
-from ..constantes.constantes import (BOT_VERSION, DEFAULT_PREFIX,
-                                     DEFAULT_VERSION, INFO_MESSAGE, REPO_URL)
-from ..embebido.embebido import Embebido
+from ..archivos import cargar_json
+from ..constantes import (BOT_VERSION, DEFAULT_PREFIX, DEFAULT_VERSION,
+                          INFO_MESSAGE, REPO_URL)
+from ..embebido import Embebido
 from .ui_general import VistaGeneral
 
 

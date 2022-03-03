@@ -8,8 +8,8 @@ from typing import Optional
 
 from discord import Message
 
-from ..archivos.archivos import DiccionarioStats, cargar_json, guardar_json
-from ..constantes.constantes import PROPERTIES_PATH
+from ..archivos import DiccionarioStats, cargar_json, guardar_json
+from ..constantes import PROPERTIES_PATH
 from .condicion_partida import Condicion
 
 

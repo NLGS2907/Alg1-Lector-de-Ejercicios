@@ -7,10 +7,10 @@ from typing import Optional
 
 from discord.ext.commands import Context, command
 
-from ..archivos.archivos import cargar_json, guardar_json
-from ..constantes.constantes import PROPERTIES_PATH, RPS_PHRASES
-from ..interfaces.ui_ppt import JuegoPPT
-from ..ppt.ppt import jugar_partida_ppt
+from ..archivos import cargar_json, guardar_json
+from ..constantes import PROPERTIES_PATH, RPS_PHRASES
+from ..interfaces import JuegoPPT
+from ..ppt import jugar_partida_ppt
 from .general import CogGeneral
 
 

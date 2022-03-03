@@ -7,15 +7,14 @@ from typing import Optional
 
 from discord.ext.commands import Context, check, command
 
-from ..archivos.archivos import (DiccionarioGuia, actualizar_guia,
-                                 lista_carpetas, lista_ejercicios,
-                                 lista_unidades, version_es_valida)
-from ..auxiliar.auxiliar import es_rol_valido
-from ..constantes.constantes import TITLE_FORMAT, USER_CONSULT
-from ..embebido.embebido import Embebido
-from ..interfaces.ui_ejercicios import NavegadorEjercicios, SelectorEjercicios
-from ..interfaces.ui_unidades import SelectorGuia, SelectorUnidad
-from ..logger.logger import log
+from ..archivos import (DiccionarioGuia, actualizar_guia, lista_carpetas,
+                        lista_ejercicios, lista_unidades, version_es_valida)
+from ..auxiliar import es_rol_valido
+from ..constantes import TITLE_FORMAT, USER_CONSULT
+from ..embebido import Embebido
+from ..interfaces import (NavegadorEjercicios, SelectorEjercicios,
+                          SelectorGuia, SelectorUnidad)
+from ..logger import log
 from .general import CogGeneral
 
 

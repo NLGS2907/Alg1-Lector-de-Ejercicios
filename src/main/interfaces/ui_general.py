@@ -9,7 +9,7 @@ from discord import PartialEmoji as Emoji
 from discord.enums import ButtonStyle
 from discord.ui import Button, View
 
-from ..logger.logger import log
+from ..logger import log
 
 
 class BotonCerrar(Button):

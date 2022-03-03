@@ -4,10 +4,10 @@ Cog para comandos que requieren permisos especiales.
 
 from discord.ext.commands import Context, check, command, is_owner
 
-from ..archivos.archivos import cargar_json, guardar_json
-from ..auxiliar.auxiliar import es_rol_valido
-from ..constantes.constantes import LOG_PATH, PROPERTIES_PATH
-from ..logger.logger import log
+from ..archivos import cargar_json, guardar_json
+from ..auxiliar import es_rol_valido
+from ..constantes import LOG_PATH, PROPERTIES_PATH
+from ..logger import log
 from .general import CogGeneral
 
 

@@ -10,9 +10,9 @@ from typing import Optional
 from discord import Attachment, Message
 from discord.ext.commands import Context, command
 
-from ..auxiliar.auxiliar import mandar_dm
-from ..constantes.constantes import DATE_FORMAT, MEMES_ALBUM_NAME
-from ..logger.logger import log
+from ..auxiliar import mandar_dm
+from ..constantes import DATE_FORMAT, MEMES_ALBUM_NAME
+from ..logger import log
 from .general import CogGeneral
 
 

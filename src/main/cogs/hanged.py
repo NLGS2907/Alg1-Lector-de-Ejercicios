@@ -2,7 +2,6 @@
 Cog para comandos del ahorcado.
 """
 
-from email import message
 from discord.ext.commands import Context, command
 
 from .general import CogGeneral

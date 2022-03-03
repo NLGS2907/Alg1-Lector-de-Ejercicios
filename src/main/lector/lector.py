@@ -9,20 +9,15 @@ from typing import Callable, Optional
 from discord import Game, Message
 from discord.ext.commands import Bot, Context
 
-from ..ahorcado.ahorcado import Ahorcado
-from ..archivos.archivos import DiccionarioGuia, cargar_guia, cargar_json
-from ..auxiliar.auxiliar import get_prefijo
-from ..cogs.admin import CogAdmin
-from ..cogs.ejercicios import CogEjercicios
-from ..cogs.eventos import CogEventos
-from ..cogs.hanged import CogHanged
-from ..cogs.imgur import CogImgur
-from ..cogs.misc import CogMisc
-from ..cogs.rps import CogRPS
-from ..constantes.constantes import (BOT_VERSION, CLIENT_CONFIG, DATE_FORMAT,
-                                     DEFAULT_VERSION, PROPERTIES_PATH)
-from ..imgur.cliente import Memegur
-from ..logger.logger import log
+from ..ahorcado import Ahorcado
+from ..archivos import DiccionarioGuia, cargar_guia, cargar_json
+from ..auxiliar import get_prefijo
+from ..cogs import (CogAdmin, CogEjercicios, CogEventos, CogHanged, CogImgur,
+                    CogMisc, CogRPS)
+from ..constantes import (BOT_VERSION, CLIENT_CONFIG, DATE_FORMAT,
+                          DEFAULT_VERSION, PROPERTIES_PATH)
+from ..imgur import Memegur
+from ..logger import log
 
 # Para que no tire error en Windows al cerrar el Bot.
 
@@ -41,6 +36,7 @@ except ImportError:
                 "esto no es Windows.")
 
 
+# pylint: disable=abstract-method
 class Lector(Bot):
     """
     Clase pasa sobrecargar y agregar cosas a la clase 'Bot'.

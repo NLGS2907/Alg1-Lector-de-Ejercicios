@@ -4,11 +4,11 @@ Cog para comandos misceláneos o de consultas.
 
 from discord.ext.commands import Context, command
 
-from ..archivos.archivos import cargar_json
-from ..auxiliar.auxiliar import mandar_dm
-from ..constantes.constantes import INFO_MESSAGE, USER_CONSULT, WHATSNEW_MESSAGE
-from ..embebido.embebido import Embebido
-from ..interfaces.ui_info import InfoUI
+from ..archivos import cargar_json
+from ..auxiliar import mandar_dm
+from ..constantes import INFO_MESSAGE, USER_CONSULT, WHATSNEW_MESSAGE
+from ..embebido import Embebido
+from ..interfaces import InfoUI
 from .general import CogGeneral
 
 

@@ -5,8 +5,9 @@ Pequeño módulo que implementa la lógica de una partida de ahorcado.
 from random import choice
 from typing import Optional
 
+from ..constantes import WORDS_PATH
 from .letra_ahorcado import LetraAhorcado
-from ..constantes.constantes import WORDS_PATH
+
 
 class Ahorcado:
     """

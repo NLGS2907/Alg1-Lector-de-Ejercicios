@@ -7,8 +7,8 @@ from discord import PartialEmoji as Emoji
 from discord.enums import ButtonStyle
 from discord.ui import Button, button
 
-from ..archivos.archivos import DiccionarioStats
-from ..ppt.ppt import jugar_partida_ppt
+from ..archivos import DiccionarioStats
+from ..ppt import jugar_partida_ppt
 from .ui_general import VistaGeneral
 
 

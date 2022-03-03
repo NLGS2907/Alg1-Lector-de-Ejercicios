@@ -7,7 +7,7 @@ from os import listdir
 from os.path import isdir, isfile, join, splitext
 from typing import Optional
 
-from ..constantes.constantes import EXT, GUIA_PATH, PROPERTIES_PATH
+from ..constantes import EXT, GUIA_PATH, PROPERTIES_PATH
 
 DiccionarioPares = dict[str, str]
 DiccionarioEjercicio = dict[str, list[str] | dict[str, list[str]]]
