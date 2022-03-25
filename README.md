@@ -16,14 +16,37 @@ de la Facultad de Ingeniería de la UBA, aunque puede utilizarse para cualquier 
 <hr/>
 
 * [**Enlace de Invitación**](https://discord.com/api/oauth2/authorize?client_id=889312376036425810&permissions=292057984064&scope=bot)
+* **índice**
+  - [Cómo Ejecutar](#cómo-ejecutar)
+  - [Changelog](#changelog)
 
 <hr/>
 
-### Changelog:
+## Cómo Ejecutar
+
+Pararse dentro de la carpeta [`run`](run), o de la carpeta raíz, y ejecutar uno de los dos
+archivos presentes en [`run`](run), según el SO.
+
+### **Ejemplos:**
+```bat
+@REM para Windows
+cd run
+./run.bat
+```
+```sh
+# para Linux u otro entorno de shell
+cd run
+./run.sh
+```
+
+<hr/>
+
+## Changelog:
 
 |       Version     |
 |     :---------:   |
-|**[v1.2.0](#v120)**| 
+|**[v1.2.1](#v121)**| 
+|  [v1.2.0](#v120)  | 
 |  [v1.1.0](#v110)  |
 |  [v1.0.4](#v104)  |
 |  [v1.0.3](#v103)  |
@@ -31,8 +54,14 @@ de la Facultad de Ingeniería de la UBA, aunque puede utilizarse para cualquier 
 |  [v1.0.1](#v101)  |
 |  [v1.0.0](#v100)  |
 
-
 <hr/>
+
+### v1.2.1
+
+* **Simplificados algunos imports en las pruebas y en el main.** No deberían tener nombres redundantes.
+* **Agregados scripts ejecutables.** Ahora debería ser más intuitivo correr el bot.
+
+<hr style="height:2px" />
 
 ## v1.2.0
 
@@ -46,7 +75,7 @@ y clases fueron separadas en sus propios módulos.
 
 * **Algunos Comandos ahora usan `Embeds`.** Esto permite una presentación más prolija.
 
-<hr style="height:2px" />
+<hr style="height:4px" />
 
 ## v1.1.0
 

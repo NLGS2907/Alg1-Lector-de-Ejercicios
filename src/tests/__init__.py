@@ -1,8 +1,7 @@
 import unittest
 
-from .ahorcado.test_ahorcado import *
-from .ahorcado.test_letra_ahorcado import *
-from .archivos.test_archivos import *
+from .ahorcado import *
+from .archivos import *
 
 if __name__ == "__main__":
 

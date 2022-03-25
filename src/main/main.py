@@ -1,4 +1,4 @@
-
+#pylint: disable=line-too-long
 """
 Módulo Principal
 
@@ -15,11 +15,12 @@ Repositorio: https://github.com/NLGS2907/Alg1-Lector-de-Ejercicios
 [03/14/22] Reboot requerido.
 """
 
-from .constantes.constantes import TOKEN
-from .lector.lector import Lector
+from .constantes import TOKEN
+from .lector import Lector
 
 
-def main() -> None:
+def main() -> int:
+    "Función principal."
 
     Lector().run(TOKEN)
     return 0
