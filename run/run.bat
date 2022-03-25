@@ -1,5 +1,5 @@
 @echo off
-set possible_ver= python py python3 python3.10
+set possible_ver= python3.10 py python3 python
 set pyupdate= -m pip install --upgrade -r requirements.txt
 set pyargs= -m src.main.main
 

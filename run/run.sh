@@ -1,5 +1,5 @@
 #!/bin/bash
-possible_ver=(python\ py\ python3\ python3.10)
+possible_ver=(python3.10\ py\ python3\ python)
 pyupdate=" -m pip install --upgrade -r requirements.txt"
 pyargs=" -m src.main.main"
 
