@@ -4,8 +4,11 @@
 
 <p align="left">
 
+![status](https://dcbadge.vercel.app/api/shield/bot/889312376036425810?logoColor=presence&theme=discord)
+
 ![version](https://img.shields.io/badge/version-1.2.1-brightgreen)
 ![estrellas](https://img.shields.io/github/stars/NLGS2907/Alg1-Lector-de-Ejercicios?label=Estrellas&style=social)
+![forks](https://img.shields.io/github/forks/NLGS2907/Alg1-Lector-de-Ejercicios?style=social)
 ![Tests](https://github.com/NLGS2907/Alg1-Lector-de-Ejercicios/actions/workflows/tests.yml/badge.svg)
 ![Pylint](https://github.com/NLGS2907/Alg1-Lector-de-Ejercicios/actions/workflows/pylint.yml/badge.svg)
 
