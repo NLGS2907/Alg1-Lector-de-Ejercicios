@@ -15,6 +15,7 @@ Repositorio: https://github.com/NLGS2907/Alg1-Lector-de-Ejercicios
 [03/14/22] Reboot requerido.
 [04/21/22] Reboot requerido.
 [04/21/22] Segundo Reboot requerido.
+[04/21/22] Tercer Reboot requerido.
 """
 
 from .constantes import TOKEN
