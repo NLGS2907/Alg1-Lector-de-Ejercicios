@@ -9,7 +9,7 @@ from discord import PartialEmoji as Emoji
 from discord.enums import ButtonStyle
 from discord.ui import Button, View
 
-from ..logger import log
+from ..logger import LectorLogger
 
 
 class BotonCerrar(Button):
@@ -56,31 +56,30 @@ class VistaGeneral(View):
 
 
     @property
-    def msg(self) -> Optional[Message]:
+    def log(self) -> LectorLogger:
         """
-        Accede al mensaje de la vista, si hay uno.
+        Devuelve el lector de la vista.
+        """
+
+        return LectorLogger()
+
+
+    @property
+    def msg(self) -> Message:
+        """
+        Devuelve el mensaje asociado a esta vista.
         """
 
         return self._msg
 
 
     @msg.setter
-    def msg(self, otro_msg: Message) -> None:
+    def msg(self, nuevo_msg: Message) -> None:
         """
-        Reemplaza el mensaje de la vista.
-        """
-
-        self._msg = otro_msg
-
-
-    def limpiar_mensaje(self) -> None:
-        """
-        Elimina la referencia al mensaje.
-        Esto puede ser útil cuando se reemplaza la vista en
-        un mensaje por otra distinta.
+        Define el mensaje de la vista.
         """
 
-        self.msg = None
+        self._msg = nuevo_msg
 
 
     async def on_timeout(self) -> None:
@@ -89,19 +88,10 @@ class VistaGeneral(View):
         escuchan más interacciones.
         """
 
-        if self.msg:
+        for item in self.children:
+            item.disabled = True
 
-            for item in self.children:
+            if item.custom_id == "exit":
+                self.remove_item(item)
 
-                item.disabled = True
-
-                if item.custom_id == "exit":
-
-                    self.remove_item(item)
-
-            await self.msg.edit(view=self)
-
-        estado_mensaje = ('' if not self.msg
-                         else f" en '{self.msg.channel.name}' en el mensaje de id '{self.msg.id}'")
-        mensaje_log = f"Vista {self} deshabilitada{estado_mensaje}"
-        log.info(mensaje_log)
+        self.log.info(f"Vista {self} deshabilitada.")

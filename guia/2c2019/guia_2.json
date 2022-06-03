@@ -121,7 +121,9 @@
         "campos": {
 
         },
-        "pie": "Nota: Hacerlo usando y sin usar la ecuación Σ 𝑛 𝑖=1 𝑖 = 𝑛 (𝑛 + 1)/2. ¿Cuál realiza más operaciones?"
+        "pie": [
+            "Nota: Hacerlo usando y sin usar la ecuación Σ 𝑛 𝑖=1 𝑖 = 𝑛 (𝑛 + 1)/2. ¿Cuál realiza más operaciones?"
+        ]
     },
     "8": {
         "titulo": [

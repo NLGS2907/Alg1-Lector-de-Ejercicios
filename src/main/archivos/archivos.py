@@ -5,7 +5,7 @@ Módulo que procesa archivos.
 from json import dump, load
 from os import listdir
 from os.path import isdir, isfile, join, splitext
-from typing import Optional
+from typing import List, Optional
 
 from ..constantes import EXT, GUIA_PATH, PROPERTIES_PATH
 
@@ -47,12 +47,25 @@ def actualizar_guia(nueva_version: str, guild_id: str) -> None:
     guardar_json(propiedades, PROPERTIES_PATH)
 
 
-def lista_carpetas(carpeta: str=GUIA_PATH) -> list[str]:
+def lista_carpetas(carpeta: str) -> list[str]:
     """
     Devuelve una lista de todas las carpetas que se encuentran en un
     directorio dado.
     """
     return [dir for dir in listdir(carpeta) if isdir(join(carpeta, dir))]
+
+
+def lista_archivos(ruta: str, ext: Optional[str]=None) -> List[str]:
+    """
+    Busca en la ruta especificada si hay archivos, y devuelve una lista
+    con los nombres de los que encuentre.
+
+    Si `ext` no es `None`, entonces probará buscando archivos con esa extensión.
+    `ext` NO debe tener un punto (`.`) adelante, es decir que `"py"` será automáticamente
+    tratado como `.py`.
+    """
+
+    return [file for file in listdir(ruta) if (file.endswith(f".{ext}") if ext else True)]
 
 
 def version_es_valida(version: str, carpeta: str=GUIA_PATH) -> bool:
@@ -85,7 +98,7 @@ def cargar_guia(version: str, carpeta: str=GUIA_PATH) -> Optional[DiccionarioGui
     sub-diccionario tiene los pares clave valor en donde la clave es el numero
     de ejercicio y el valor el enunciado del mismo, ya formateado.
 
-    Lanza una excepción si la versión pasada no es válida.
+    Devuelve `None` si la versión pasada no es válida.
     """
 
     if not version_es_valida(version, carpeta):

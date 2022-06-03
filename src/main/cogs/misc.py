@@ -2,14 +2,20 @@
 Cog para comandos misceláneos o de consultas.
 """
 
-from discord.ext.commands import Context, command
+from typing import TYPE_CHECKING
+
+from discord import Interaction, Permissions
+from discord.app_commands import command as appcommand
+from discord.utils import oauth_url
 
 from ..archivos import cargar_json
-from ..auxiliar import mandar_dm
-from ..constantes import INFO_MESSAGE, USER_CONSULT, WHATSNEW_MESSAGE
+from ..constantes import WHATSNEW_MESSAGE
 from ..embebido import Embebido
-from ..interfaces import InfoUI
 from .general import CogGeneral
+
+if TYPE_CHECKING:
+
+    from ..lector import Lector
 
 
 class CogMisc(CogGeneral):
@@ -17,71 +23,20 @@ class CogMisc(CogGeneral):
     Cog para comandos misceláneos.
     """
 
-    @command(name="info",
-             aliases=["i"],
-             usage="[-dm]",
-             help="Muestra una lista de todos los comandos.")
-    async def mostrar_info(self, ctx: Context, *opciones):
-        """
-        Muestra una lista con los comandos y lo que hace cada uno.
-        """
-
-        version_bot=self.bot.version
-        version_guia=self.bot.guias[str(ctx.guild.id)]["version"]
-        prefijo=ctx.prefix
-
-        info_ui = InfoUI(version_bot=version_bot, version_guia=version_guia, prefijo=prefijo)
-        opciones_iniciales = cargar_json(INFO_MESSAGE)
-        opciones_iniciales["campos"] = dict(list(opciones_iniciales["campos"].items())[:6])
-
-        formatos = {"version_bot": version_bot,
-                    "version_guia": version_guia,
-                    "prefijo": prefijo}
-
-        embed = Embebido(opciones=opciones_iniciales,
-                         formatos=formatos)
-
-        contenido = USER_CONSULT.format(mencion=ctx.author.mention)
-
-        if "-dm" in opciones:
-
-            await mandar_dm(ctx,
-                            contenido=contenido,
-                            vista=info_ui, embed=embed)
-
-        else:
-
-            mensaje_enviado = await ctx.channel.send(content=contenido,
-                                   view=info_ui, embed=embed)
-            info_ui.msg = mensaje_enviado
-
-
-    @command(name="version",
-             aliases=["ver"],
-             usage="[-dm]",
-             help="Muestra la versión del bot.")
-    async def mostrar_version(self, ctx: Context, *opciones) -> None:
+    @appcommand(name="version",
+                description="Muestra la versión del bot.")
+    async def mostrar_version(self, interaction: Interaction) -> None:
         """
         Muestra en el chat la versión actual del bot.
         """
 
-        mensaje = f"Mi versión actual es la `{self.bot.version}`"
+        await interaction.response.send_message(f"Mi versión actual es la `{self.bot.version}`",
+                                                ephemeral=True)
 
-        if "-dm" in opciones:
 
-            await mandar_dm(ctx, mensaje)
-
-        else:
-
-            await ctx.channel.send(mensaje)
-
-        await ctx.message.delete(delay=5.0)
-
-    @command(name="whatsnew",
-             aliases=["quehaydenuevo", "nuevo"],
-             help="Muestra las novedades de la versión actual.",
-             hidden=True)
-    async def mostrar_novedades(self, ctx: Context):
+    @appcommand(name="whatsnew",
+                description="Muestra las novedades de la versión actual.")
+    async def mostrar_novedades(self, interaction: Interaction) -> None:
         """
         Muestra las novedades de la versión más nueva del bot.
         """
@@ -91,5 +46,28 @@ class CogMisc(CogGeneral):
 
         embebido = Embebido(opciones=opciones, formatos=formatos)
 
-        await ctx.message.delete(delay=5.0)
-        await ctx.channel.send(embed=embebido, delete_after=30.0)
+        await interaction.response.send_message(embed=embebido)
+
+
+    @appcommand(name="invite",
+                description="Muestra el link de invitación del lector.")
+    async def invitar_bot(self, interaction: Interaction) -> None:
+        """
+        Manda un mensaje indicando cuál es el enlace de invitación del lector.
+        """
+
+        link = oauth_url(self.bot.application_id,
+                         permissions=Permissions(permissions=19327560768))
+
+        await interaction.response.send_message(f"Mi enlace de invitación es:\n\n{link}\n\n" +
+                                                "*!Sino igual puedes apretar el botón " +
+                                                "que hay en mi perfil!*",
+                                                ephemeral=True)
+
+
+async def setup(bot: "Lector"):
+    """
+    Agrega el cog de este módulo al Lector.
+    """
+
+    await bot.add_cog(CogMisc(bot))

@@ -2,13 +2,18 @@
 Cog para escuchar eventos del Bot.
 """
 
+from typing import TYPE_CHECKING
+
 from discord import Guild, Thread
 from discord.ext.commands import Cog, Context
 
 from ..archivos import cargar_json, guardar_json
 from ..constantes import DEFAULT_PREFIX, DEFAULT_VERSION, PROPERTIES_PATH
-from ..logger import log
 from .general import CogGeneral
+
+if TYPE_CHECKING:
+
+    from ..lector import Lector
 
 
 class CogEventos(CogGeneral):
@@ -22,7 +27,7 @@ class CogEventos(CogGeneral):
         El bot se conectó y está listo para usarse.
         """
 
-        log.info("¡%s conectado y listo para utilizarse!", self.bot.user)
+        self.bot.log.info("¡%s conectado y listo para utilizarse!", self.bot.user)
 
     @Cog.listener()
     async def on_command(self, ctx: Context):
@@ -36,9 +41,9 @@ class CogEventos(CogGeneral):
                        "guild": ctx.guild.name,
                        "msg": ctx.message.content}
 
-        log.info("El usuario %(autor)s está tratando de invocar '%(cmd)s' " % formato_log +
-                 "en el canal '#%(canal)s' del server '%(guild)s' " % formato_log +
-                 "mediante el mensaje '%(msg)s'" % formato_log)
+        self.bot.log.info("El usuario %(autor)s está tratando de invocar '%(cmd)s' " % formato_log +
+                          "en el canal '#%(canal)s' del server '%(guild)s' " % formato_log +
+                          "mediante el mensaje '%(msg)s'" % formato_log)
 
     @Cog.listener()
     async def on_command_completion(self, ctx: Context):
@@ -49,7 +54,7 @@ class CogEventos(CogGeneral):
         formato_log = {"autor": ctx.author,
                        "cmd": ctx.command}
 
-        log.info("%(autor)s ha invocado '%(cmd)s' satisfactoriamente", formato_log)
+        self.bot.log.info("%(autor)s ha invocado '%(cmd)s' satisfactoriamente", formato_log)
 
 
     @Cog.listener()
@@ -58,7 +63,7 @@ class CogEventos(CogGeneral):
         El bot se conectó por primera vez a un servidor.
         """
 
-        log.info("El bot se conectó a '%s'", guild.name)
+        self.bot.log.info("El bot se conectó a '%s'", guild.name)
 
         propiedades = cargar_json(PROPERTIES_PATH)
 
@@ -87,8 +92,16 @@ class CogEventos(CogGeneral):
             formato_log = {"nombre": after.name,
                            "guild": after.guild.name}
 
-            log.info("Partida '%(nombre)s' archivada en '%(guild)s'", formato_log)
+            self.bot.log.info("Partida '%(nombre)s' archivada en '%(guild)s'", formato_log)
             await after.parent.send(content=f"**[AVISO]** Partida `{after.name}` fue " +
                                     "eliminada al ser archivado (probablemente por la hora " +
                                     "de inactividad).")
             await after.delete()
+
+
+async def setup(bot: "Lector"):
+    """
+    Agrega el cog de este módulo al Lector.
+    """
+
+    await bot.add_cog(CogEventos(bot))

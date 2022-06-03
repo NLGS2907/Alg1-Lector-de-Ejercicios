@@ -6,7 +6,7 @@ from random import choice
 from time import sleep
 from typing import Optional
 
-from discord import Message
+from discord import Interaction
 
 from ..archivos import DiccionarioStats, cargar_json, guardar_json
 from ..constantes import PROPERTIES_PATH
@@ -47,8 +47,8 @@ def decidir_partida_ppt(eleccion: str,
 
 async def jugar_partida_ppt(eleccion: str,
                             author_id: str,
-                            msg: Message,
-                            stats_juego: DiccionarioStats) -> None:
+                            stats_juego: DiccionarioStats,
+                            interaction: Interaction) -> None:
     """
     Juega una partida de 'Piedra, Papel o Tijeras'.
     """
@@ -57,19 +57,18 @@ async def jugar_partida_ppt(eleccion: str,
 
     eleccion = eleccion.upper()
     opcion_elegida = choice(opciones)
-
     piedra, papel, tijeras = opciones
+
+    msg = (interaction.message if interaction.message is not None else None)
 
     contenido_mensaje = f"¡Yo elegí `{opcion_elegida}`!"
 
-    if msg.components:
-
-        mensaje_partida = await msg.edit(content=contenido_mensaje, view=None)
+    if msg is not None and msg.components:
+        mensaje_partida = await msg.edit(content=contenido_mensaje,
+                                         view=None)
 
     else:
-
-        mensaje_partida = await msg.channel.send(content=contenido_mensaje,
-                                                 reference=msg.to_reference())
+        mensaje_partida = await interaction.channel.send(content=contenido_mensaje)
 
     sleep(2.0) # suspenso...
 
@@ -78,19 +77,15 @@ async def jugar_partida_ppt(eleccion: str,
     match eleccion:
 
         case "PIEDRA":
-
             cond_partida = decidir_partida_ppt(opcion_elegida, tijeras, papel, piedra)
 
         case "PAPEL":
-
             cond_partida = decidir_partida_ppt(opcion_elegida, piedra, tijeras, papel)
 
         case "TIJERAS":
-
             cond_partida = decidir_partida_ppt(opcion_elegida, papel, piedra, tijeras)
 
         case _:
-
             cond_partida = None
 
     if cond_partida is not None:

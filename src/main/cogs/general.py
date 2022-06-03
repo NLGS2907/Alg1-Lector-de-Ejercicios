@@ -2,8 +2,9 @@
 Cog general para uso de herencia.
 """
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Dict, Tuple
 
+from discord import Message
 from discord.ext.commands import Cog
 
 if TYPE_CHECKING:
@@ -22,3 +23,13 @@ class CogGeneral(Cog):
         """
 
         self.bot: "Lector" = bot
+        self.msg_timeouts: Dict[str, Tuple[Message, int]] = {}
+
+
+
+async def setup(_bot: "Lector"):
+    """
+    Agrega el cog de este módulo al Lector.
+    """
+
+    ... # Este Cog no está pensado para agregarse.

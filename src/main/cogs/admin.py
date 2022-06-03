@@ -2,13 +2,23 @@
 Cog para comandos que requieren permisos especiales.
 """
 
-from discord.ext.commands import Context, check, command, is_owner
+from os import execl
+from sys import executable as sys_executable
+from typing import TYPE_CHECKING
+
+from discord import Interaction
+from discord.app_commands import Choice, choices
+from discord.app_commands import command as appcommand
+from discord.app_commands import describe
 
 from ..archivos import cargar_json, guardar_json
-from ..auxiliar import es_rol_valido
+from ..auxiliar import es_rol_valido, get_prefijo_por_id
 from ..constantes import LOG_PATH, PROPERTIES_PATH
-from ..logger import log
 from .general import CogGeneral
+
+if TYPE_CHECKING:
+
+    from ..lector import Lector
 
 
 class CogAdmin(CogGeneral):
@@ -16,12 +26,11 @@ class CogAdmin(CogGeneral):
     Cog de comandos que requieren permisos.
     """
 
-    @command(name="prefix",
-             aliases=["prefijo", "pfx", "px"],
-             usage="nuevo_prefijo",
-             help="Cambia el prefijo de los comandos.")
-    @check(es_rol_valido)
-    async def cambiar_prefijo(self, ctx: Context, nuevo_prefijo: str) -> None:
+    @appcommand(name="prefix",
+                description="Cambia el prefijo de los comandos.")
+    @describe(nuevo_prefijo="El nuevo prefijo a usar")
+    @es_rol_valido()
+    async def cambiar_prefijo(self, interaction: Interaction, nuevo_prefijo: str) -> None:
         """
         Cambia el prefijo utilizado para convocar a los comandos, solamente del
         servidor de donde el comando fue escrito.
@@ -29,87 +38,147 @@ class CogAdmin(CogGeneral):
         Se da por hecho que el servidor ya está memorizado en el diccionario.
         """
 
-        prefijo_viejo = self.bot.command_prefix
+        prefijo_viejo = get_prefijo_por_id(interaction.guild_id)
 
         propiedades = cargar_json(PROPERTIES_PATH)
-        propiedades["prefijos"][str(ctx.guild.id)] = nuevo_prefijo
+        propiedades["prefijos"][str(interaction.guild.id)] = nuevo_prefijo
         guardar_json(propiedades, PROPERTIES_PATH)
 
-        formato_log = {"guild": ctx.guild.name,
-                        "bf_pfx": prefijo_viejo,
-                        "aft_pfx": nuevo_prefijo}
+        await interaction.response.send_message("**[AVISO]** El prefijo de los comandos fue " +
+                                                f"cambiado de `{prefijo_viejo}` a " +
+                                                f"`{nuevo_prefijo}` exitosamente.",
+                                                ephemeral=True)
 
-        log.info("El prefijo en '%(guild)s' fue cambiado de " % formato_log +
-                 "'%(bf_pfx)s' a '%(aft_pfx)s' exitosamente." % formato_log)
-        await ctx.channel.send("**[AVISO]** El prefijo de los comandos fue cambiado de " +
-                               f"`{prefijo_viejo}` a `{nuevo_prefijo}` exitosamente.",
-                               delete_after=30.0)
-
-        formato_log = {"guild_name": ctx.guild.name,
-                       "old_pfx": prefijo_viejo,
-                       "new_pfx": nuevo_prefijo}
-
-        log.info("El prefijo en '%(guild_name)s' fue cambiado de '%(old_pfx)s' a '%(new_pfx)s'",
-                 formato_log)
+        self.bot.log.info(f"El prefijo en '{interaction.guild.name}' fue cambiado " +
+                          f"de '{prefijo_viejo}' a '{nuevo_prefijo}'")
 
 
-    @command(name="clear",
-             aliases=["clean", "cls"],
-             usage="limite [-full]",
-             help="Limpia el canal de mensajes del bot.")
-    @check(es_rol_valido)
-    async def limpiar_mensajes(self, ctx: Context, limite: int, *opciones) -> None:
+    @appcommand(name="clear",
+                description="Limpia el canal de mensajes del bot.")
+    @describe(limite="Cuántos mensajes inspeccionar para borrar")
+    @choices(completo=[
+        Choice(name="Sí", value=1),
+        Choice(name="No", value=0)
+    ])
+    @es_rol_valido()
+    async def limpiar_mensajes(self,
+                               interaction: Interaction,
+                               limite: int,
+                               completo: Choice[int]=1) -> None:
         """
         Limpia los mensajes del bot del canal de donde se
         invoca el comando.
 
-        Si '-full' está entre las opciones, también borra los
+        Si 'completo' es seleccionado, también borra los
         mensajes de los usuarios que invocan los comandos.
         """
 
         funcion_check = (self.bot.es_mensaje_comando
-                         if "-full" in opciones
+                         if completo
                          else self.bot.es_mensaje_de_bot)
-        eliminados = await ctx.channel.purge(limit=limite + 1, check=funcion_check)
+        eliminados = await interaction.channel.purge(limit=limite + 1, check=funcion_check)
 
-        formato_log = {"cant_eliminados": len(eliminados),
-                       "ch_name": ctx.guild.name,
-                       "guild_name": ctx.guild.name}
-
-        log.info("%(cant_eliminados)s mensajes eliminados de '#%(ch_name)s' en '%(guild_name)s'",
-                 formato_log)
-
-        await ctx.message.delete(delay=5)
+        mensaje = (f"`{len(eliminados)}` mensaje/s fueron eliminados de " +
+                   f"{interaction.channel.name} en {interaction.guild.name}")
 
 
-    @command(name="shutdown",
-             aliases=["shut", "exit", "quit", "salir"],
-             help="Apaga el bot. Uso exclusivo del dev.",
-             hidden=True)
-    @is_owner()
-    async def shutdown(self, ctx: Context) -> None:
+        await interaction.response.send_message(content=mensaje,
+                                                ephemeral=True)
+        self.bot.log.info(mensaje)
+
+
+    @appcommand(name="shutdown",
+                description="Apaga el bot. Uso para moderadores.")
+    @es_rol_valido()
+    async def shutdown(self, interaction: Interaction) -> None:
         """
         Apaga el bot y lo desconecta.
         """
 
-        formato_log = {"nombre_bot": str(self.bot.user)}
+        mensaje = f"Cerrando bot **{str(self.bot.user)}...**"
 
-        log.info("Cerrando bot %(nombre_bot)s...", formato_log)
-        await ctx.message.delete()
+        await interaction.response.send_message(content=mensaje,
+                                                ephemeral=True)
+        self.bot.log.info(mensaje)
+
         await self.bot.close()
 
 
-    @command(name="flush",
-    aliases=["logclear"],
-    help="Vacía el archivo de registro. Uso exclusivo del dev.",
-    hidden=True)
-    @is_owner()
-    async def logflush(self, ctx: Context):
+    @appcommand(name="reboot",
+                description="Reinicia el bot. Uso para moderadores.")
+    @es_rol_valido()
+    async def reboot(self, interaction: Interaction) -> None:
+        """
+        Reinicia el bot, apagándolo y volviéndolo a conectar.
+        """
+
+        if not sys_executable:
+
+            mensaje = "[ERROR] No se pudo reiniciar el lector."
+
+            await interaction.response.send_message(content=mensaje,
+                                                    ephemeral=True)
+            self.bot.log.error(mensaje)
+            return
+
+        mensaje = f"Reiniciando bot **{str(self.bot.user)}...**"
+
+        await interaction.response.send_message(content=mensaje,
+                                                ephemeral=True)
+        self.bot.log.info(mensaje)
+
+        execl(sys_executable, sys_executable, "-m", "src.main.main")
+
+
+    @appcommand(name="flush",
+                description="Vacía el archivo de registro. Uso para moderadores.")
+    @es_rol_valido()
+    async def logflush(self, interaction: Interaction):
         """
         Vacía el contenido del archivo de registro.
         """
 
         with open(LOG_PATH, mode='w', encoding="utf-8"):
+            await interaction.response.send_message("**[AVISO]** Vaciando archivo en " +
+                                                    f"`./{LOG_PATH}`...",
+                                                    ephemeral=True)
 
-            await ctx.channel.send(f"**[AVISO]** Vaciando archivo en `./{LOG_PATH}`...",
-                                   delete_after=10.0)
+
+    @appcommand(name="uptime",
+                description="Calcula el tiempo que el bot estuvo activo.")
+    @es_rol_valido()
+    async def calcular_uptime(self, interaction: Interaction) -> None:
+        """
+        Calcula el tiempo que el bot estuvo corriendo.
+        """
+
+        delta = self.bot.uptime
+
+        dias = (f"`{delta.days}` día/s" if delta.days > 9 else "")
+
+        horas_posibles = (delta.seconds // 3600)
+        horas = (f"`{horas_posibles}` hora/s" if horas_posibles > 0 else "")
+
+        minutos_posibles = ((delta.seconds % 3600) // 60)
+        minutos = (f"`{minutos_posibles}` minuto/s" if minutos_posibles > 0 else "")
+
+        segundos_posibles = (delta.seconds % 60)
+        segundos = (f"`{segundos_posibles}` segundo/s" if segundos_posibles > 0 else "")
+
+        tiempo = [tmp for tmp in [dias, horas, minutos, segundos] if tmp]
+        if len(tiempo) > 1:
+            ultimo = tiempo.pop()
+            tiempo[-1] = f"{tiempo[-1]} y {ultimo}"
+
+
+        await interaction.response.send_message(f"***{self.bot.user}** estuvo activo por " +
+                                                f"{', '.join(tiempo)}.*",
+                                                ephemeral=True)
+
+
+async def setup(bot: "Lector"):
+    """
+    Agrega el cog de este módulo al Lector.
+    """
+
+    await bot.add_cog(CogAdmin(bot))

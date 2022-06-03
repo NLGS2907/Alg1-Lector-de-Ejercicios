@@ -95,8 +95,6 @@ class MenuSelectorEjercicio(Select):
         mensaje_editado = await interaction.response.edit_message(content=mensaje,
                                                                   embed=embebido,
                                                                   view=vista)
-        vista.msg = mensaje_editado
-        self.view.limpiar_mensaje()
 
 
 class SelectorEjercicios(VistaGeneral):
@@ -106,7 +104,7 @@ class SelectorEjercicios(VistaGeneral):
 
     def __init__(self, guia: DiccionarioGuia, unidad: DiccionarioPares) -> None:
         """
-        Crea uan instancia de 'SelectorEjercicios'.
+        Crea una instancia de 'SelectorEjercicios'.
         """
 
         super().__init__()
@@ -178,16 +176,18 @@ class NavegadorEjercicios(VistaGeneral):
         Muestra u oculta el botón dependiendo de qué ejercicio sea.
         """
 
-        if any(((boton.custom_id == "u_left" and self.unidad_actual == self.unidades[0]),
-              (boton.custom_id == "ex_left" and self.ejercicio_actual == self.ejercicios[0]),
-              (boton.custom_id == "ex_right" and self.ejercicio_actual == str(self.max_ejercicios)),
-              (boton.custom_id == "u_right") and self.unidad_actual == str(len(self.unidades)))):
-
-            boton.disabled = True
-
-        else:
-
-            boton.disabled = False
+        boton.disabled = any(
+            (
+                (boton.custom_id == "u_left"
+                 and self.unidad_actual == self.unidades[0]),
+                (boton.custom_id == "ex_left"
+                 and self.ejercicio_actual == self.ejercicios[0]),
+                (boton.custom_id == "ex_right"
+                 and self.ejercicio_actual == str(self.max_ejercicios)),
+                (boton.custom_id == "u_right")
+                 and self.unidad_actual == str(len(self.unidades))
+            )
+        )
 
 
     def actualizar_botones(self) -> None:
@@ -223,7 +223,7 @@ class NavegadorEjercicios(VistaGeneral):
     @button(style=ButtonStyle.grey,
             custom_id="u_left",
             emoji=Emoji.from_str("\N{Black Left-Pointing Double Triangle}"))
-    async def unidad_anterior(self, _boton: Button, interaccion: Interaction) -> None:
+    async def unidad_anterior(self, interaccion: Interaction, _boton: Button) -> None:
         """
         Retrocede hasta el último ejercicio de la unidad anterior.
         """
@@ -244,7 +244,7 @@ class NavegadorEjercicios(VistaGeneral):
     @button(style=ButtonStyle.grey,
             custom_id="ex_left",
             emoji=Emoji.from_str("\N{Leftwards Black Arrow}"))
-    async def ejercicio_anterior(self, _boton: Button, interaccion: Interaction) -> None:
+    async def ejercicio_anterior(self, interaccion: Interaction, _boton: Button) -> None:
         """
         Se intenta ir a la página anterior del mensaje INFO.
         """
@@ -261,7 +261,7 @@ class NavegadorEjercicios(VistaGeneral):
     @button(style=ButtonStyle.grey,
     custom_id="ex_right",
     emoji=Emoji.from_str("\N{Black Rightwards Arrow}"))
-    async def ejercicio_posterior(self, _boton: Button, interaccion: Interaction) -> None:
+    async def ejercicio_posterior(self, interaccion: Interaction, _boton: Button) -> None:
         """
         Se intenta ir a la página posterior del mensaje INFO.
         """
@@ -278,7 +278,7 @@ class NavegadorEjercicios(VistaGeneral):
     @button(style=ButtonStyle.grey,
             custom_id="u_right",
             emoji=Emoji.from_str("\N{Black Right-Pointing Double Triangle}"))
-    async def unidad_posterior(self, _boton: Button, interaccion: Interaction) -> None:
+    async def unidad_posterior(self, interaccion: Interaction, _boton: Button) -> None:
         """
         Retrocede hasta el primer ejercicio de la unidad siguiente.
         """
@@ -299,7 +299,7 @@ class NavegadorEjercicios(VistaGeneral):
     @button(style=ButtonStyle.grey,
             custom_id="ex_random",
             emoji=Emoji.from_str("\N{Anticlockwise Downwards and Upwards Open Circle Arrows}"))
-    async def ejercicio_aleatorio(self, _boton: Button, interaccion: Interaction) -> None:
+    async def ejercicio_aleatorio(self, interaccion: Interaction, _boton: Button) -> None:
         """
         Muestra un ejercicio completamente aleatorio de toda
         la guía.

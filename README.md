@@ -18,7 +18,15 @@ de la Facultad de Ingeniería de la UBA, aunque puede utilizarse para cualquier 
 
 <hr/>
 
-* [**Enlace de Invitación**](https://discord.com/api/oauth2/authorize?client_id=889312376036425810&permissions=292057984064&scope=bot)
+* [**Enlace de Invitación**](https://discord.com/api/oauth2/authorize?client_id=889312376036425810&permissions=294205467712&scope=bot%20applications.commands)
+
+* **[Dependencias](requirements.txt)**
+  - [python-dotenv](https://pypi.org/project/python-dotenv/)
+  - [discord.py](https://pypi.org/project/discord.py/) (rama `master`)
+  - [imgur-python](https://pypi.org/project/imgur-python/)
+
+* **[Licencia MIT](LICENSE)**
+
 * **índice**
   - [Cómo Ejecutar](#cómo-ejecutar)
   - [Changelog](#changelog)
@@ -48,8 +56,9 @@ cd run
 
 |       Version     |
 |     :---------:   |
-|**[v1.2.1](#v121)**| 
-|  [v1.2.0](#v120)  | 
+|**[v1.3.0](#v130)**|
+|  [v1.2.1](#v121)  |
+|  [v1.2.0](#v120)  |
 |  [v1.1.0](#v110)  |
 |  [v1.0.4](#v104)  |
 |  [v1.0.3](#v103)  |
@@ -58,6 +67,16 @@ cd run
 |  [v1.0.0](#v100)  |
 
 <hr/>
+
+## v1.3.0
+
+* Puesto que [discord.py](https://github.com/Rapptz/discord.py) ha continuado su mantenimiento, y las *features* que promete traer son preferidas, **se ha decidido en buena fe volver a usar esta librería.**
+
+* **Agregados los *slash commands*.**
+
+* **Agregado nuevo comando `reboot`.** Ahora se puede reiniciar el bot sin tener que apagarlo manualmente.
+
+<hr style="height:4px" />
 
 ### v1.2.1
 

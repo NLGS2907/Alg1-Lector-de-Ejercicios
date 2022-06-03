@@ -30,14 +30,19 @@ class Ahorcado:
         return lineas
 
 
-    def __init__(self, frase: Optional[str]=None, **opciones) -> None:
+    def __init__(self,
+                 *,
+                 frase: Optional[str]=None,
+                 vidas_maximas: int=7,
+                 id_mensaje_padre: int = int) -> None:
         """
         Inicializa una instancia de tipo 'Ahorcado'.
         """
 
         frase_magica = (frase if frase else choice(Ahorcado.cargar_palabras(WORDS_PATH)))
-        self.maximos_intentos = opciones.get("vidas_maximas", 7)
+        self.maximos_intentos = vidas_maximas
         self.intentos = self.maximos_intentos
+        self.id_mensaje_padre: int = id_mensaje_padre
 
         self.display_id = 0  # Es inicializado después con el primer mensaje
 

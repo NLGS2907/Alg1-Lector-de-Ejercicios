@@ -9,8 +9,7 @@ from discord.ui import Select, select
 
 from ..archivos import (DiccionarioGuia, actualizar_guia, cargar_guia,
                         lista_carpetas, lista_unidades)
-from ..constantes import DEFAULT_VERSION
-from ..logger import log
+from ..constantes import DEFAULT_VERSION, GUIA_PATH
 from .ui_ejercicios import SelectorEjercicios
 from .ui_general import VistaGeneral
 
@@ -22,7 +21,7 @@ class SelectorGuia(VistaGeneral):
 
     def __init__(self, version_actual: Optional[str]=None) -> None:
         """
-        Inicializa una instancia de 'InfoUI'.
+        Inicializa una instancia de 'SelectorGuia'.
         """
 
         super().__init__()
@@ -32,9 +31,9 @@ class SelectorGuia(VistaGeneral):
 
     @select(placeholder="Seleccione una versión de la guía",
             custom_id="selector_de_guia",
-            options=[SelectOption(label=ver) for ver in lista_carpetas()],
+            options=[SelectOption(label=ver) for ver in lista_carpetas(GUIA_PATH)],
             max_values=1)
-    async def seleccionar_guia(self, seleccion: Select, interaccion: Interaction) -> None:
+    async def seleccionar_guia(self, interaccion: Interaction, seleccion: Select) -> None:
         """
         Muestra y selecciona una versión específica de la guía.
         """
@@ -49,8 +48,8 @@ class SelectorGuia(VistaGeneral):
                        "old_ver": version_vieja,
                        "new_ver": nueva_version}
 
-        log.info("En '%(guild)s', la versión de la guía fue cambiada " % formato_log +
-                 "de %(old_ver)s a %(new_ver)s exitosamente" % formato_log)
+        self.log.info("En '%(guild)s', la versión de la guía fue cambiada " % formato_log +
+                      "de %(old_ver)s a %(new_ver)s exitosamente" % formato_log)
         await interaccion.response.edit_message(content="**[AVISO]** La versión de la guía " +
                             f"fue cambiada{f' de `{version_vieja}`' if version_vieja else ''} a " +
                             f"`{nueva_version}` exitosamente.",
@@ -104,8 +103,6 @@ class MenuSelectorUnidad(Select):
         vista = SelectorEjercicios(guia=self.guia, unidad=unidad_elegida)
         mensaje_enviado = await interaction.response.edit_message(content="Elija el ejercicio",
                                                                   view=vista)
-        vista.msg = mensaje_enviado
-        self.view.limpiar_mensaje()
 
 
 class SelectorUnidad(VistaGeneral):

@@ -7,20 +7,16 @@
     ],
     "color": 16750335,
     "campos": {
-        "- Migración a Pycord": [
-            "La librería que se venía usando, **`discord.py`**, cesó su mantenimiento,",
-            "y por lo tanto el bot migró a usar **`pycord`**, un *fork* de discord.py",
-            "casi idéntico y más actualizado."
+        "- Vuelta a discord.py": [
+            "Puesto que [discord.py](https://github.com/Rapptz/discord.py) ha continuado su ",
+            "mantenimiento, y las *features* que promete traer son preferidas, **se ha decidido ",
+            "en buena fe volver a usar esta librería.**"
         ],
-        "- Reformado el Código": [
-            "Ahora hace uso de `Cogs` para mejor organización de los comandos."
+        "- Agregados los *slash commands*": [
+            "Ahora los comandos se invocan mediante `/`."
         ],
-        "- Modularización": [
-            "Siguiendo la mejora de solidez técnica descrita arriba, muchas funciones",
-            "y clases fueron separadas en sus propios módulos."
-        ],
-        "- Algunos Comandos ahora usan `Embeds`": [
-            "Esto permite una presentación más prolija."
+        "- Agregado nuevo comando `reboot`": [
+            "Ahora se puede reiniciar el bot sin tener que apagarlo manualmente."
         ]
     },
     "pie": [

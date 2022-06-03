@@ -2,18 +2,19 @@
 Cog para comandos del cliente de Imgur.
 """
 
-from datetime import datetime
-from os import remove as dir_remove
 from random import choice
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 
-from discord import Attachment, Message
-from discord.ext.commands import Context, command
+from discord import Attachment, Interaction, Message
+from discord.app_commands import command as appcommand
+from discord.app_commands import describe
 
-from ..auxiliar import mandar_dm
-from ..constantes import DATE_FORMAT, MEMES_ALBUM_NAME
-from ..logger import log
+from ..constantes import MEMES_ALBUM_NAME
 from .general import CogGeneral
+
+if TYPE_CHECKING:
+
+    from ..lector import Lector
 
 
 class CogImgur(CogGeneral):
@@ -52,52 +53,6 @@ class CogImgur(CogGeneral):
 
 
     @staticmethod
-    async def es_numero_meme_valido(mensaje_enviado: Message,
-                                    indice_meme: int,
-                                    lista_memes: list[str]) -> bool:
-        """
-        Verifica si el índice que se pasó por parámetro es válido o no. En caso
-        de no serlo envía un mensaje indicándolo.
-        """
-
-        limite_memes = len(lista_memes)
-
-        if all((lista_memes, indice_meme > 0, indice_meme <= limite_memes)):
-
-            return True
-
-        log.error("Número de Meme '%s' inválido", indice_meme)
-        await mensaje_enviado.edit(f"**[ERROR]** El número de meme `{indice_meme}` ingresado " +
-                                   "no es válido.\n\nLas opciones disponibles " +
-                                   f"incluyen de `1` a `{limite_memes}`.")
-        return False
-
-
-    @staticmethod
-    def hay_valor_numerico(lista: list[str]) -> Optional[int]:
-        """
-        Busca en una lista si hay un números en tipo 'string'.
-        De ser así, devuelve el primer caso encontrado, ya
-        convertido a tipo 'int'.
-        """
-
-        elemento_a_devolver = None
-
-        for elem in lista:
-
-            try:
-
-                elemento_a_devolver = int(elem)
-                break
-
-            except ValueError:
-
-                continue
-
-        return elemento_a_devolver
-
-
-    @staticmethod
     async def buscar_meme_en_adjunto(msg: Message) -> Optional[Attachment]:
         """
         Busca si existe un meme en los datos adjunto por el mensaje que
@@ -115,7 +70,7 @@ class CogImgur(CogGeneral):
 
 
     @staticmethod
-    async def buscar_meme_en_referencia(ctx: Context) -> Optional[Attachment]:
+    async def buscar_meme_en_referencia(ctx: Interaction) -> Optional[Attachment]:
         """
         Busca si existe un meme en un mensaje referenciado por el que está
         ejecutando el comando.
@@ -133,95 +88,54 @@ class CogImgur(CogGeneral):
         return archivo
 
 
-    async def subir_meme(self, ctx: Context) -> None:
+    def es_numero_meme_valido(self,
+                              indice_meme: int,
+                              lista_memes: list[str]) -> bool:
         """
-        Trata de subir efectivamente el meme si lo encuentra.
+        Verifica si el índice que se pasó por parámetro es válido o no. En caso
+        de no serlo envía un mensaje indicándolo.
         """
 
-        adjunto_meme = await CogImgur.buscar_meme_en_adjunto(ctx.message)
+        limite_memes = len(lista_memes)
 
-        if not adjunto_meme:
-
-            adjunto_meme = await CogImgur.buscar_meme_en_referencia(ctx)
-
-        if not adjunto_meme:
-
-            log.error("Ningún Meme encontrado")
-            await ctx.channel.send("**[ERROR]** No se ha encontrado ningún meme.", delete_after=10)
-            return
-
-        mensaje_enviado = await ctx.channel.send(content="Subiendo Meme...",
-                                                 reference=ctx.message.to_reference())
-
-        meme_dir = (f"temp/{str(datetime.now().strftime(DATE_FORMAT))}." +
-                    f"{CogImgur.tipo_mime(adjunto_meme.content_type)[1]}")
-        album_destino = self.bot.cliente.get_album_por_nombre(MEMES_ALBUM_NAME)
-        numero_meme = self.bot.cliente.cuantas_imagenes(MEMES_ALBUM_NAME)
-        meme_titulo = f"Meme No. {numero_meme + 1}"
-
-        log.info("Guardando archivo temporalmente en '%s'", meme_dir)
-        await adjunto_meme.save(meme_dir)
-        log.info("¡Guardado!")
-
-        ctx.bot.cliente.image_upload(meme_dir,
-                                     meme_titulo,
-                                     f"Este es el {meme_titulo}",
-                                     album=album_destino["id"])
-        log.info("Meme '%s' subido exitosamente", meme_titulo)
-
-        try:
-
-            dir_remove(meme_dir)
-            log.info("Se borró el archivo en '%s'", meme_dir)
-
-        except FileNotFoundError:
-
-            log.warning("No se pudo borrar el archivo en '%s'", meme_dir)
-
-        await mensaje_enviado.edit(content=f"¡De acuerdo, {ctx.author.mention}! " +
-                                   "Ya guardé esa imagen.\nAhora este es el nuevo " +
-                                   f"Meme No. `{numero_meme}`.",
-                                   delete_after=15.0)
+        return all((lista_memes, indice_meme > 0, indice_meme <= limite_memes))
 
 
-    @command(name="meme",
-             usage="[numero | -add | -agregar]",
-             help="Para los curiosos aburridos.")
-    async def mostrar_meme(self, ctx: Context, *opciones) -> None:
+    @appcommand(name="meme",
+                description="Para los curiosos.")
+    @describe(numero="El índice específico del meme que se quiere.")
+    async def mostrar_meme(self,
+                           interaction: Interaction,
+                           numero: Optional[int]=None) -> None:
         """
         Muestra un meme o lo agrega al album donde estan guardados.
         """
 
-        if "-add" in opciones or "-agregar" in opciones:
+        await interaction.response.defer()
 
-            await self.subir_meme(ctx)
+        memes = self.bot.cliente_imgur.get_links_imagenes(MEMES_ALBUM_NAME)
+        meme_link = None
+
+        if numero is None:
+            meme_link = choice(memes)
+
+        elif self.es_numero_meme_valido(numero, memes):
+            meme_link = memes[numero - 1]
 
         else:
+            self.bot.log.error(f"Número de Meme '{numero}' inválido")
+            await interaction.followup.send(content="**[ERROR]** El número de meme " +
+                                            f"`{numero}` ingresado no es válido.\n\n" +
+                                            "Las opciones disponibles incluyen de `1` " +
+                                            f"a `{len(memes)}`.")
+            return
 
-            status = "**[AVISO]** Cargando meme..."
+        await interaction.followup.send(content=meme_link)
 
-            if "-dm" in opciones:
 
-                mensaje_enviado = await mandar_dm(ctx, status)
+async def setup(bot: "Lector"):
+    """
+    Agrega el cog de este módulo al Lector.
+    """
 
-            else:
-
-                mensaje_enviado = await ctx.channel.send(status)
-
-            numero = CogImgur.hay_valor_numerico(opciones)
-            memes = self.bot.cliente.get_links_imagenes(MEMES_ALBUM_NAME)
-            meme_link = None
-
-            if numero:
-
-                if await CogImgur.es_numero_meme_valido(mensaje_enviado, numero, memes):
-
-                    meme_link = memes[numero - 1]
-
-            else:
-
-                meme_link = choice(memes)
-
-            if meme_link:
-
-                await mensaje_enviado.edit(meme_link)
+    await bot.add_cog(CogImgur(bot))

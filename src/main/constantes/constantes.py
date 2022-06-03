@@ -11,6 +11,11 @@ load_dotenv()
 
 TOKEN = getenv("DISCORD_TOKEN")
 
+BOT_ID = 889312376036425810
+"""
+El ID específico de este bot.
+"""
+
 CLIENT_CONFIG = {"client_id" : getenv("IMGUR_ID"),
                  "client_secret" : getenv("IMGUR_SECRET"),
                  "access_token": getenv("IMGUR_ACCESS_TOKEN"),
@@ -40,7 +45,7 @@ ROL_DIEGO_ID = 653341579389435927
 
 ROL_DOCENTE_ID = 653341523886342145
 
-BOT_VERSION = "1.2.1"
+BOT_VERSION = "1.3.0"
 """
 La versión del bot a ser usada.
 
@@ -75,7 +80,7 @@ El path donde se encuentra el registro.
 
 WORDS_PATH = "src/main/txt/palabras.txt"
 
-INFO_MESSAGE = "src/main/json/info_msg.json"
+COGS_PATH = "src/main/cogs"
 
 WHATSNEW_MESSAGE = "src/main/json/whatsnew_msg.json"
 
