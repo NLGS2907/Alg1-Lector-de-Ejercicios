@@ -42,7 +42,7 @@ class TestAhorcado(unittest.TestCase):
         """
 
         frase = "Hola soy pablo"
-        partida = Ahorcado(frase)
+        partida = Ahorcado(frase=frase)
 
         self.assertEqual(frase.upper(), partida.get_frase())
 
@@ -52,7 +52,7 @@ class TestAhorcado(unittest.TestCase):
         Se adivina una letra correctamente.
         """
 
-        partida = Ahorcado("MANZANA")
+        partida = Ahorcado(frase="MANZANA")
 
         fue_usada, esta_presente = partida.adivinar("a")
 
@@ -65,7 +65,7 @@ class TestAhorcado(unittest.TestCase):
         Se intenta adivinar una letra que ya fue usada.
         """
 
-        partida = Ahorcado("NARANJA")
+        partida = Ahorcado(frase="NARANJA")
         partida.adivinar("a")
 
         fue_usada, esta_presente = partida.adivinar("a")
@@ -79,7 +79,7 @@ class TestAhorcado(unittest.TestCase):
         Se intenta adivinar una letra que no está en la frase.
         """
 
-        partida = Ahorcado("BANANA")
+        partida = Ahorcado(frase="BANANA")
         partida.adivinar("a")
 
         fue_usada, esta_presente = partida.adivinar("c")
@@ -94,7 +94,7 @@ class TestAhorcado(unittest.TestCase):
         además, ya había sido utilizada.
         """
 
-        partida = Ahorcado("MARACUYA")
+        partida = Ahorcado(frase="MARACUYA")
         partida.adivinar("t")
 
         fue_usada, esta_presente = partida.adivinar("t")
@@ -108,7 +108,7 @@ class TestAhorcado(unittest.TestCase):
         No debería de poder adivinarse con una cadena de más de un caracter.
         """
 
-        partida = Ahorcado("SALTO")
+        partida = Ahorcado(frase="SALTO")
 
         with self.assertRaises(ValueError):
 
