@@ -25,6 +25,7 @@ Repositorio: https://github.com/NLGS2907/Alg1-Lector-de-Ejercicios
 [09/29/22] Reboot.
 [10/01/22] Reboot.
 [10/06/22] Reboot.
+[12/24/22] Reboot.
 """
 
 from .constantes import TOKEN
