@@ -1,3 +1,2 @@
-python-dotenv
-git+https://github.com/Rapptz/discord.py
-imgur-python
+discord.py==2.1.0
+python-dotenv==0.21.0

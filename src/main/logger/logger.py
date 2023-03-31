@@ -5,38 +5,24 @@ Registrador de eventos.
 from logging import INFO, FileHandler, Formatter, StreamHandler, getLogger
 from typing import TYPE_CHECKING
 
-from ..auxiliar import Singleton
-from ..constantes import LOG_PATH
+from ..db.atajos import get_ruta_log
 
 if TYPE_CHECKING:
 
     from logging import Logger
 
 
-class LectorLogger(metaclass=Singleton):
+class LectorLogger:
     """
     Clase que registra eventos del bot.
     Hecho con patrón singleton.
     """
 
-    def __new__(cls) -> "LectorLogger":
-        """
-        Devuelve la instancia de la clase,
-        la cual es única y no puede tener duplicados
-        """
-
-        if not hasattr(cls, "_instance"):
-
-            cls._instancia = super(LectorLogger, cls).__new__(cls)
-
-        return cls._instancia
-
-
     def __init__(self,
                  *,
                  nombre_log: str="lector",
                  nivel_log: int=INFO,
-                 fmt: str="[ %(asctime)s ] [ %(levelname)s ] %(message)s",
+                 fmt: str="%(asctime)s - %(levelname)s - %(message)s",
                  fmt_fecha: str="%d-%m-%Y %I:%M:%S %p") -> None:
         """
         Crea una instancia de 'LectorLogger'.
@@ -49,7 +35,7 @@ class LectorLogger(metaclass=Singleton):
 
         self._formateador = Formatter(fmt=self.formato, datefmt=self.fmt_fecha)
 
-        self.handler_archivo = FileHandler(filename=LOG_PATH, encoding="utf-8")
+        self.handler_archivo = FileHandler(filename=get_ruta_log(), encoding="utf-8")
         self.handler_consola = StreamHandler()
         self.actualizar_formateador()
 

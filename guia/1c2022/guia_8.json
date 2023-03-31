@@ -1,0 +1,107 @@
+{
+    "titulo": "Algoritmos de Búsqueda",
+    "1": {
+        "titulo": [
+
+        ],
+        "descripcion": [
+            "Escribir una función que reciba una lista desordenada y un elemento, que:"
+        ],
+        "campos": {
+            "a)": [
+                "Busque todos los elementos coincidan con el pasado por parámetro y devuelva",
+                "la cantidad de coincidencias encontradas."
+            ],
+            "b)": [
+                "Busque la primera coincidencia del elemento en la lista y devuelva su posición."
+            ],
+            "c)": [
+                "Utilizando la función anterior, busque todos los elementos que coincidan con el",
+                "pasado por parámetro y devuelva una lista con las posiciones."
+            ]
+        },
+        "pie": [
+
+        ]
+    },
+    "2": {
+        "titulo": [
+
+        ],
+        "descripcion": [
+            "Escribir una función que reciba una lista de números no ordenada, que:"
+        ],
+        "campos": {
+            "a)": [
+                "Devuelva el valor máximo."
+            ],
+            "b)": [
+                "Devuelva una tupla que incluya el valor máximo y su posición."
+            ],
+            "c)": [
+                "¿Qué sucede si los elementos son cadenas de caracteres?"
+            ]
+        },
+        "pie": [
+            "Nota: No utilizar `lista.sort()`."
+        ]
+    },
+    "3": {
+        "titulo": [
+
+        ],
+        "descripcion": [
+            "**Agenda Simplificada**\n",
+
+            "Escribir una función que reciba una cadena a buscar y una lista de tuplas (nombre_completo, telefono),",
+            "y busque dentro de la lista, todas las entradas que contengan en el nombre completo la",
+            "cadena recibida (puede ser el nombre, el apellido o sólo una parte de cualquiera de ellos).",
+            "Debe devolver una lista con todas las tuplas encontradas."
+        ],
+        "campos": {
+
+        },
+        "pie": [
+
+        ]
+    },
+    "4": {
+        "titulo": [
+
+        ],
+        "descripcion": [
+            "**Sistema de Facturación Simplificado**\n",
+
+            "Se cuenta con una lista ordenada de productos, en la que uno consiste en una tupla de",
+            "(identificador, descripción, precio), y una lista de los productos a facturar, en la",
+            "que cada uno consiste en una tupla de (identificador, cantidad).\n",
+
+            "Se desea generar una factura que incluya la cantidad, la descripción, el precio",
+            "unitario y el precio total de cada producto comprado, y al final imprima el total general.\n",
+
+            "Escribir una función que reciba ambas listas e imprima por pantalla la factura solicitada."
+        ],
+        "campos": {
+
+        },
+        "pie": [
+
+        ]
+    },
+    "5": {
+        "titulo": [
+
+        ],
+        "descripcion": [
+            "Escribir una función que reciba una lista ordenada y un elemento.",
+            "Si el elemento se encuentra en la lista, debe encontrar su posición mediante búsqueda binaria y devolverlo.",
+            "Si no se encuentra, debe agregarlo a la lista en la posición correcta y devolver esa nueva posición."
+        ],
+        "campos": {
+
+        },
+        "pie": [
+            "Nota: No utilizar `lista.sort()`."
+        ]
+    }
+}

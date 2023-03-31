@@ -30,8 +30,16 @@ Repositorio: https://github.com/NLGS2907/Alg1-Lector-de-Ejercicios
 [17/03/23] Reboot.
 """
 
-from .constantes import TOKEN
+from os import getenv
+
+from dotenv import load_dotenv
+
 from .lector import Lector
+
+load_dotenv()
+
+
+TOKEN = getenv("DISCORD_TOKEN")
 
 
 def main() -> int:

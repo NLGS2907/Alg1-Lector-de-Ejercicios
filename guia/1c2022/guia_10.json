@@ -1,0 +1,53 @@
+{
+    "titulo": "Documentación, Contratos y Mutabilidad",
+    "1": {
+        "titulo": [
+
+        ],
+        "descripcion": [
+            "Analizar cada una de las siguientes funciones. ¿Cuál es el contrato de la función?",
+            "¿Cómo sería su documentación? ¿Es necesario agregar comentarios?",
+            "¿Se puede simplificar el código y/o mejorar su legibilidad? ¿Hay algún invariante de ciclo?"
+        ],
+        "campos": {
+            "a)": [
+                "```python",
+                "def Abs(i):",
+                "    if i >= 0:",
+                "        return i",
+                "    else:",
+                "        return -i",
+                "```"
+            ],
+            "b)": [
+                "```python",
+                "def emails(diccionario):",
+                "    for k, v in diccionario.items():",
+                "        print(f\"El e-mail de {k} es {v}\")",
+                "```"
+            ],
+            "c)": [
+                "```python",
+                "def emails2(diccionario):",
+                "    buenos = {}",
+                "    for k, v in diccionario.items():",
+                "        if '@' in v:",
+                "            buenos[k] = v",
+                "    return buenos",
+                "```"
+            ],
+            "d)": [
+                "```python",
+                "def emails3(nombres, direcciones):",
+                "    for nom in range(len(nombres)):",
+                "        if direcciones[nom] == None:",
+                "            nombre, apellido = ' '.split(nombres[nom].lower())",
+                "            direcciones[nom] = nombre[0] + apellido + '@ejemplo.com'",
+                "```"
+            ]
+        },
+        "pie": [
+
+        ]
+    }
+}

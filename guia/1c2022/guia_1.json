@@ -114,7 +114,7 @@
                 "Dados dos números, imprimir la suma, resta, división y multiplicación de ambos."
             ],
             "b)": [
-                "Dado un número entero 𝑛, imprimir su tabla de multiplicar."
+                "Dado un número natural 𝑛, imprimir su tabla de multiplicar."
             ]
         },
         "pie": [

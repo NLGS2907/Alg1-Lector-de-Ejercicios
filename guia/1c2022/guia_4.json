@@ -1,0 +1,168 @@
+{
+    "titulo": "Decisiones",
+    "1": {
+        "titulo": [
+
+        ],
+        "descripcion": [
+            "Escribir dos funciones que resuelvan los siguientes problemas:"
+        ],
+        "campos": {
+            "a)": [
+                "Dado un número entero 𝑛, indicar si es par o no."
+            ],
+            "b)": [
+                "Dado un número entero 𝑛, indicar si es primo o no."
+            ]
+        },
+        "pie": [
+
+        ]
+    },
+    "2": {
+        "titulo": [
+
+        ],
+        "descripcion": [
+            "Escribir una implementación propia de la función `abs`, que devuelva",
+            "el valor absoluto de cualquier valor que reciba."
+        ],
+        "campos": {
+
+        },
+        "pie": [
+
+        ]
+    },
+    "3": {
+        "titulo": [
+
+        ],
+        "descripcion": [
+            "Escribir una función que reciba por parámetro una dimensión 𝑛, e imprima",
+            "la matriz identidad correspondiente a esa dimensión."
+        ],
+        "campos": {
+
+        },
+        "pie": [
+
+        ]
+    },
+    "4": {
+        "titulo": [
+
+        ],
+        "descripcion": [
+            "Escribir funciones que permitan encontrar:"
+        ],
+        "campos": {
+            "a)": [
+                "El máximo o mínimo de un polinomio de segundo grado (dados los coeficientes",
+                "a, b y c), indicando si es un máximo o un mínimo."
+            ],
+            "b)": [
+                "Las raíces (reales o complejas) de un polinomio de segundo grado. ****"
+            ],
+            "c)": [
+                "La intersección de dos rectas (dadas las pendientes y ordenada al origen de cada recta). **²**"
+            ]
+        },
+        "pie": [
+            "¹ Nota: Validar que las operaciones puedan efectuarse antes de realizarlas",
+            "  (no dividir por cero, ni calcular la raíz de un número negativo).",
+            "² Nota: Validar que no sean dos rectas con la misma pendiente, antes de efectuar la operación."
+        ]
+    },
+    "5": {
+        "titulo": [
+
+        ],
+        "descripcion": [
+            "Escribir funciones que resuelvan los siguientes problemas:"
+        ],
+        "campos": {
+            "a)": [
+                "Dado un año indicar si es bisiesto. **¹**"
+            ],
+            "b)": [
+                "Dado un mes y un año, devolver la cantidad de días correspondientes."
+            ],
+            "c)": [
+                "Dada una fecha (día, mes, año), indicar si es válida o no."
+            ],
+            "d)": [
+                "Dada una fecha, indicar los días que faltan hasta fin de mes."
+            ],
+            "e)": [
+                "Dada una fecha, indicar los días que faltan hasta fin de año."
+            ],
+            "f)": [
+                "Dada una fecha, indicar la cantidad de días transcurridos en ese año hasta esa fecha."
+            ],
+            "g)": [
+                "Dadas dos fechas (día1, mes1, año1, día2, mes2, año2), indicar el tiempo transcurrido",
+                "entre ambas, en años, meses y días. **²**"
+            ]
+        },
+        "pie": [
+            "¹ Nota: Un año es bisiesto si es un número divisible por 4, pero no si es divisible",
+            "  por 100, excepto que también sea divisible por 400.",
+            "² Nota: En todos los casos, invocar las funciones escritas previamente cuando sea posible."
+        ]
+    },
+    "6": {
+        "titulo": [
+
+        ],
+        "descripcion": [
+            "Suponiendo que el primer día del año fue lunes, escribir una función que reciba un número con",
+            "el día del año (de 1 a 366) y devuelva el día de la semana que le toca.",
+            "Por ejemplo: si recibe `'3'` debe devolver `'miércoles'`, si recibe `'9'` debe devolver `'martes'`."
+        ],
+        "campos": {
+
+        },
+        "pie": [
+
+        ]
+    },
+    "7": {
+        "titulo": [
+
+        ],
+        "descripcion": [
+            "**⋆** Escribir un programa que reciba como entrada un entero representando un año",
+            "(por ejemplo `751`, `1999`, o `2158`), y muestre por pantalla el mismo año escrito",
+            "en números romanos."
+        ],
+        "campos": {
+
+        },
+        "pie": [
+
+        ]
+    },
+    "8": {
+        "titulo": [
+
+        ],
+        "descripcion": [
+            "**Programa de astrología:** el usuario debe ingresar el día y mes de su cumpleaños y",
+            "el programa le debe decir a qué signo corresponde.\n",
+
+            "***Aries:** 21 de marzo al 20 de abril.                   **Tauro:** 21 de abril al 20 de mayo.*",
+            "***Geminis:** 21 de mayo al 21 de junio.                  **Cancer:** 22 de junio al 23 de julio.*",
+            "***Leo:** 24 de julio al 23 de agosto.                    **Virgo:** 24 de agosto al 23 de septiembre.*",
+            "***Libra:** 24 de septiembre al 22 de octubre.            **Escorpio:** 23 de octubre al 22 de noviembre.*",
+            "***Sagitario:** 23 de noviembre al 21 de diciembre.       **Capricornio:** 22 de diciembre al 20 de enero.*",
+            "***Acuari*:** 21 de enero al 19 de febrero.               **Piscis:** 20 de febrero al 20 de marzo.*"
+        ],
+        "campos": {
+
+        },
+        "pie": [
+
+        ]
+    }
+}

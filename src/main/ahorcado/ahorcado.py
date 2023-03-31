@@ -3,10 +3,13 @@ Pequeño módulo que implementa la lógica de una partida de ahorcado.
 """
 
 from random import choice
-from typing import Optional
+from typing import Optional, TypeAlias
 
-from ..constantes import WORDS_PATH
 from .letra_ahorcado import LetraAhorcado
+from ..db.atajos import get_ruta_palabras
+
+
+ListaLetras: TypeAlias = list[LetraAhorcado]
 
 
 class Ahorcado:
@@ -39,15 +42,13 @@ class Ahorcado:
         Inicializa una instancia de tipo 'Ahorcado'.
         """
 
-        frase_magica = (frase if frase else choice(Ahorcado.cargar_palabras(WORDS_PATH)))
-        self.maximos_intentos = vidas_maximas
-        self.intentos = self.maximos_intentos
+        frase_magica: str = (frase if frase else choice(Ahorcado.cargar_palabras(get_ruta_palabras())))
+        self.maximos_intentos: int = vidas_maximas
+        self.intentos: int = self.maximos_intentos
         self.id_mensaje_padre: int = id_mensaje_padre
 
-        self.display_id = 0  # Es inicializado después con el primer mensaje
-
-        self.caracteres_usados = []
-        self.frase = []
+        self.caracteres_usados: ListaLetras = []
+        self.frase: ListaLetras = []
 
         for char in frase_magica:
 
@@ -136,14 +137,6 @@ class Ahorcado:
             esta_presente = False
 
         return fue_usado, esta_presente
-
-
-    def definir_display(self, display_id: int) -> None:
-        """
-        Define el ID del primer mensaje que es la pantalla del juego de ahorcado.
-        """
-
-        self.display_id = display_id
 
 
     def termino_juego(self) -> tuple[bool, bool]:

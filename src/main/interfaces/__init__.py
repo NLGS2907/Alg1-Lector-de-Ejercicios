@@ -2,7 +2,7 @@
 Paquete de interfaces.
 """
 
-from .ui_ejercicios import *
+from .ahorcado import *
+from .ejs import *
 from .ui_general import *
-from .ui_ppt import *
-from .ui_unidades import *
+from .vistas_db import *

@@ -27,12 +27,12 @@ class BotonCerrar(Button):
                          emoji=Emoji.from_str("\N{Heavy Multiplication X}"))
 
 
-    async def callback(self, interaction: Interaction) -> None:
+    async def callback(self, interaccion: Interaction) -> None:
         """
         Cierra la vista actual.
         """
 
-        await interaction.message.edit(content="*Borrando Mensaje...*",
+        await interaccion.message.edit(content="*Borrando Mensaje...*",
                                        view=None,
                                        embed=None,
                                        delete_after=3.0)
@@ -43,7 +43,9 @@ class VistaGeneral(View):
     Vista general hecha para que se herede de ella.
     """
 
-    def __init__(self, ui_timeout: Optional[float]=120.0) -> None:
+    def __init__(self,
+                 ui_timeout: Optional[float]=120.0,
+                 agregar_btn_cerrar: bool=True) -> None:
         """
         Inicializa una instancia de 'VistaGeneral'.
         """
@@ -52,7 +54,8 @@ class VistaGeneral(View):
 
         super().__init__(timeout=ui_timeout)
 
-        self.add_item(BotonCerrar())
+        if agregar_btn_cerrar:
+            self.add_item(BotonCerrar())
 
 
     @property

@@ -26,8 +26,8 @@ class LetraAhorcado:
 
             raise TypeError(f"Valor de 'oculta' ({oculta}) debería ser 'True' or 'False'.")
 
-        self.valor = valor
-        self._oculta = oculta
+        self.valor: str = valor
+        self._oculta: bool = oculta
 
     def __str__(self):
         """

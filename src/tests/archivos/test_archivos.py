@@ -26,7 +26,6 @@ class TestArchivos(unittest.TestCase):
         try:
 
             with open(arch_temp) as arch:
-
                 dic_simple_str = arch.read()
 
             dic_cargado = cargar_json(arch_temp)
@@ -37,7 +36,6 @@ class TestArchivos(unittest.TestCase):
                 cargar_json("__path_basura__")
 
         finally:
-
             arch_remove(arch_temp)
 
 
@@ -57,27 +55,26 @@ class TestArchivos(unittest.TestCase):
 
         set_archivos = archivos_guia("2c2019", "guia")
         set_esperado = {"guia_1.json",
-                          "guia_2.json",
-                          "guia_3.json",
-                          "guia_4.json",
-                          "guia_5.json",
-                          "guia_6.json",
-                          "guia_7.json",
-                          "guia_8.json",
-                          "guia_9.json",
-                          "guia_10.json",
-                          "guia_11.json",
-                          "guia_12.json",
-                          "guia_13.json",
-                          "guia_14.json",
-                          "guia_15.json",
-                          "guia_16.json",
-                          "guia_17.json"}
+                        "guia_2.json",
+                        "guia_3.json",
+                        "guia_4.json",
+                        "guia_5.json",
+                        "guia_6.json",
+                        "guia_7.json",
+                        "guia_8.json",
+                        "guia_9.json",
+                        "guia_10.json",
+                        "guia_11.json",
+                        "guia_12.json",
+                        "guia_13.json",
+                        "guia_14.json",
+                        "guia_15.json",
+                        "guia_16.json",
+                        "guia_17.json"}
 
         self.assertEqual(set_archivos, set_esperado)
         self.assertEqual(archivos_guia("2x2019", "guia"), None)
         with self.assertRaises(FileNotFoundError):
-
             archivos_guia("2c2019", "guiasa")
 
 
@@ -95,7 +92,6 @@ class TestArchivos(unittest.TestCase):
                             "pie": []}
 
         with self.assertRaises(FileNotFoundError):
-
             cargar_guia("2c2019", "guiasa")
 
         self.assertEqual(cargar_guia("2x2019", "guia"), None)
@@ -115,7 +111,6 @@ class TestArchivos(unittest.TestCase):
         self.assertNotEqual(lista_unidades({"version": "Ninguna, lol", "10": "judías", "40": 41, "337": "banana"}),
                             lista_esperada)
         with self.assertRaises(KeyError):
-
             lista_unidades({"10": "judías", "40": 41, "337": "banana"})
 
 
@@ -130,10 +125,8 @@ class TestArchivos(unittest.TestCase):
 
         self.assertEqual(lista_cargada, lista_esperada)
         with self.assertRaises(KeyError):
-
             lista_ejercicios(guia_cargada, "18")            
 
 
 if __name__ == "__main__":
-
     unittest.main()

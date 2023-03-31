@@ -1,0 +1,105 @@
+{
+    "titulo": "Manejo de Archivos",
+    "1": {
+        "titulo": [
+
+        ],
+        "descripcion": [
+            "Escribir una función, llamada `head` que reciba un archivo y un número *N* e imprima",
+            "las primeras *N* líneas del archivo."
+        ],
+        "campos": {
+
+        },
+        "pie": [
+
+        ]
+    },
+    "2": {
+        "titulo": [
+
+        ],
+        "descripcion": [
+            "Escribir una función, llamada `cp`, que copie todo el contenido de un archivo",
+            "(sea de texto o binario) a otro, de modo que quede exactamente igual."
+        ],
+        "campos": {
+
+        },
+        "pie": [
+            "Nota: Utilizar `archivo.read(bytes)` para leer como máximo una cantidad de bytes."
+        ]
+    },
+    "3": {
+        "titulo": [
+
+        ],
+        "descripcion": [
+            "Escribir una función, llamada `wc`, que dado un archivo de texto, lo procese, e imprima",
+            "por pantalla cuántas líneas, cuantas palabras y cuántos caracteres contiene el archivo."
+        ],
+        "campos": {
+
+        },
+        "pie": [
+
+        ]
+    },
+    "4": {
+        "titulo": [
+
+        ],
+        "descripcion": [
+            "Escribir una función, llamada `grep`, que reciba una cadena y un archivo e imprima",
+            "las líneas del archivo que contienen la cadena recibida."
+        ],
+        "campos": {
+
+        },
+        "pie": [
+
+        ]
+    },
+    "5": {
+        "titulo": [
+
+        ],
+        "descripcion": [
+            "Escribir una función, llamada `rot13`, que reciba un archivo de texto de origen y uno",
+            "de destino, de modo que para cada línea del archivo origen, se guarde una línea *cifrada*",
+            "en el archivo destino.\n",
+
+            "El algoritmo de cifrado a utilizar será muy sencillo: a cada caracter comprendido entre",
+            "la a y la z, se le suma 13 y luego se aplica el módulo 26, para obtener un nuevo caracter."
+        ],
+        "campos": {
+
+        },
+        "pie": [
+
+        ]
+    },
+    "6": {
+        "titulo": [
+
+        ],
+        "descripcion": [
+            "**Persistencia de un Diccionario**"
+        ],
+        "campos": {
+            "a)": [
+                "Escribir una función `cargar_datos` que reciba un nombre de archivo, cuyo",
+                "contenido tiene el formato `clave, valor` y devuelva un diccionario con el",
+                "primer campo como clave y el segundo como diccionario."
+            ],
+            "b)": [
+                "Escribir una función `guardar_datos` que reciba un diccionario y un nombre de",
+                "archivo, y guarde el contenido del diccionario en el archivo, con el formato",
+                "`clave, valor`."
+            ]
+        },
+        "pie": [
+
+        ]
+    }
+}

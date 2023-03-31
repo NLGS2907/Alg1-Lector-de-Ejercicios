@@ -1,0 +1,67 @@
+{
+    "titulo": "Ordenar Listas",
+    "1": {
+        "titulo": [
+
+        ],
+        "descripcion": [
+            "Mostrar los pasos del ordenamiento de la lista `[ 0 9 3 8 5 3 2 4 ]` con los",
+            "algoritmos de inserción y selección."
+        ],
+        "campos": {
+
+        },
+        "pie": [
+
+        ]
+    },
+    "2": {
+        "titulo": [
+
+        ],
+        "descripcion": [
+            "Escribir una función `merge_sort_3` que funcione igual que el *merge sort* pero en",
+            "lugar de dividir los valores en dos partes iguales, los divida en tres (asumir que se",
+            "cuenta con la función `merge(lista_1, lista_2, lista_3)`).",
+            "¿Cómo te parece que se va a comportar este método con respecto al *merge sort* original?"
+        ],
+        "campos": {
+
+        },
+        "pie": [
+
+        ]
+    },
+    "3": {
+        "titulo": [
+
+        ],
+        "descripcion": [
+            "Mostrar los pasos del ordenamiento de la lista: `[ 6 0 3 2 5 7 4 1 ]` con los métodos",
+            "de inserción y con *merge sort*.",
+            "¿Cuáles son las principales diferencias entre los métodos? ¿Cuál usarías en qué casos?"
+        ],
+        "campos": {
+
+        },
+        "pie": [
+
+        ]
+    },
+    "4": {
+        "titulo": [
+
+        ],
+        "descripcion": [
+            "Ordenar la lista `[ 6 0 3 2 5 7 4 1 ]` usando el método *quicksort*.",
+            "Mostrar el árbol de recursividad explicando las llamadas que se hacen en cada paso,",
+            "y el orden en el que se realizan."
+        ],
+        "campos": {
+
+        },
+        "pie": [
+
+        ]
+    }
+}

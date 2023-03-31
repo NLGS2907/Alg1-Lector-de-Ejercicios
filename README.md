@@ -6,7 +6,7 @@
 
 ![status](https://dcbadge.vercel.app/api/shield/889312376036425810?bot=true?logoColor=presence&theme=discord)
 
-![version](https://img.shields.io/badge/version-1.2.1-brightgreen)
+![version](https://img.shields.io/badge/version-1.4.0-brightgreen)
 ![estrellas](https://img.shields.io/github/stars/NLGS2907/Alg1-Lector-de-Ejercicios?label=Estrellas&style=social)
 ![forks](https://img.shields.io/github/forks/NLGS2907/Alg1-Lector-de-Ejercicios?style=social)
 ![Tests](https://github.com/NLGS2907/Alg1-Lector-de-Ejercicios/actions/workflows/tests.yml/badge.svg)
@@ -21,9 +21,11 @@ de la Facultad de Ingeniería de la UBA, aunque puede utilizarse para cualquier 
 * [**Enlace de Invitación**](https://discord.com/api/oauth2/authorize?client_id=889312376036425810&permissions=294205467712&scope=bot%20applications.commands)
 
 * **[Dependencias](requirements.txt)**
-  - [python-dotenv](https://pypi.org/project/python-dotenv/)
-  - [discord.py](https://pypi.org/project/discord.py/) (rama `master`)
-  - [imgur-python](https://pypi.org/project/imgur-python/)
+
+  | Nombre | Versión | Extra Info. |
+  | :-: | :-: | :-: |
+  | [discord.py](https://pypi.org/project/discord.py/) | 2.1.0 |  |
+  | [python-dotenv](https://pypi.org/project/python-dotenv/) | 0.21.0 |  |
 
 * **[Licencia MIT](LICENSE)**
 
@@ -56,7 +58,8 @@ cd run
 
 |       Version     |
 |     :---------:   |
-|**[v1.3.0](#v130)**|
+|**[v1.4.0](#v140)**|
+|  [v1.3.0](#v130)  |
 |  [v1.2.1](#v121)  |
 |  [v1.2.0](#v120)  |
 |  [v1.1.0](#v110)  |
@@ -67,6 +70,20 @@ cd run
 |  [v1.0.0](#v100)  |
 
 <hr/>
+
+## v1.4.0
+
+* Arreglados bugs con el menu de `/ej`, en donde el menu de unidades no funcionaba para las unidades `2` y `12`.
+* **Actualizada la versión de la guía.** Ahora utiliza la revisión del 6 de Marzo de 2022 bajo el nombre `1c2022`.
+  - Cambiada *una* palabra del ejercicio **1.6.b)**.
+  - Expandido el enunciado del ejercicio **7.11**.
+  - Nuevo ejercicio **7.13**.
+* **Comando `/meme` removido.** Cayó en desuso y no era rentable mantener las claves.
+* **Comandos `/whatsnew` y `/rps` removidos.**
+* **Mejorada la lógica de archivos.** Ahora usan búsqueda recursiva e instancias de la clase `pathlib.Path`, en vez de las funciones de `os.path`.
+* **Ahora se usa una DB de SQLite3,** en vez de un módulo de constantes.
+
+<hr style="height:4px" />
 
 ## v1.3.0
 

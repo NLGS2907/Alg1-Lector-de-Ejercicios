@@ -2,5 +2,6 @@
 Paquete auxiliar.
 """
 
+from .autocompletado import *
 from .auxiliar import *
-from .singleton import *
+from .checks import *
