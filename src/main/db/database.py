@@ -4,16 +4,16 @@ Módulo de bases de datos.
 
 from os import PathLike
 from sqlite3 import connect, OperationalError
-from typing import Any, Dict, List, Literal, Optional, Tuple, TypeAlias, Union
+from typing import Any, Dict, List, Literal, Optional, Tuple, Union
 
 from .db_tipos import TiposDB
 
-DictConds: TypeAlias = Any
-ValoresResolucion: TypeAlias = Literal["ABORT", "FAIL", "IGNORE", "REPLACE", "ROLLBACK"]
-_SingularResult: TypeAlias = Tuple[Union[None, int, str]]
-FetchResult: TypeAlias = Union[List[_SingularResult], _SingularResult]
-CursorDesc: TypeAlias = Dict[str, Union[None, Tuple[str, ...], str, int]]
-DictLlaveForanea: TypeAlias = Dict[str, Tuple[str, str]]
+DictConds = Any
+ValoresResolucion = Literal["ABORT", "FAIL", "IGNORE", "REPLACE", "ROLLBACK"]
+_SingularResult = Tuple[Union[None, int, str]]
+FetchResult = Union[List[_SingularResult], _SingularResult]
+CursorDesc = Dict[str, Union[None, Tuple[str, ...], str, int]]
+DictLlaveForanea = Dict[str, Tuple[str, str]]
 
 DEFAULT_DB: PathLike = "src/main/db/db.sqlite3"
 RESOLUCIONES: Tuple[str, ...] = "ABORT", "FAIL", "IGNORE", "REPLACE", "IGNORE"

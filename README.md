@@ -6,7 +6,7 @@
 
 ![status](https://dcbadge.vercel.app/api/shield/889312376036425810?bot=true?logoColor=presence&theme=discord)
 
-![version](https://img.shields.io/badge/version-1.4.0-brightgreen)
+![version](https://img.shields.io/badge/version-1.4.1-brightgreen)
 ![estrellas](https://img.shields.io/github/stars/NLGS2907/Alg1-Lector-de-Ejercicios?label=Estrellas&style=social)
 ![forks](https://img.shields.io/github/forks/NLGS2907/Alg1-Lector-de-Ejercicios?style=social)
 ![Tests](https://github.com/NLGS2907/Alg1-Lector-de-Ejercicios/actions/workflows/tests.yml/badge.svg)
@@ -24,8 +24,8 @@ de la Facultad de Ingeniería de la UBA, aunque puede utilizarse para cualquier 
 
   | Nombre | Versión | Extra Info. |
   | :-: | :-: | :-: |
-  | [discord.py](https://pypi.org/project/discord.py/) | 2.1.0 |  |
-  | [python-dotenv](https://pypi.org/project/python-dotenv/) | 0.21.0 |  |
+  | [discord.py](https://pypi.org/project/discord.py/) | 2.2.2 |  |
+  | [python-dotenv](https://pypi.org/project/python-dotenv/) | 1.0.0 |  |
 
 * **[Licencia MIT](LICENSE)**
 
@@ -58,7 +58,8 @@ cd run
 
 |       Version     |
 |     :---------:   |
-|**[v1.4.0](#v140)**|
+|**[v1.4.1](#v141)**|
+|  [v1.4.0](#v140)  |
 |  [v1.3.0](#v130)  |
 |  [v1.2.1](#v121)  |
 |  [v1.2.0](#v120)  |
@@ -70,6 +71,16 @@ cd run
 |  [v1.0.0](#v100)  |
 
 <hr/>
+
+### v1.4.1
+
+* **Actualizadas las dependencias.**
+  - discord.py (2.1.0 → **2.2.2**)
+  - python-dotenv (0.2.1 → **1.0.0**)
+
+* **Uso de `typing.Union` en vez de `|`** para un poco retrocompatibilidad.
+
+<hr style="height:2px" />
 
 ## v1.4.0
 
