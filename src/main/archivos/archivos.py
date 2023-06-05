@@ -5,17 +5,17 @@ Módulo que procesa archivos.
 from json import dump, load
 from os import PathLike
 from pathlib import Path
-from typing import Optional, Union
+from typing import Optional, TypeAlias, Union
 
 from ..db import existe_dato_en_tabla, sacar_datos_de_tabla
 from ..db.atajos import get_guia_default, get_guia_ext, get_ruta_guia
 from ..logger import LectorLogger
 
-DiccionarioPares = dict[str, str]
-DiccionarioEjercicio = dict[str, Union[list[str], dict[str, list[str]]]]
-DiccionarioUnidad = dict[str, Union[str, DiccionarioEjercicio]]
-DiccionarioGuia = dict[str, Union[str, DiccionarioUnidad]]
-DiccionarioStats = dict[str, list[int]]
+DiccionarioPares: TypeAlias = dict[str, str]
+DiccionarioEjercicio: TypeAlias = dict[str, Union[list[str], dict[str, list[str]]]]
+DiccionarioUnidad: TypeAlias = dict[str, Union[str, DiccionarioEjercicio]]
+DiccionarioGuia: TypeAlias = dict[str, Union[str, DiccionarioUnidad]]
+DiccionarioStats: TypeAlias = dict[str, list[int]]
 
 
 def cargar_json(ruta_archivo: PathLike) -> DiccionarioPares:

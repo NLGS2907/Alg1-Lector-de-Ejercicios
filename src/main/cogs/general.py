@@ -3,7 +3,7 @@ Cog general para uso de herencia.
 """
 
 from traceback import format_exc
-from typing import TYPE_CHECKING, Any, Optional, Union
+from typing import TYPE_CHECKING, Any, Optional, TypeAlias, Union
 
 from discord import Interaction
 from discord.app_commands import AppCommandError, Group
@@ -50,7 +50,7 @@ class GrupoGeneral(Group):
         self.bot: "Lector" = bot
 
 
-GroupsList = list[type[GrupoGeneral]]
+GroupsList: TypeAlias = list[type[GrupoGeneral]]
 
 class CogGeneral(Cog):
     """

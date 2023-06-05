@@ -3,13 +3,12 @@ Pequeño módulo que implementa la lógica de una partida de ahorcado.
 """
 
 from random import choice
-from typing import Optional
+from typing import Optional, TypeAlias
 
-from .letra_ahorcado import LetraAhorcado
 from ..db.atajos import get_ruta_palabras
+from .letra_ahorcado import LetraAhorcado
 
-
-ListaLetras = list[LetraAhorcado]
+ListaLetras: TypeAlias = list[LetraAhorcado]
 
 
 class Ahorcado:

@@ -3,7 +3,7 @@ Módulo dedicado a contener la clase personalizada 'CustomBot'.
 """
 
 from platform import system
-from typing import TYPE_CHECKING, Callable, Optional
+from typing import TYPE_CHECKING, Callable, Optional, TypeAlias
 
 from discord import Game, Intents, Message
 from discord.ext.commands import Bot
@@ -12,8 +12,7 @@ from discord.utils import utcnow
 from ..ahorcado import Ahorcado
 from ..archivos import buscar_archivos
 from ..auxiliar import get_prefijo
-from ..db.atajos import (actualizar_guild, get_lector_id,
-                         get_ruta_cogs)
+from ..db.atajos import actualizar_guild, get_lector_id, get_ruta_cogs
 from ..logger import LectorLogger
 
 if TYPE_CHECKING:
@@ -28,8 +27,8 @@ except ImportError:
     LectorLogger().warning("No se pudo importar 'WindowsSelectorEventLoopPolicy', " +
                            "probablemente porque esto no es Windows.")
 
-PrefixCallable = Callable[["Lector", Message], str]
-DiccionarioPartidas = dict[str, Ahorcado]
+PrefixCallable: TypeAlias = Callable[["Lector", Message], str]
+DiccionarioPartidas: TypeAlias = dict[str, Ahorcado]
 
 
 # pylint: disable=abstract-method
