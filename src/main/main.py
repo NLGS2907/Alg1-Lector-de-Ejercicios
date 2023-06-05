@@ -26,8 +26,10 @@ Repositorio: https://github.com/NLGS2907/Alg1-Lector-de-Ejercicios
 [10/01/22] Reboot.
 [10/06/22] Reboot.
 [12/24/22] Reboot.
+--  mm/dd/yy -> dd/mm/yy  --
 [05/03/23] Reboot.
 [17/03/23] Reboot.
+[03/06/23] Reboot.
 """
 
 from os import getenv
